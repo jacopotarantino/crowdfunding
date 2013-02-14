@@ -3,7 +3,8 @@ var CrowdFunding = (function($) {
 
 	return {
 		init : function() {
-			this.addReward();	
+			this.addReward();
+			this.removeReward();
 		},
 
 		addReward : function() {
@@ -34,6 +35,21 @@ var CrowdFunding = (function($) {
 				});
 
 				newReward.insertAfter( $( '.atcf-submit-campaign-reward.static' ) );
+			});
+		},
+
+		removeReward : function() {
+			$( 'body' ).on( 'click', '.atcf-submit-campaign-reward-remove a', function(e) {
+				e.preventDefault();
+
+				var reward          = $( this ).parents( '.atcf-submit-campaign-reward' );
+				var rewardContainer = $( '.atcf-submit-campaign-rewards' );
+				var count           = rewardContainer.find( '.atcf-submit-campaign-reward' ).length;
+
+				if ( count == 1 )
+					return alert( CrowdFundingL10n.oneReward );
+
+				reward.remove();
 			});
 		}
 	}

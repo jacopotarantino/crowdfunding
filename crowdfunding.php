@@ -6,8 +6,7 @@
  * Author:      AppThemer
  * Author URI:  http://appthemer.com
  * Version:     0.1-alpha
- * Text Domain: cf
- * Domain Path: /cf-languages/
+ * Text Domain: atcf
  */
 
 // Exit if accessed directly
@@ -153,6 +152,10 @@ final class AT_CrowdFunding {
 
 	public function enqueue_scripts() {
 		wp_enqueue_script( 'atcf-scripts', $this->plugin_url . '/assets/js/crowdfunding.js', array( 'jquery' ) );
+
+		wp_localize_script( 'atcf-scripts', 'CrowdFundingL10n', array(
+			'oneReward' => __( 'At least one reward is required.', 'atcf' )
+		) );
 	}
 
 	/**

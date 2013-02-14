@@ -196,6 +196,11 @@ function atcf_shortcode_submit_field_rewards() {
 				<label for="files[0]"><?php _e( 'File (optional)', 'atcf' ); ?></label>
 				<input type="file" class="file" name="files[0]" id="files[0]" />
 			</p>
+
+			<p class="atcf-submit-campaign-reward-remove">
+				<label>&nbsp;</label><br />
+				<a href="#">&times;</a>
+			</p>
 		</div>
 
 		<p class="atcf-submit-campaign-add-reward">
