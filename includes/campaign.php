@@ -182,42 +182,59 @@ class ATCF_Campaigns {
 		}
 
 		$paypal_adaptive = new PayPalAdaptivePaymentsGateway();
+		$payments        = $campaign->backers();
+		$num_collected   = 0;
+		$errors          = null;
 
-		$payment_id      = 0; // Payment ID's will come from your function to process the payments
+		foreach ( $payments as $payment ) {
+			$payment_id      = $payment->ID;
 
-		$sender_email    = get_post_meta( $payment_id, '_edd_epap_sender_email', true );
-		$amount          = get_post_meta( $payment_id, '_edd_epap_sender_amount', true );
-		$paid            = get_post_meta( $payment_id, '_edd_epap_sender_paid', true );
+			$sender_email    = get_post_meta( $payment_id, '_edd_epap_sender_email', true );
+			$amount          = get_post_meta( $payment_id, '_edd_epap_sender_amount', true );
+			$paid            = get_post_meta( $payment_id, '_edd_epap_sender_paid', true );
+			$preapproval_key = get_post_meta( $payment_id, '_edd_epap_preapproval_key', true );
 
-		$receivers       = array(); // Your list of receivers can be sent in here to override the system receivers
+			$receivers       = array(); // Your list of receivers can be sent in here to override the system receivers
 		
-		if ( $amount > $paid ) {
+			/** Already paid or other error */
+			if ( $amount > $paid ) {
+				$errors = new WP_Error( 'already-paid-' . $payment_id, __( 'This payment has already been collected.', 'atcf' ) );
+				
+				continue;
+			}
+
 			if ( $payment = $paypal_adaptive->pay_preapprovals( $payment_id, $preapproval_key, $sender_email, $amount, $receivers ) ) {
-				$responsecode = strtoupper( $payment['responseEnvelope']['ack'] );
+				$responsecode = strtoupper( $payment[ 'responseEnvelope' ][ 'ack' ] );
 				
 				if ( $responsecode == 'SUCCESS' || $responsecode == 'SUCCESSWITHWARNING' ) {
-					$pay_key = $payment['payKey'];
+					$pay_key = $payment[ 'payKey' ];
 					
-					add_post_meta( $_GET['payment_id'], '_edd_epap_pay_key', $pay_key );
-					add_post_meta( $_GET['payment_id'], '_edd_epap_preapproval_paid', true );
+					add_post_meta( $_GET[ 'payment_id'], '_edd_epap_pay_key', $pay_key );
+					add_post_meta( $_GET[ 'payment_id'], '_edd_epap_preapproval_paid', true );
+
+					$num_collected = $num_collected + 1;
 					
 					edd_update_payment_status( $_GET['payment_id'], 'publish' );
-					// add in success message
 				} else {
-					echo '<pre>' . nl2br(print_r($payment,true)) . $amount . '</pre>';
-					// an error occured, figure out how to handle the errors here
+					$errors = new WP_Error( 'invalid-response-' . $payment_id, __( 'There was an error collecting funds.', 'atcf' ), $payment );
 				}
 			} else {
-				// an error occured figure out how to handle errors here
+				$errors = new WP_Error( 'payment-error-' . $payment_id, __( 'There was an error.', 'atcf' ) );
 			}
-		} else {
-			// Already paid or other error
+		}
+
+		if ( is_wp_error( $errors ) )
+			wp_die( $errors->get_error_messages() );
+		else {
+			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 13, 'collected' => $num_collected ), admin_url( 'post.php' ) ) );
+			exit();
 		}
 	}
 
 	function messages( $messages ) {
 		$messages[ 'download' ][11] = sprintf( __( 'This %s has not reached its funding goal.', 'atcf' ), strtolower( edd_get_label_singular() ) );
 		$messages[ 'download' ][12] = sprintf( __( 'You do not have permission to collect funds for %s.', 'atcf' ), strtolower( edd_get_label_plural() ) );
+		$messages[ 'download' ][13] = sprintf( __( '%d payments have been collected for this %s.', 'atcf' ), isset ( $_GET[ 'collected' ] ) ? $_GET[ 'collected' ] : 0, strtolower( edd_get_label_plural() ) );
 
 		return $messages;
 	}

@@ -46,7 +46,7 @@ var CrowdFunding = (function($) {
 				var rewardContainer = $( '.atcf-submit-campaign-rewards' );
 				var count           = rewardContainer.find( '.atcf-submit-campaign-reward' ).length;
 
-				if ( count == 1 )
+				if ( count == 1 || reward.hasClass( 'static' ) )
 					return alert( CrowdFundingL10n.oneReward );
 
 				reward.remove();
