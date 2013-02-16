@@ -104,9 +104,6 @@ final class AT_CrowdFunding {
 	 * @since CrowdFunding 0.1-alpha
 	 */
 	private function setup_actions() {
-		add_action( 'activate_'   . $this->basename, 'cf_activation'   );
-		add_action( 'deactivate_' . $this->basename, 'cf_deactivation' );
-
 		add_filter( 'template_include', array( $this, 'template_loader' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
