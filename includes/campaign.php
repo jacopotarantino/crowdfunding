@@ -53,19 +53,19 @@ class ATCF_Campaigns {
 	 */
 	function download_labels( $labels ) {
 		$labels =  apply_filters( 'cf_campaign_labels', array(
-			'name' 				=> __( 'Campaigns', 'cf' ),
-			'singular_name' 	=> __( 'Campaign', 'cf' ),
-			'add_new' 			=> __( 'Add New', 'cf' ),
-			'add_new_item' 		=> __( 'Add New Campaign', 'cf' ),
-			'edit_item' 		=> __( 'Edit Campaign', 'cf' ),
-			'new_item' 			=> __( 'New Campaign', 'cf' ),
-			'all_items' 		=> __( 'All Campaigns', 'cf' ),
-			'view_item' 		=> __( 'View Campaign', 'cf' ),
-			'search_items' 		=> __( 'Search Campaigns', 'cf' ),
-			'not_found' 		=> __( 'No Campaigns found', 'cf' ),
-			'not_found_in_trash'=> __( 'No Campaigns found in Trash', 'cf' ),
+			'name' 				=> __( 'Campaigns', 'atcf' ),
+			'singular_name' 	=> __( 'Campaign', 'atcf' ),
+			'add_new' 			=> __( 'Add New', 'atcf' ),
+			'add_new_item' 		=> __( 'Add New Campaign', 'atcf' ),
+			'edit_item' 		=> __( 'Edit Campaign', 'atcf' ),
+			'new_item' 			=> __( 'New Campaign', 'atcf' ),
+			'all_items' 		=> __( 'All Campaigns', 'atcf' ),
+			'view_item' 		=> __( 'View Campaign', 'atcf' ),
+			'search_items' 		=> __( 'Search Campaigns', 'atcf' ),
+			'not_found' 		=> __( 'No Campaigns found', 'atcf' ),
+			'not_found_in_trash'=> __( 'No Campaigns found in Trash', 'atcf' ),
 			'parent_item_colon' => '',
-			'menu_name' 		=> __( 'Campaigns', 'cf' )
+			'menu_name' 		=> __( 'Campaigns', 'atcf' )
 		) );
 
 		return $labels;
@@ -106,11 +106,10 @@ class ATCF_Campaigns {
 	function dashboard_columns( $columns ) {
 		$columns = array(
 			'cb'                => '<input type="checkbox"/>',
-			'title'             => __( 'Name', 'edd' ),
-			'download_category' => __( 'Categories', 'edd' ),
-			'download_tag'      => __( 'Tags', 'edd' ),
-			'earnings'          => __( 'Funded', 'edd' ),
-			'date'              => __( 'Expires', 'edd' )
+			'title'             => __( 'Name', 'atcf' ),
+			'download_category' => __( 'Categories', 'atcf' ),
+			'earnings'          => __( 'Amount Funded', 'atcf' ),
+			'date'              => __( 'Expires', 'atcf' )
 		);
 
 		return $columns;
@@ -137,9 +136,9 @@ class ATCF_Campaigns {
 		$campaign = new ATCF_Campaign( $post );
 
 		if ( $campaign->is_funded() )
-			add_meta_box( 'cf_campaign_funds', __( 'Campaign Funds', 'cf' ), '_cf_metabox_campaign_funds', 'download', 'side', 'high' );
+			add_meta_box( 'cf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_cf_metabox_campaign_funds', 'download', 'side', 'high' );
 
-		add_meta_box( 'cf_campaign_stats', __( 'Campaign Stats', 'cf' ), '_cf_metabox_campaign_stats', 'download', 'side', 'high' );
+		add_meta_box( 'cf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_cf_metabox_campaign_stats', 'download', 'side', 'high' );
 
 		add_action( 'edd_meta_box_fields', '_cf_metabox_campaign_info', 5 );
 	}
@@ -267,7 +266,7 @@ function atcf_campaign_save_end_date( $new ) {
 	$valid_date = wp_checkdate( $mm, $jj, $aa, $end_date );
 	
 	if ( ! $valid_date ) {
-		return new WP_Error( 'invalid_date', __( 'Whoops, the provided date is invalid.', 'cf' ) );
+		return new WP_Error( 'invalid_date', __( 'Whoops, the provided date is invalid.', 'atcf' ) );
 	}
 
 	$end_date = get_gmt_from_date( $end_date );
@@ -354,7 +353,7 @@ function _cf_metabox_campaign_info() {
 		<select id="end-mm" name="end-mm">
 			<?php for ( $i = 1; $i < 13; $i = $i + 1 ) : $monthnum = zeroise($i, 2); ?>
 				<option value="<?php echo $monthnum; ?>" <?php selected( $monthnum, $mm ); ?>>
-				<?php printf( __( '%1$s-%2$s' ), $monthnum, $wp_locale->get_month_abbrev( $wp_locale->get_month( $i ) ) ); ?>
+				<?php printf( '%1$s-%2$s', $monthnum, $wp_locale->get_month_abbrev( $wp_locale->get_month( $i ) ) ); ?>
 				</option>
 			<?php endfor; ?>
 		</select>
