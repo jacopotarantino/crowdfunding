@@ -52,7 +52,7 @@ class ATCF_Campaigns {
 	 * @return array $labels The modified labels
 	 */
 	function download_labels( $labels ) {
-		$labels =  apply_filters( 'cf_campaign_labels', array(
+		$labels =  apply_filters( 'atcf_campaign_labels', array(
 			'name' 				=> __( 'Campaigns', 'atcf' ),
 			'singular_name' 	=> __( 'Campaign', 'atcf' ),
 			'add_new' 			=> __( 'Add New', 'atcf' ),
@@ -280,17 +280,17 @@ function _cf_metabox_campaign_stats() {
 	$campaign = new ATCF_Campaign( $post );
 ?>
 	<p>
-		<strong><?php _e( 'Current Amount:', 'cf' ); ?></strong>
+		<strong><?php _e( 'Current Amount:', 'atcf' ); ?></strong>
 		<?php echo $campaign->current_amount(); ?> &mdash; <?php echo $campaign->percent_completed(); ?>
 	</p>
 
 	<p>
-		<strong><?php _e( 'Backers:' ,'cf' ); ?></strong>
+		<strong><?php _e( 'Backers:' ,'atcf' ); ?></strong>
 		<?php echo $campaign->backers_count(); ?>
 	</p>
 
 	<p>
-		<strong><?php _e( 'Days Remaining:', 'cf' ); ?></strong>
+		<strong><?php _e( 'Days Remaining:', 'atcf' ); ?></strong>
 		<?php echo $campaign->days_remaining(); ?>
 	</p>
 <?php
@@ -332,7 +332,7 @@ function _cf_metabox_campaign_info() {
 	</p>
 
 	<p>
-		<label for="campaign_goal"><strong><?php _e( 'Goal:', 'cf' ); ?></strong></label><br />	
+		<label for="campaign_goal"><strong><?php _e( 'Goal:', 'atcf' ); ?></strong></label><br />	
 		<?php if ( ! isset( $edd_options[ 'currency_position' ] ) || $edd_options[ 'currency_position' ] == 'before' ) : ?>
 			<?php echo edd_currency_filter( '' ); ?><input type="text" name="campaign_goal" id="campaign_goal" value="<?php echo edd_format_amount( $campaign->goal(false) ); ?>" style="width:80px" />
 		<?php else : ?>
@@ -341,14 +341,14 @@ function _cf_metabox_campaign_info() {
 	</p>
 
 	<p>
-		<label for="campaign_goal"><strong><?php _e( 'PayPal Email:', 'cf' ); ?></strong></label><br />
+		<label for="campaign_goal"><strong><?php _e( 'PayPal Email:', 'atcf' ); ?></strong></label><br />
 		<input type="text" name="campaign_email" id="campaign_email" value="<?php echo $campaign->paypal_email(); ?>" class="regular-text" />
 	</p>
 
 	<style>#end-aa { width: 3.4em } #end-jj, #end-hh, #end-mn { width: 2em; }</style>
 
 	<p>
-		<strong><?php _e( 'End Date:', 'cf' ); ?></strong><br />
+		<strong><?php _e( 'End Date:', 'atcf' ); ?></strong><br />
 
 		<select id="end-mm" name="end-mm">
 			<?php for ( $i = 1; $i < 13; $i = $i + 1 ) : $monthnum = zeroise($i, 2); ?>
@@ -518,7 +518,7 @@ class ATCF_Campaign_Query extends WP_Query {
 
 /** Frontend Submission *******************************************************/
 
-function cf_shortcode_submit_process() {
+function atcf_shortcode_submit_process() {
 	global $edd_options;
 	
 	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
@@ -600,7 +600,7 @@ function cf_shortcode_submit_process() {
 	if ( is_wp_error( $errors ) )
 		wp_die( $errors->get_error_message() );
 
-	$args = apply_filters( 'cf_campaign_submit_data', array(
+	$args = apply_filters( 'atcf_campaign_submit_data', array(
 		'post_type'    => 'download',
 		'post_status'  => 'pending',
 		'post_title'   => $title,
@@ -682,7 +682,7 @@ function cf_shortcode_submit_process() {
 
 	do_action( 'atcf_submit_process_after', $campaign, $_POST );
 }
-add_action( 'template_redirect', 'cf_shortcode_submit_process' );
+add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
 
 /**
  * 
