@@ -115,10 +115,7 @@ class ATCF_Campaigns {
 		return $columns;
 	}
 
-	function remove_meta_boxes() {
-		remove_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );
-		remove_action( 'edd_meta_box_fields', 'edd_render_disable_button', 30 );
-		 
+	function remove_meta_boxes() {		 
 		$boxes = array( 
 			'edd_file_download_log' => 'normal',
 			'edd_purchase_log' => 'normal',
