@@ -503,7 +503,7 @@ class ATCF_Campaign_Query extends WP_Query {
 	function __construct( $args = array() ) {
 		$defaults = array(
 			'post_type'      => array( 'download' ),
-			'posts_per_page' => 9,
+			'posts_per_page' => 12,
 			'no_found_rows'  => true
 		);
 
