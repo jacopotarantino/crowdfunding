@@ -333,12 +333,12 @@ function _cf_metabox_campaign_info() {
 		<?php if ( ! isset( $edd_options[ 'currency_position' ] ) || $edd_options[ 'currency_position' ] == 'before' ) : ?>
 			<?php echo edd_currency_filter( '' ); ?><input type="text" name="campaign_goal" id="campaign_goal" value="<?php echo edd_format_amount( $campaign->goal(false) ); ?>" style="width:80px" />
 		<?php else : ?>
-			<input type="text" name="campaign_goal" id="campaign_goal" value="<?php echo edd_format_amount( $campaign->goal(false) ); ?>" style="width:80px" /><?php echo edd_currency_filter( '' ); ?>
+			<input type="text" name="campaign_goal" id="campaign_goal" value="<?php echo edd_format_amount($campaign->goal(false) ); ?>" style="width:80px" /><?php echo edd_currency_filter( '' ); ?>
 		<?php endif; ?>
 	</p>
 
 	<p>
-		<label for="campaign_goal"><strong><?php _e( 'PayPal Email:', 'atcf' ); ?></strong></label><br />
+		<label for="campaign_email"><strong><?php _e( 'PayPal Email:', 'atcf' ); ?></strong></label><br />
 		<input type="text" name="campaign_email" id="campaign_email" value="<?php echo $campaign->paypal_email(); ?>" class="regular-text" />
 	</p>
 
@@ -364,6 +364,23 @@ function _cf_metabox_campaign_info() {
 	</p>
 <?php
 }
+
+/**
+ * 
+ */
+function atcf_sanitize_goal_save( $price ) {
+	global $edd_options;
+
+	$thousands_sep = isset( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
+	$decimal_sep   = isset( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	: '.';
+
+	if ( $thousands_sep == ',' ) {
+		$price = str_replace( ',', '', $price );
+	}
+
+	return $price;
+}
+add_filter( 'edd_metabox_save_campaign_goal', 'atcf_sanitize_goal_save' );
 
 /** Single Campaign *******************************************************/
 
