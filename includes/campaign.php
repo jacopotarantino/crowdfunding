@@ -440,6 +440,28 @@ class ATCF_Campaign {
 		return count( $backers );
 	}
 
+	public function backers_per_price() {
+		$backers = $this->backers();
+		$prices  = edd_get_variable_prices( $this->ID );
+		$totals  = array();
+
+		foreach ( $backers as $log ) {
+			$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
+			$cart_items = edd_get_payment_meta_cart_details( $payment_id );
+			
+			foreach ( $cart_items as $item ) {
+				$price_id = $item[ 'item_number' ][ 'options' ][ 'price_id' ];
+
+				if ( ! isset( $totals[$price_id] ) )
+					$totals[$price_id] = 1;
+				else
+					$totals[$price_id] = $totals[$price_id] + 1;
+			}
+		}
+
+		return $totals;
+	}
+
 	public function days_remaining() {
 		$expires = new DateTime( $this->end_date() );
 
@@ -480,7 +502,6 @@ class ATCF_Campaign {
 	}
 
 	public function is_active() {
-		return false;
 		$active  = true;
 
 		$expires = new DateTime( $this->end_date() );
@@ -712,11 +733,10 @@ function atcf_purchase_variable_pricing( $download_id ) {
 
 	do_action( 'edd_before_price_options', $download_id ); 
 
-	if ( ! $prices )
-		return;
-
 	do_action( 'atcf_campaign_contribute_options', $prices, $type, $download_id );
 
 	add_action( 'edd_after_price_options', $download_id );
 }
 add_action( 'edd_purchase_link_top', 'atcf_purchase_variable_pricing' );
+
+/** Purchasing *******************************************************/
