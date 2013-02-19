@@ -461,6 +461,9 @@ class ATCF_Campaign {
 		$prices  = edd_get_variable_prices( $this->ID );
 		$totals  = array();
 
+		if ( empty( $backers ) )
+			return $totals;
+
 		foreach ( $backers as $log ) {
 			$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
 			$cart_items = edd_get_payment_meta_cart_details( $payment_id );
