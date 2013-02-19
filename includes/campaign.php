@@ -133,9 +133,10 @@ class ATCF_Campaigns {
 		$campaign = new ATCF_Campaign( $post );
 
 		if ( $campaign->is_funded() )
-			add_meta_box( 'cf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_cf_metabox_campaign_funds', 'download', 'side', 'high' );
+			add_meta_box( 'cf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
-		add_meta_box( 'cf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_cf_metabox_campaign_stats', 'download', 'side', 'high' );
+		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
+		add_meta_box( 'atcf_campaign_video', __( 'Campaign Video', 'atcf' ), '_atcf_metabox_campaign_video', 'download', 'normal', 'high' );
 
 		add_action( 'edd_meta_box_fields', '_cf_metabox_campaign_info', 5 );
 	}
@@ -145,6 +146,7 @@ class ATCF_Campaigns {
 		$fields[] = 'campaign_goal';
 		$fields[] = 'campaign_email';
 		$fields[] = 'campaign_end_date';
+		$fields[] = 'campaign_video';
 
 		return $fields;
 	}
@@ -271,7 +273,7 @@ function atcf_campaign_save_end_date( $new ) {
 	return $end_date;
 }
 
-function _cf_metabox_campaign_stats() {
+function _atcf_metabox_campaign_stats() {
 	global $post;
 
 	$campaign = new ATCF_Campaign( $post );
@@ -293,7 +295,7 @@ function _cf_metabox_campaign_stats() {
 <?php
 }
 
-function _cf_metabox_campaign_funds() {
+function _atcf_metabox_campaign_funds() {
 	global $post;
 
 	$campaign = new ATCF_Campaign( $post );
@@ -304,7 +306,18 @@ function _cf_metabox_campaign_funds() {
 <?php
 }
 
-function _cf_metabox_campaign_info() {
+function _atcf_metabox_campaign_video() {
+	global $post;
+
+	$campaign = new ATCF_Campaign( $post );
+?>
+	<p>
+		<input name="campaign_video" id="campaign_video" class="widefat" value="<?php echo esc_url( $campaign->video() ); ?>" />
+	</p>
+<?php
+}
+
+function _atcf_metabox_campaign_info() {
 	global $post, $edd_options, $wp_locale;
 
 	/** Verification Field */
@@ -339,7 +352,7 @@ function _cf_metabox_campaign_info() {
 
 	<p>
 		<label for="campaign_email"><strong><?php _e( 'PayPal Email:', 'atcf' ); ?></strong></label><br />
-		<input type="text" name="campaign_email" id="campaign_email" value="<?php echo $campaign->paypal_email(); ?>" class="regular-text" />
+		<input type="text" name="campaign_email" id="campaign_email" value="<?php echo esc_attr( $campaign->paypal_email() ); ?>" class="regular-text" />
 	</p>
 
 	<style>#end-aa { width: 3.4em } #end-jj, #end-hh, #end-mn { width: 2em; }</style>
@@ -355,11 +368,11 @@ function _cf_metabox_campaign_info() {
 			<?php endfor; ?>
 		</select>
 
-		<input type="text" id="end-jj" name="end-jj" value="<?php echo $jj; ?>" size="2" maxlength="2" autocomplete="off" />, 
-		<input type="text" id="end-aa" name="end-aa" value="<?php echo $aa; ?>" size="4" maxlength="4" autocomplete="off" /> @
-		<input type="text" id="end-hh" name="end-hh" value="<?php echo $hh; ?>" size="2" maxlength="2" autocomplete="off" /> :
-		<input type="text" id="end-mn" name="end-mn" value="<?php echo $mn; ?>" size="2" maxlength="2" autocomplete="off" />
-		<input type="hidden" id="end-ss" name="end-ss" value="<?php echo $ss; ?>" />
+		<input type="text" id="end-jj" name="end-jj" value="<?php echo esc_attr( $jj ); ?>" size="2" maxlength="2" autocomplete="off" />, 
+		<input type="text" id="end-aa" name="end-aa" value="<?php echo esc_attr( $aa ); ?>" size="4" maxlength="4" autocomplete="off" /> @
+		<input type="text" id="end-hh" name="end-hh" value="<?php echo esc_attr( $hh ); ?>" size="2" maxlength="2" autocomplete="off" /> :
+		<input type="text" id="end-mn" name="end-mn" value="<?php echo esc_attr( $mn ); ?>" size="2" maxlength="2" autocomplete="off" />
+		<input type="hidden" id="end-ss" name="end-ss" value="<?php echo esc_attr( $ss ); ?>" />
 		<input type="hidden" id="campaign_end_date" name="campaign_end_date" />
 	</p>
 <?php
@@ -421,6 +434,10 @@ class ATCF_Campaign {
 
 	public function featured() {
 		return $this->__get( '_campaign_featured' );
+	}
+
+	public function video() {
+		return $this->__get( 'campaign_video' );
 	}
 
 	public function backers() {
@@ -523,31 +540,6 @@ class ATCF_Campaign {
 			return true;
 
 		return false;
-	}
-}
-
-/** Frontend Query *******************************************************/
-
-class ATCF_Campaign_Query extends WP_Query {
-	/**
-	 * Extend WP_Query with some predefined defaults to query
-	 * only download items.
-	 *
-	 * @since Function 2.0
-	 *
-	 * @param array $args
-	 * @return void
-	 */
-	function __construct( $args = array() ) {
-		$defaults = array(
-			'post_type'      => array( 'download' ),
-			'posts_per_page' => 12,
-			'no_found_rows'  => true
-		);
-
-		$args = wp_parse_args( $args, $defaults );
-
-		parent::__construct( $args );
 	}
 }
 
@@ -720,23 +712,13 @@ function atcf_shortcode_submit_process() {
 add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
 
 /**
+ * Endpoints
+ *
  * 
- */
-function atcf_purchase_variable_pricing( $download_id ) {
-	$variable_pricing = edd_has_variable_prices( $download_id );
-
-	if ( ! $variable_pricing )
-		return;
-
-	$prices = edd_get_variable_prices( $download_id );
-	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
-
-	do_action( 'edd_before_price_options', $download_id ); 
-
-	do_action( 'atcf_campaign_contribute_options', $prices, $type, $download_id );
-
-	add_action( 'edd_after_price_options', $download_id );
+ *
+ * @return void
+ */  
+function atcf_add_endpoints() {
+	add_rewrite_endpoint( 'backers', EP_ALL );
 }
-add_action( 'edd_purchase_link_top', 'atcf_purchase_variable_pricing' );
-
-/** Purchasing *******************************************************/
+add_action( 'init', 'atcf_add_endpoints' );

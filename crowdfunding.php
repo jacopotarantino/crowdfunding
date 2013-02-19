@@ -90,12 +90,11 @@ final class AT_CrowdFunding {
 	 */
 	private function includes() {
 		require( $this->includes_dir . 'campaign.php' );
+		require( $this->includes_dir . 'theme-stuff.php' );
 		require( $this->includes_dir . 'shortcode-submit.php' );
 
 		if ( ! is_admin() )
 			return;
-
-		require( $this->includes_dir . 'admin/page-metabox.php' );
 	}
 
 	/**
@@ -125,10 +124,14 @@ final class AT_CrowdFunding {
 	 * @return string
 	 */
 	public function template_loader( $template ) {
+		global $wp_query;
+		
 		$find = array();
 		$file = '';
 
-		if ( is_single() && get_post_type() == 'download' ) {
+		if ( isset( $wp_query->query[ 'backers' ] ) && is_singular( 'download' ) ) {
+			$file   = 'single-campaign-backers.php';
+		} else if ( is_single() && get_post_type() == 'download' ) {
 			$file 	= 'single-campaign.php';
 		} else if ( is_post_type_archive( 'download' ) ) {
 			$file   = 'archive-campaigns.php';
