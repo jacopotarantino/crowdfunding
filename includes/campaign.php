@@ -115,7 +115,7 @@ class ATCF_Campaigns {
 		return $columns;
 	}
 
-	function remove_meta_boxes() {		 
+	function remove_meta_boxes() {
 		$boxes = array( 
 			'edd_file_download_log' => 'normal',
 			'edd_purchase_log' => 'normal',
@@ -406,7 +406,7 @@ class ATCF_Campaign {
 	}
 
 	public function __get( $key ) {
-		$meta = apply_filters( 'cf_campaign_meta_' . $key, $this->data->__get( $key ) );
+		$meta = apply_filters( 'atcf_campaign_meta_' . $key, $this->data->__get( $key ) );
 
 		return $meta;
 	}
