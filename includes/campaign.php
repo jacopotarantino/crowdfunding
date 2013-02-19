@@ -138,7 +138,7 @@ class ATCF_Campaigns {
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
 		add_meta_box( 'atcf_campaign_video', __( 'Campaign Video', 'atcf' ), '_atcf_metabox_campaign_video', 'download', 'normal', 'high' );
 
-		add_action( 'edd_meta_box_fields', '_cf_metabox_campaign_info', 5 );
+		add_action( 'edd_meta_box_fields', '_atcf_metabox_campaign_info', 5 );
 	}
 
 	function meta_boxes_save( $fields ) {
@@ -311,9 +311,8 @@ function _atcf_metabox_campaign_video() {
 
 	$campaign = new ATCF_Campaign( $post );
 ?>
-	<p>
-		<input name="campaign_video" id="campaign_video" class="widefat" value="<?php echo esc_url( $campaign->video() ); ?>" />
-	</p>
+	<input type="text" name="campaign_video" id="campaign_video" class="widefat" value="<?php echo esc_url( $campaign->video() ); ?>" />
+	<p class="description"><?php _e( 'oEmbed supported video links.', 'atcf' ); ?></p>
 <?php
 }
 
