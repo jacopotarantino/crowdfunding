@@ -9,11 +9,13 @@
  *
  * @return void
  */
-function cf_shortcode_submit() {
+function atcf_shortcode_submit() {
 	$crowdfunding = crowdfunding();
 
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_enqueue_style( 'jquery-ui-style', $crowdfunding->plugin_url . 'assets/css/jquery-ui-fresh.css');
+
+	ob_start();
 ?>
 	<form action="" method="post" class="atcf-submit-campaign" enctype="multipart/form-data">
 		<?php do_action( 'cf_shortcode_submit_fields' ); ?>
@@ -25,8 +27,11 @@ function cf_shortcode_submit() {
 		</p>
 	</form>
 <?php
+	$form = ob_get_clean();
+
+	return $form;
 }
-add_shortcode( 'appthemer_crowdfunding_submit', 'cf_shortcode_submit' );
+add_shortcode( 'appthemer_crowdfunding_submit', 'atcf_shortcode_submit' );
 
 /**
  * 
