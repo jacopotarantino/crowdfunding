@@ -157,6 +157,12 @@ class ATCF_Campaigns {
 		$campaign = absint( $_GET[ 'campaign' ] );
 		$campaign = new ATCF_Campaign( $campaign );
 
+		/** check gateway */
+		if ( ! class_exists( 'PayPalAdaptivePaymentsGateway' ) ) {
+			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) );
+			exit();
+		}
+
 		/** check nonce */
 		if ( ! check_admin_referer( 'atcf-collect-funds' ) ) {
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) );
@@ -172,12 +178,6 @@ class ATCF_Campaigns {
 		/** check funded */
 		if ( ! $campaign->is_funded() ) {
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 11 ), admin_url( 'post.php' ) ) );
-			exit();
-		}
-
-		/** check gateway */
-		if ( ! class_exists( 'PayPalAdaptivePaymentsGateway' ) ) {
-			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) );
 			exit();
 		}
 
