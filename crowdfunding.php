@@ -65,18 +65,18 @@ final class AT_CrowdFunding {
 		/** Paths *************************************************************/
 
 		$this->file         = __FILE__;
-		$this->basename     = apply_filters( 'cf_plugin_basenname', plugin_basename( $this->file ) );
-		$this->plugin_dir   = apply_filters( 'cf_plugin_dir_path',  plugin_dir_path( $this->file ) );
-		$this->plugin_url   = apply_filters( 'cf_plugin_dir_url',   plugin_dir_url ( $this->file ) );
+		$this->basename     = apply_filters( 'atcf_plugin_basenname', plugin_basename( $this->file ) );
+		$this->plugin_dir   = apply_filters( 'atcf_plugin_dir_path',  plugin_dir_path( $this->file ) );
+		$this->plugin_url   = apply_filters( 'atcf_plugin_dir_url',   plugin_dir_url ( $this->file ) );
 
-		$this->template_url = apply_filters( 'cf_plugin_template_url', 'crowdfunding/' );
+		$this->template_url = apply_filters( 'atcf_plugin_template_url', 'crowdfunding/' );
 
 		// Includes
-		$this->includes_dir = apply_filters( 'cf_includes_dir', trailingslashit( $this->plugin_dir . 'includes'  ) );
-		$this->includes_url = apply_filters( 'cf_includes_url', trailingslashit( $this->plugin_url . 'includes'  ) );
+		$this->includes_dir = apply_filters( 'atcf_includes_dir', trailingslashit( $this->plugin_dir . 'includes'  ) );
+		$this->includes_url = apply_filters( 'atcf_includes_url', trailingslashit( $this->plugin_url . 'includes'  ) );
 
 		// Languages
-		$this->lang_dir     = apply_filters( 'cf_lang_dir',     trailingslashit( $this->plugin_dir . 'languages' ) );
+		$this->lang_dir     = apply_filters( 'atcf_lang_dir',     trailingslashit( $this->plugin_dir . 'languages' ) );
 
 		/** Misc **************************************************************/
 
@@ -93,8 +93,12 @@ final class AT_CrowdFunding {
 		require( $this->includes_dir . 'theme-stuff.php' );
 		require( $this->includes_dir . 'shortcode-submit.php' );
 
+		do_action( 'atcf_include_files' );
+
 		if ( ! is_admin() )
 			return;
+
+		do_action( 'atcf_include_admin_files' );
 	}
 
 	/**
@@ -105,6 +109,8 @@ final class AT_CrowdFunding {
 	private function setup_actions() {
 		add_filter( 'template_include', array( $this, 'template_loader' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		do_action( 'atcf_setup_actions' );
 
 		$this->load_textdomain();
 	}

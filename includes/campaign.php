@@ -19,7 +19,7 @@ class ATCF_Campaigns {
 	 * @since Function 2.0
 	 */
 	function setup() {
-		define( 'EDD_SLUG', 'campaigns' );
+		define( 'EDD_SLUG', apply_filters( 'atcf_edd_slug', 'campaigns' ) );
 		
 		remove_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing' );
 
@@ -118,8 +118,8 @@ class ATCF_Campaigns {
 	function remove_meta_boxes() {
 		$boxes = array( 
 			'edd_file_download_log' => 'normal',
-			'edd_purchase_log' => 'normal',
-			'edd_download_stats' => 'side'
+			'edd_purchase_log'      => 'normal',
+			'edd_download_stats'    => 'side'
 		);
 
 		foreach ( $boxes as $box => $context ) {
@@ -204,8 +204,6 @@ class ATCF_Campaigns {
 				'amount' => absint( $owner_amount )
 			)
 		);
-
-		die( print_r( $receivers ) );
 
 		foreach ( $payments as $payment ) {
 			$payment_id      = $payment->ID;
@@ -298,6 +296,8 @@ function _atcf_metabox_campaign_stats() {
 	global $post;
 
 	$campaign = new ATCF_Campaign( $post );
+
+	do_action( 'atcf_metabox_campaign_stats_before', $campaign );
 ?>
 	<p>
 		<strong><?php _e( 'Current Amount:', 'atcf' ); ?></strong>
@@ -314,27 +314,34 @@ function _atcf_metabox_campaign_stats() {
 		<?php echo $campaign->days_remaining(); ?>
 	</p>
 <?php
+	do_action( 'atcf_metabox_campaign_stats_after', $campaign );
 }
 
 function _atcf_metabox_campaign_funds() {
 	global $post;
 
 	$campaign = new ATCF_Campaign( $post );
+
+	do_action( 'atcf_metabox_campaign_funds_before', $campaign );
 ?>
 	<p><?php printf( __( 'This %1$s has reached its funding goal. You may now send the funds to the owner. This will end the %1$s.', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?></p>
 	<p><?php _e( '<strong>Make sure their PayPal email is valid</strong>', 'atcf' ); ?></p>
 	<a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button"><?php _e( 'Collect Funds', 'atcf' ); ?></a>
 <?php
+	do_action( 'atcf_metabox_campaign_funds_after', $campaign );
 }
 
 function _atcf_metabox_campaign_video() {
 	global $post;
 
 	$campaign = new ATCF_Campaign( $post );
+
+	do_action( 'atcf_metabox_campaign_video_before', $campaign );
 ?>
 	<input type="text" name="campaign_video" id="campaign_video" class="widefat" value="<?php echo esc_url( $campaign->video() ); ?>" />
 	<p class="description"><?php _e( 'oEmbed supported video links.', 'atcf' ); ?></p>
 <?php
+	do_action( 'atcf_metabox_campaign_video_after', $campaign );
 }
 
 function _atcf_metabox_campaign_info() {
@@ -353,6 +360,8 @@ function _atcf_metabox_campaign_info() {
 	$hh = mysql2date( 'H', $end_date, false );
 	$mn = mysql2date( 'i', $end_date, false );
 	$ss = mysql2date( 's', $end_date, false );
+
+	do_action( 'atcf_metabox_campaign_info_before', $campaign );
 ?>	
 	<p>
 		<label for="_campaign_featured">
@@ -396,6 +405,7 @@ function _atcf_metabox_campaign_info() {
 		<input type="hidden" id="campaign_end_date" name="campaign_end_date" />
 	</p>
 <?php
+	do_action( 'atcf_metabox_campaign_video_after', $campaign );
 }
 
 /**
@@ -574,10 +584,10 @@ function atcf_shortcode_submit_process() {
 	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
 		return;
 	
-	if ( empty( $_POST['action' ] ) || ( 'cf-campaign-submit' !== $_POST[ 'action' ] ) )
+	if ( empty( $_POST['action' ] ) || ( 'atcf-campaign-submit' !== $_POST[ 'action' ] ) )
 		return;
 
-	if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'cf-campaign-submit' ) )
+	if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'atcf-campaign-submit' ) )
 		return;
 
 	if ( ! function_exists( 'wp_handle_upload' ) ) {

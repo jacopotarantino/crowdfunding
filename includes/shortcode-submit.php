@@ -18,12 +18,12 @@ function atcf_shortcode_submit() {
 	ob_start();
 ?>
 	<form action="" method="post" class="atcf-submit-campaign" enctype="multipart/form-data">
-		<?php do_action( 'cf_shortcode_submit_fields' ); ?>
+		<?php do_action( 'atcf_shortcode_submit_fields' ); ?>
 
 		<p class="atcf-submit-campaign-submit">
 			<input type="submit" value="<?php _e( 'Submit Project', 'atcf' ); ?>">
 			<input type="hidden" name="action" value="cf-campaign-submit" />
-			<?php wp_nonce_field( 'cf-campaign-submit' ) ?>
+			<?php wp_nonce_field( 'atcf-campaign-submit' ) ?>
 		</p>
 	</form>
 <?php
@@ -50,7 +50,7 @@ function atcf_shortcode_submit_field_title() {
 	</p>
 <?php
 }
-add_action( 'cf_shortcode_submit_fields', 'atcf_shortcode_submit_field_title', 10 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_title', 10 );
 
 /**
  * Goal Field
@@ -70,7 +70,7 @@ function atcf_shortcode_submit_field_goal() {
 	</p>
 <?php
 }
-add_action( 'cf_shortcode_submit_fields', 'atcf_shortcode_submit_field_goal', 20 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_goal', 20 );
 
 /**
  * 
@@ -87,7 +87,7 @@ function atcf_shortcode_submit_field_length() {
 	</p>
 <?php
 }
-add_action( 'cf_shortcode_submit_fields', 'atcf_shortcode_submit_field_length', 30 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_length', 30 );
 
 /**
  * Category Field
@@ -110,7 +110,7 @@ function atcf_shortcode_submit_field_category() {
 	</p>
 <?php
 }
-add_action( 'cf_shortcode_submit_fields', 'atcf_shortcode_submit_field_category', 35 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_category', 35 );
 
 /**
  * 
@@ -138,7 +138,7 @@ function atcf_shortcode_submit_field_description() {
 	</div>
 <?php
 }
-add_action( 'cf_shortcode_submit_fields', 'atcf_shortcode_submit_field_description', 40 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_description', 40 );
 
 /**
  * 
@@ -155,7 +155,7 @@ function atcf_shortcode_submit_field_excerpt() {
 	</p>
 <?php
 }
-add_action( 'cf_shortcode_submit_fields', 'atcf_shortcode_submit_field_excerpt', 50 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_excerpt', 50 );
 
 /**
  * 
@@ -172,7 +172,7 @@ function atcf_shortcode_submit_field_images() {
 	</p>
 <?php
 }
-add_action( 'cf_shortcode_submit_fields', 'atcf_shortcode_submit_field_images', 60 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_images', 60 );
 
 /**
  * Backer Rewards
@@ -187,6 +187,8 @@ function atcf_shortcode_submit_field_rewards() {
 
 	<div class="atcf-submit-campaign-rewards">
 		<div class="atcf-submit-campaign-reward static">
+			<?php do_action( 'atcf_shortcode_submit_field_rewards_before' ); ?>
+
 			<p class="atcf-submit-campaign-reward-price">
 				<label for="rewards[0][price]"><?php printf( __( 'Contribution Amount (%s)', 'atcf' ), edd_currency_filter( '' ) ); ?></label>
 				<input class="name" type="text" name="rewards[0][price]" id="rewards[0][price]" placeholder="<?php _e( '$20', 'atcf' ); ?>">
@@ -202,6 +204,8 @@ function atcf_shortcode_submit_field_rewards() {
 				<input type="file" class="file" name="files[0]" id="files[0]" />
 			</p>
 
+			<?php do_action( 'atcf_shortcode_submit_field_rewards_after' ); ?>
+
 			<p class="atcf-submit-campaign-reward-remove">
 				<label>&nbsp;</label><br />
 				<a href="#">&times;</a>
@@ -209,12 +213,12 @@ function atcf_shortcode_submit_field_rewards() {
 		</div>
 
 		<p class="atcf-submit-campaign-add-reward">
-			<a href="#" class="atcf-submit-campaign-add-reward-button">+ <em>Add Reward</em></a>
+			<a href="#" class="atcf-submit-campaign-add-reward-button"><?php _e( '+ <em>Add Reward</em>', 'fundify' ); ?></a>
 		</p>
 	</div>
 <?php
 }
-add_action( 'cf_shortcode_submit_fields', 'atcf_shortcode_submit_field_rewards', 90 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_rewards', 90 );
 
 /**
  * Goal Field
@@ -233,4 +237,4 @@ function atcf_shortcode_submit_field_paypal_email() {
 	</p>
 <?php
 }
-add_action( 'cf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_email', 100 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_email', 100 );
