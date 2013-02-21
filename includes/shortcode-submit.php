@@ -213,7 +213,7 @@ function atcf_shortcode_submit_field_rewards() {
 		</div>
 
 		<p class="atcf-submit-campaign-add-reward">
-			<a href="#" class="atcf-submit-campaign-add-reward-button"><?php _e( '+ <em>Add Reward</em>', 'fundify' ); ?></a>
+			<a href="#" class="atcf-submit-campaign-add-reward-button"><?php _e( '+ <em>Add Reward</em>', 'atcf' ); ?></a>
 		</p>
 	</div>
 <?php
