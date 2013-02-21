@@ -152,6 +152,8 @@ class ATCF_Campaigns {
 	}
 
 	function collect_funds() {
+		global $edd_options;
+
 		$campaign = absint( $_GET[ 'campaign' ] );
 		$campaign = new ATCF_Campaign( $campaign );
 
@@ -184,6 +186,26 @@ class ATCF_Campaigns {
 		$num_collected   = 0;
 		$errors          = null;
 
+		$owner           = $edd_options[ 'epap_receivers' ];
+		$owner           = explode( '|', $owner );
+		$owner_email     = $owner[0];
+		$owner_amount    = $owner[1];
+
+		$campaign_amount = 100 - $owner_amount;
+		$campaign_email  = $campaign->paypal_email();
+
+		$receivers       = array(
+			array(
+				'email'  => trim( $campaign_email ),
+				'amount' => absint( $campaign_amount )
+			),
+			array(
+				'email'        => trim( $owner_email ),
+				'owner_amount' => absint( $owner_amount ),
+				'primary'      => true
+			)
+		);
+
 		foreach ( $payments as $payment ) {
 			$payment_id      = $payment->ID;
 
@@ -191,8 +213,6 @@ class ATCF_Campaigns {
 			$amount          = get_post_meta( $payment_id, '_edd_epap_sender_amount', true );
 			$paid            = get_post_meta( $payment_id, '_edd_epap_sender_paid', true );
 			$preapproval_key = get_post_meta( $payment_id, '_edd_epap_preapproval_key', true );
-
-			$receivers       = array(); // Your list of receivers can be sent in here to override the system receivers
 		
 			/** Already paid or other error */
 			if ( $amount > $paid ) {
