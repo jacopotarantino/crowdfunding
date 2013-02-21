@@ -132,7 +132,7 @@ class ATCF_Campaigns {
 
 		$campaign = new ATCF_Campaign( $post );
 
-		if ( $campaign->is_funded() )
+		if ( $campaign->is_funded() && class_exists( 'PayPalAdaptivePaymentsGateway' ) )
 			add_meta_box( 'cf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
