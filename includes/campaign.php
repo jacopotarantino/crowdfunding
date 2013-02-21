@@ -200,11 +200,12 @@ class ATCF_Campaigns {
 				'amount' => absint( $campaign_amount )
 			),
 			array(
-				'email'        => trim( $owner_email ),
-				'owner_amount' => absint( $owner_amount ),
-				'primary'      => true
+				'email'  => trim( $owner_email ),
+				'amount' => absint( $owner_amount )
 			)
 		);
+
+		die( print_r( $receivers ) );
 
 		foreach ( $payments as $payment ) {
 			$payment_id      = $payment->ID;
