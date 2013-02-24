@@ -325,8 +325,8 @@ function _atcf_metabox_campaign_funds() {
 	do_action( 'atcf_metabox_campaign_funds_before', $campaign );
 ?>
 	<p><?php printf( __( 'This %1$s has reached its funding goal. You may now send the funds to the owner. This will end the %1$s.', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?></p>
-	<p><?php _e( '<strong>Make sure their PayPal email is valid</strong>', 'atcf' ); ?></p>
-	<a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button"><?php _e( 'Collect Funds', 'atcf' ); ?></a>
+	<p><?php printf( __( 'Make sure <code>%s</code> is a valid PayPal email address.', 'atcf' ), $campaign->paypal_email() ); ?></p>
+	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button button-primary"><?php _e( 'Collect Funds', 'atcf' ); ?></a></p>
 <?php
 	do_action( 'atcf_metabox_campaign_funds_after', $campaign );
 }
@@ -579,7 +579,7 @@ class ATCF_Campaign {
 /** Frontend Submission *******************************************************/
 
 function atcf_shortcode_submit_process() {
-	global $edd_options;
+	global $edd_options, $post;
 	
 	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
 		return;
@@ -741,6 +741,10 @@ function atcf_shortcode_submit_process() {
 	add_post_meta( $campaign, 'edd_download_files', $edd_files );
 
 	do_action( 'atcf_submit_process_after', $campaign, $_POST );
+
+	$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', add_query_arg( array( 'success' => true ), get_permalink() ) );
+	wp_safe_redirect( $redirect );
+	exit();
 }
 add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
 

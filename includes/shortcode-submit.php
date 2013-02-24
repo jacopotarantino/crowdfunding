@@ -17,15 +17,17 @@ function atcf_shortcode_submit() {
 
 	ob_start();
 ?>
+	<?php do_action( 'atcf_shortcode_submit_before' ); ?>
 	<form action="" method="post" class="atcf-submit-campaign" enctype="multipart/form-data">
 		<?php do_action( 'atcf_shortcode_submit_fields' ); ?>
 
 		<p class="atcf-submit-campaign-submit">
 			<input type="submit" value="<?php _e( 'Submit Project', 'atcf' ); ?>">
-			<input type="hidden" name="action" value="cf-campaign-submit" />
+			<input type="hidden" name="action" value="atcf-campaign-submit" />
 			<?php wp_nonce_field( 'atcf-campaign-submit' ) ?>
 		</p>
 	</form>
+	<?php do_action( 'atcf_shortcode_submit_after' ); ?>
 <?php
 	$form = ob_get_clean();
 
@@ -238,3 +240,14 @@ function atcf_shortcode_submit_field_paypal_email() {
 <?php
 }
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_email', 100 );
+
+function atcf_shortcode_submit_before() {
+	if ( $_GET[ 'success' ] != true )
+		return;
+
+	$message = apply_filters( 'atcf_shortcode_submit_success', __( 'Success! Your campaign has been received. It will be reviewed shortly.', 'atcf' ) );
+?>
+	<p class="edd_success"><?php echo esc_attr( $message ); ?></p>	
+<?php
+}
+add_action( 'atcf_shortcode_submit_before', 'atcf_shortcode_submit_before' );
