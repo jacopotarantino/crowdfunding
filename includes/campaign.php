@@ -325,8 +325,13 @@ function _atcf_metabox_campaign_funds() {
 	do_action( 'atcf_metabox_campaign_funds_before', $campaign );
 ?>
 	<p><?php printf( __( 'This %1$s has reached its funding goal. You may now send the funds to the owner. This will end the %1$s.', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?></p>
+
+	<?php if ( '' != $campaign->paypal_email() ) : ?>
 	<p><?php printf( __( 'Make sure <code>%s</code> is a valid PayPal email address.', 'atcf' ), $campaign->paypal_email() ); ?></p>
 	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button button-primary"><?php _e( 'Collect Funds', 'atcf' ); ?></a></p>
+	<?php else : ?>
+	<p><?php printf( __( 'Please assign a valid PayPal email address to this %s to enable fund collection.', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?>
+	<?php endif; ?>
 <?php
 	do_action( 'atcf_metabox_campaign_funds_after', $campaign );
 }
@@ -473,7 +478,11 @@ class ATCF_Campaign {
 	public function backers() {
 		global $edd_logs;
 
-		$backers = $edd_logs->get_logs( $this->ID, 'sale' );
+		$backers = $edd_logs->get_connected_logs( array(
+			'post_parent' => $this->ID, 
+			'log_type'    => 'sale',
+			'post_status' => array( 'publish', 'preapproval' )
+		) );
 
 		return $backers;
 	}
