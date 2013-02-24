@@ -242,7 +242,7 @@ function atcf_shortcode_submit_field_paypal_email() {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_email', 100 );
 
 function atcf_shortcode_submit_before() {
-	if ( $_GET[ 'success' ] != true )
+	if ( ! isset ( $GET[ 'success' ] ) || $_GET[ 'success' ] != true )
 		return;
 
 	$message = apply_filters( 'atcf_shortcode_submit_success', __( 'Success! Your campaign has been received. It will be reviewed shortly.', 'atcf' ) );

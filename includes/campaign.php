@@ -711,7 +711,7 @@ function atcf_shortcode_submit_process() {
 		}
 	}
 
-	if ( $image ) {
+	if ( '' != $image[ 'name' ] ) {
 		$upload = wp_handle_upload( $images, $upload_overrides );
 
 		$attachment = array(
@@ -742,7 +742,7 @@ function atcf_shortcode_submit_process() {
 
 	do_action( 'atcf_submit_process_after', $campaign, $_POST );
 
-	$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', add_query_arg( array( 'success' => true ), get_permalink() ) );
+	$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', add_query_arg( array( 'success' => 'true' ), get_permalink() ) );
 	wp_safe_redirect( $redirect );
 	exit();
 }
