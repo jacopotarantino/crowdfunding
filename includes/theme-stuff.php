@@ -7,7 +7,7 @@ class ATCF_Campaign_Query extends WP_Query {
 	 * Extend WP_Query with some predefined defaults to query
 	 * only download items.
 	 *
-	 * @since Function 2.0
+	 * @since 
 	 *
 	 * @param array $args
 	 * @return void
@@ -15,7 +15,7 @@ class ATCF_Campaign_Query extends WP_Query {
 	function __construct( $args = array() ) {
 		$defaults = array(
 			'post_type'      => array( 'download' ),
-			'posts_per_page' => 12,
+			'posts_per_page' => get_option( 'posts_per_page' ),
 			'no_found_rows'  => true
 		);
 
