@@ -147,6 +147,7 @@ class ATCF_Campaigns {
 		$fields[] = 'campaign_email';
 		$fields[] = 'campaign_end_date';
 		$fields[] = 'campaign_video';
+		$fields[] = 'campaign_location';
 
 		return $fields;
 	}
@@ -385,6 +386,11 @@ function _atcf_metabox_campaign_info() {
 	</p>
 
 	<p>
+		<label for="campaign_location"><strong><?php _e( 'Location:', 'atcf' ); ?></strong></label><br />
+		<input type="text" name="campaign_location" id="campaign_location" value="<?php echo esc_attr( $campaign->location() ); ?>" class="regular-text" />
+	</p>
+
+	<p>
 		<label for="campaign_email"><strong><?php _e( 'PayPal Email:', 'atcf' ); ?></strong></label><br />
 		<input type="text" name="campaign_email" id="campaign_email" value="<?php echo esc_attr( $campaign->paypal_email() ); ?>" class="regular-text" />
 	</p>
@@ -459,12 +465,16 @@ class ATCF_Campaign {
 		return $goal;
 	}
 
+	public function location() {
+		return $this->__get( 'campaign_location' );
+	}
+
 	public function paypal_email() {
 		return $this->__get( 'campaign_email' );
 	}
 
 	public function end_date() {
-		return $this->__get( 'campaign_end_date' );
+		return mysql2date( get_option( 'date_format' ), $this->__get( 'campaign_end_date' ), false );
 	}
 
 	public function featured() {
@@ -612,6 +622,7 @@ function atcf_shortcode_submit_process() {
 	$title     = $_POST[ 'title' ];
 	$goal      = $_POST[ 'goal' ];
 	$length    = $_POST[ 'length' ];
+	$location  = $_POST[ 'location' ];
 	$category  = $_POST[ 'cat' ];
 	$content   = $_POST[ 'description' ];
 	$excerpt   = $_POST[ 'excerpt' ];
@@ -666,6 +677,8 @@ function atcf_shortcode_submit_process() {
 	if ( ! is_email( $email ) )
 		$errors = new WP_Error( 'invalid-email', __( 'Please provide a valid PayPal email address.', 'atcf' ) );
 
+	do_action( 'atcf_campaign_submit_validate', $_POST, $errors );
+
 	if ( is_wp_error( $errors ) )
 		wp_die( $errors->get_error_message() );
 
@@ -683,9 +696,10 @@ function atcf_shortcode_submit_process() {
 	$campaign = wp_insert_post( $args, true );
 
 	/** Extra Campaign Information */
-	add_post_meta( $campaign, 'goal', $goal );
-	add_post_meta( $campaign, 'email', $email );
-	add_post_meta( $campaign, 'end_date', $end_date );
+	add_post_meta( $campaign, 'campaign_goal', apply_filters( 'edd_metabox_save_edd_price', $goal ) );
+	add_post_meta( $campaign, 'campaign_email', esc_attr( $email ) );
+	add_post_meta( $campaign, 'campaign_end_date', esc_attr( $end_date ) );
+	add_post_meta( $campaign, 'campaign_location', esc_attr( $location ) );
 	
 	foreach ( $rewards as $key => $reward ) {
 		$edd_files[] = array(
@@ -694,8 +708,8 @@ function atcf_shortcode_submit_process() {
 		);
 
 		$prices[] = array(
-			'name'   => $reward[ 'description' ],
-			'amount' => $reward[ 'price' ]
+			'name'   => esc_attr( $reward[ 'description' ] ),
+			'amount' => esc_attr( $reward[ 'price' ] )
 		);
 	}
 
@@ -738,7 +752,7 @@ function atcf_shortcode_submit_process() {
 			wp_generate_attachment_metadata( $attach_id, $upload[ 'file' ] ) 
 		);
 
-		add_post_meta( $campaign, '_thumbnail_id', $attach_id );
+		add_post_meta( $campaign, '_thumbnail_id', absint( $attach_id ) );
 	}
 
 	/** EDD Stuff */

@@ -121,6 +121,23 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_categor
  *
  * @return void
  */
+function atcf_shortcode_submit_field_location() {
+?>
+	<p class="atcf-submit-campaign-location">
+		<label for="length"><?php _e( 'Location', 'atcf' ); ?></label>
+		<input type="text" name="location" id="location">
+	</p>
+<?php
+}
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_location', 38 );
+
+/**
+ * 
+ *
+ * @since CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
 function atcf_shortcode_submit_field_description() {
 ?>
 	<div class="atcf-submit-campaign-description">
