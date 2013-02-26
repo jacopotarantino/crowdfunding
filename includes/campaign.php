@@ -148,6 +148,7 @@ class ATCF_Campaigns {
 		$fields[] = 'campaign_end_date';
 		$fields[] = 'campaign_video';
 		$fields[] = 'campaign_location';
+		$fields[] = 'campaign_author';
 
 		return $fields;
 	}
@@ -391,6 +392,11 @@ function _atcf_metabox_campaign_info() {
 	</p>
 
 	<p>
+		<label for="campaign_author"><strong><?php _e( 'Author:', 'atcf' ); ?></strong></label><br />
+		<input type="text" name="campaign_author" id="campaign_author" value="<?php echo esc_attr( $campaign->author() ); ?>" class="regular-text" />
+	</p>
+
+	<p>
 		<label for="campaign_email"><strong><?php _e( 'PayPal Email:', 'atcf' ); ?></strong></label><br />
 		<input type="text" name="campaign_email" id="campaign_email" value="<?php echo esc_attr( $campaign->paypal_email() ); ?>" class="regular-text" />
 	</p>
@@ -467,6 +473,10 @@ class ATCF_Campaign {
 
 	public function location() {
 		return $this->__get( 'campaign_location' );
+	}
+
+	public function author() {
+		return $this->__get( 'campaign_author' );
 	}
 
 	public function paypal_email() {
@@ -697,9 +707,9 @@ function atcf_shortcode_submit_process() {
 
 	/** Extra Campaign Information */
 	add_post_meta( $campaign, 'campaign_goal', apply_filters( 'edd_metabox_save_edd_price', $goal ) );
-	add_post_meta( $campaign, 'campaign_email', esc_attr( $email ) );
-	add_post_meta( $campaign, 'campaign_end_date', esc_attr( $end_date ) );
-	add_post_meta( $campaign, 'campaign_location', esc_attr( $location ) );
+	add_post_meta( $campaign, 'campaign_email', sanitize_text_field( $email ) );
+	add_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
+	add_post_meta( $campaign, 'campaign_location', sanitize_text_field( $location ) );
 	
 	foreach ( $rewards as $key => $reward ) {
 		$edd_files[] = array(
@@ -708,8 +718,8 @@ function atcf_shortcode_submit_process() {
 		);
 
 		$prices[] = array(
-			'name'   => esc_attr( $reward[ 'description' ] ),
-			'amount' => esc_attr( $reward[ 'price' ] )
+			'name'   => sanitize_text_field( $reward[ 'description' ] ),
+			'amount' => apply_filters( 'edd_metabox_save_edd_price', $reward[ 'price' ] )
 		);
 	}
 

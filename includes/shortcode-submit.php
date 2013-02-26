@@ -121,6 +121,23 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_categor
  *
  * @return void
  */
+function atcf_shortcode_submit_field_author() {
+?>
+	<p class="atcf-submit-campaign-author">
+		<label for="length"><?php _e( 'Name/Organization Name', 'atcf' ); ?></label>
+		<input type="text" name="name" id="name">
+	</p>
+<?php
+}
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_author', 36 );
+
+/**
+ * 
+ *
+ * @since CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
 function atcf_shortcode_submit_field_location() {
 ?>
 	<p class="atcf-submit-campaign-location">
@@ -192,6 +209,23 @@ function atcf_shortcode_submit_field_images() {
 <?php
 }
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_images', 60 );
+
+/**
+ * 
+ *
+ * @since CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
+function atcf_shortcode_submit_field_video() {
+?>
+	<p class="atcf-submit-campaign-video">
+		<label for="length"><?php _e( 'Video URL', 'atcf' ); ?></label>
+		<input type="text" name="video" id="video">
+	</p>
+<?php
+}
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_video', 65 );
 
 /**
  * Backer Rewards
