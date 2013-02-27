@@ -356,6 +356,17 @@ class ATCF_Campaigns {
 	}
 }
 
+/**
+ * Filter the expiration date for a campaign.
+ *
+ * A hidden/fake input field so the filter is triggered, then
+ * add all the other date fields together to create the MySQL date.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @param string $date
+ * @return string $end_date Formatted date
+ */
 function atcf_campaign_save_end_date( $new ) {
 	if ( ! isset( $_POST[ 'end-aa' ] ) )
 		return;
@@ -389,6 +400,15 @@ function atcf_campaign_save_end_date( $new ) {
 	return $end_date;
 }
 
+/**
+ * Campaign Stats Box
+ *
+ * These are read-only stats/info for the current campaign.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
 function _atcf_metabox_campaign_stats() {
 	global $post;
 
@@ -414,6 +434,16 @@ function _atcf_metabox_campaign_stats() {
 	do_action( 'atcf_metabox_campaign_stats_after', $campaign );
 }
 
+/**
+ * Campaign Collect Funds Box
+ *
+ * If a campaign is fully funded (or expired and fully funded) show this box.
+ * Includes a button to collect funds.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
 function _atcf_metabox_campaign_funds() {
 	global $post;
 
@@ -433,6 +463,15 @@ function _atcf_metabox_campaign_funds() {
 	do_action( 'atcf_metabox_campaign_funds_after', $campaign );
 }
 
+/**
+ * Campaign Video Box
+ *
+ * oEmbed campaign video.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
 function _atcf_metabox_campaign_video() {
 	global $post;
 
@@ -446,6 +485,17 @@ function _atcf_metabox_campaign_video() {
 	do_action( 'atcf_metabox_campaign_video_after', $campaign );
 }
 
+/**
+ * Campaign Configuration
+ *
+ * Hook into EDD Download Information and add a bit more stuff.
+ * These are all things that can be updated while the campaign runs/before
+ * being published.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
 function _atcf_metabox_campaign_info() {
 	global $post, $edd_options, $wp_locale;
 
@@ -521,13 +571,19 @@ function _atcf_metabox_campaign_info() {
 }
 
 /**
- * 
+ * Goal Save
+ *
+ * Sanitize goal before it is saved, to remove commas.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @return string $price The formatted price
  */
 function atcf_sanitize_goal_save( $price ) {
 	global $edd_options;
 
-	$thousands_sep = isset( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
-	$decimal_sep   = isset( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	: '.';
+	$thousands_sep = isset( $edd_options[ 'thousands_separator' ] ) ? $edd_options[ 'thousands_separator' ] : ',';
+	$decimal_sep   = isset( $edd_options[ 'decimal_separator'   ] ) ? $edd_options[ 'decimal_separator' ]   : '.';
 
 	if ( $thousands_sep == ',' ) {
 		$price = str_replace( ',', '', $price );
@@ -548,6 +604,14 @@ class ATCF_Campaign {
 		$this->ID   = $this->data->ID;
 	}
 
+	/**
+	 * Getter
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @param string $key The meta key to fetch
+	 * @return string $meta The fetched value
+	 */
 	public function __get( $key ) {
 		$meta = apply_filters( 'atcf_campaign_meta_' . $key, $this->data->__get( $key ) );
 
@@ -825,6 +889,13 @@ class ATCF_Campaign {
 
 /** Frontend Submission *******************************************************/
 
+/**
+ * Process shortcode submission.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
 function atcf_shortcode_submit_process() {
 	global $edd_options, $post;
 	
