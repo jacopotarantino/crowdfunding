@@ -1,13 +1,24 @@
 <?php
+/**
+ * Theme Stuff
+ *
+ * Some stuff themes can use, and theme compatability. 
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ */
 
-/** Frontend Query *******************************************************/
-
+/**
+ * Extend WP_Query with some predefined defaults to query
+ * only campaign items.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ */
 class ATCF_Campaign_Query extends WP_Query {
 	/**
 	 * Extend WP_Query with some predefined defaults to query
-	 * only download items.
+	 * only campaign items.
 	 *
-	 * @since 
+	 * @since AT_CrowdFunding 0.1-alpha
 	 *
 	 * @param array $args
 	 * @return void
@@ -26,7 +37,12 @@ class ATCF_Campaign_Query extends WP_Query {
 }
 
 /**
- * 
+ * Custom output for variable pricing.
+ *
+ * Themes can hook into `atcf_campaign_contribute_options` to output
+ * their own prices, if they choose to implement a custom solution.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
  */
 function atcf_purchase_variable_pricing( $download_id ) {
 	$variable_pricing = edd_has_variable_prices( $download_id );
