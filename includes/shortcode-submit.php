@@ -12,8 +12,11 @@
 function atcf_shortcode_submit() {
 	$crowdfunding = crowdfunding();
 
-	wp_enqueue_script( 'jquery-ui-datepicker' );
-	wp_enqueue_style( 'jquery-ui-style', $crowdfunding->plugin_url . 'assets/css/jquery-ui-fresh.css');
+	wp_enqueue_script( 'atcf-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding.js', array( 'jquery' ) );
+
+	wp_localize_script( 'atcf-scripts', 'CrowdFundingL10n', array(
+		'oneReward' => __( 'At least one reward is required.', 'atcf' )
+	) );
 
 	ob_start();
 ?>

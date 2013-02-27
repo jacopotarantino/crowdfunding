@@ -1,12 +1,30 @@
 <?php
 /**
  * Campaigns
+ *
+ * All data related to campaigns. This includes wrangling various EDD
+ * things, adding extra stuff, etc. There are two main classes:
+ *
+ * ATCF_Campaigns - Mostly admin things, and changing some settings of EDD
+ * ATCF_Campaign  - A singular campaign. Includes getter methods for accessing a single campaign's info
+ *
+ * @since AT_CrowdFunding 0.1-alpha
  */
 
 /** Global Campaigns *******************************************************/
 
+/** Start me up! */
+$cf_campaigns = new ATCF_Campaigns;
+
 class ATCF_Campaigns {
 
+	/**
+	 * Start things up.
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return void
+	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'setup' ) );
 	}
@@ -16,23 +34,28 @@ class ATCF_Campaigns {
 	 *
 	 * Set the archive slug, and remove formatting from prices.
 	 *
-	 * @since Function 2.0
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return void
 	 */
 	function setup() {
 		define( 'EDD_SLUG', apply_filters( 'atcf_edd_slug', 'campaigns' ) );
 		
 		remove_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing' );
 
+		add_action( 'init', array( $this, 'endpoints' ) );
+
 		add_filter( 'edd_download_labels', array( $this, 'download_labels' ) );
 		add_filter( 'edd_default_downloads_name', array( $this, 'download_names' ) );
 		add_filter( 'edd_download_supports', array( $this, 'download_supports' ) );
+
+		do_action( 'atcf_campaigns_nopriv' );
 		
 		if ( ! is_admin() )
 			return;
 
 		add_filter( 'manage_edit-download_columns', array( $this, 'dashboard_columns' ), 11, 1 );
-		add_filter( 'edd_download_tag_args', array( $this, 'download_tag_args' ) );
-
+		
 		add_action( 'add_meta_boxes', array( $this, 'remove_meta_boxes' ), 11 );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
@@ -41,12 +64,26 @@ class ATCF_Campaigns {
 
 		add_action( 'admin_action_atcf-collect-funds', array( $this, 'collect_funds' ) );
 		add_filter( 'post_updated_messages', array( $this, 'messages' ) );
+
+		do_action( 'atcf_campaigns' );
 	}
 
 	/**
-	 * Download label. Change it to "Our Store" for the archives page.
+	 * Add Endpoint for backers. This allows us to monitor
+	 * the query to create "fake" URLs for seeing backers.
 	 *
-	 * @since Function 2.0
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return void
+	 */
+	function endpoints() {
+		add_rewrite_endpoint( 'backers', EP_ALL );
+	}
+
+	/**
+	 * Download labels. Change it to "Campaigns".
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
 	 *
 	 * @param array $labels The preset labels
 	 * @return array $labels The modified labels
@@ -71,6 +108,14 @@ class ATCF_Campaigns {
 		return $labels;
 	}
 
+	/**
+	 * Further change "Download" & "Downloads" to "Campaign" and "Campaigns"
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @param array $labels The preset labels
+	 * @return array $labels The modified labels
+	 */
 	function download_names( $labels ) {
 		$cpt_labels = $this->download_labels( array() );
 
@@ -85,7 +130,7 @@ class ATCF_Campaigns {
 	/**
 	 * Add excerpt support for downloads.
 	 *
-	 * @since Function 2.0
+	 * @since AT_CrowdFunding 0.1-alpha
 	 *
 	 * @param array $supports The post type supports
 	 * @return array $supports The modified post type supports
@@ -97,12 +142,16 @@ class ATCF_Campaigns {
 		return $supports;
 	}
 
-	function download_tag_args( $args ) {
-		$args[ 'show_ui' ] = false;
-
-		return $args;
-	}
-
+	/**
+	 * Download Columns
+	 *
+	 * Add "Amount Funded" and "Expires" to the main campaign table listing. 
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @param array $supports The post type supports
+	 * @return array $supports The modified post type supports
+	 */
 	function dashboard_columns( $columns ) {
 		$columns = array(
 			'cb'                => '<input type="checkbox"/>',
@@ -115,6 +164,14 @@ class ATCF_Campaigns {
 		return $columns;
 	}
 
+	/**
+	 * Remove some metaboxes that we don't need to worry about. Sales
+	 * and download stats, aren't really important. 
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return void
+	 */
 	function remove_meta_boxes() {
 		$boxes = array( 
 			'edd_file_download_log' => 'normal',
@@ -127,6 +184,20 @@ class ATCF_Campaigns {
 		}
 	}
 
+	/**
+	 * Add our custom metaboxes.
+	 *
+	 * - Collect Funds
+	 * - Campaign Stats
+	 * - Campaign Video
+	 *
+	 * As well as some other information plugged into EDD in the Download Configuration
+	 * metabox that already exists.
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return void
+	 */
 	function add_meta_boxes() {
 		global $post;
 
@@ -141,6 +212,17 @@ class ATCF_Campaigns {
 		add_action( 'edd_meta_box_fields', '_atcf_metabox_campaign_info', 5 );
 	}
 
+	/**
+	 * Campaign Information
+	 *
+	 * Hook in to EDD and add a few more things that will be saved. Use
+	 * this so we are already cleared/validated.
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @param array $fields An array of fields to save
+	 * @return array $fields An updated array of fields to save
+	 */
 	function meta_boxes_save( $fields ) {
 		$fields[] = '_campaign_featured';
 		$fields[] = 'campaign_goal';
@@ -153,6 +235,13 @@ class ATCF_Campaigns {
 		return $fields;
 	}
 
+	/**
+	 * Collect Funds
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return void
+	 */
 	function collect_funds() {
 		global $edd_options;
 
@@ -250,6 +339,14 @@ class ATCF_Campaigns {
 		}
 	}
 
+	/**
+	 * Custom messages for various actions when managing campaigns.
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @param array $messages An array of messages to display
+	 * @return array $messages An updated array of messages to display
+	 */
 	function messages( $messages ) {
 		$messages[ 'download' ][11] = sprintf( __( 'This %s has not reached its funding goal.', 'atcf' ), strtolower( edd_get_label_singular() ) );
 		$messages[ 'download' ][12] = sprintf( __( 'You do not have permission to collect funds for %s.', 'atcf' ), strtolower( edd_get_label_plural() ) );
@@ -258,8 +355,6 @@ class ATCF_Campaigns {
 		return $messages;
 	}
 }
-
-$cf_campaigns = new ATCF_Campaigns;
 
 function atcf_campaign_save_end_date( $new ) {
 	if ( ! isset( $_POST[ 'end-aa' ] ) )
@@ -459,6 +554,25 @@ class ATCF_Campaign {
 		return $meta;
 	}
 
+	/**
+	 * Campaign Featured
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return sting Campaign Featured
+	 */
+	public function featured() {
+		return $this->__get( '_campaign_featured' );
+	}
+
+	/**
+	 * Campaign Goal
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @param boolean $formatted Return formatted currency or not
+	 * @return sting $goal A goal amount (formatted or not)
+	 */
 	public function goal( $formatted = true ) {
 		$goal = $this->__get( 'campaign_goal' );
 
@@ -471,30 +585,71 @@ class ATCF_Campaign {
 		return $goal;
 	}
 
+	/**
+	 * Campaign Location
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return sting Campaign Location
+	 */
 	public function location() {
 		return $this->__get( 'campaign_location' );
 	}
 
+	/**
+	 * Campaign Author
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return sting Campaign Author
+	 */
 	public function author() {
 		return $this->__get( 'campaign_author' );
 	}
 
+	/**
+	 * Campaign PayPal Email
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return sting Campaign PayPal Email
+	 */
 	public function paypal_email() {
 		return $this->__get( 'campaign_email' );
 	}
 
+	/**
+	 * Campaign End Date
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return sting Campaign End Date
+	 */
 	public function end_date() {
 		return mysql2date( get_option( 'date_format' ), $this->__get( 'campaign_end_date' ), false );
 	}
 
-	public function featured() {
-		return $this->__get( '_campaign_featured' );
-	}
-
+	/**
+	 * Campaign Video
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return sting Campaign Video
+	 */
 	public function video() {
 		return $this->__get( 'campaign_video' );
 	}
 
+	/**
+	 * Campaign Backers
+	 *
+	 * Use EDD logs to get all sales. This includes both preapproved
+	 * payments (if they have Plugin installed) or standard payments.
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return sting Campaign Backers
+	 */
 	public function backers() {
 		global $edd_logs;
 
@@ -507,6 +662,13 @@ class ATCF_Campaign {
 		return $backers;
 	}
 
+	/**
+	 * Campaign Backers Count
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return int Campaign Backers Count
+	 */
 	public function backers_count() {
 		$backers = $this->backers();
 		
@@ -516,6 +678,17 @@ class ATCF_Campaign {
 		return count( $backers );
 	}
 
+	/**
+	 * Campaign Backers Per Price
+	 *
+	 * Get all of the backers, then figure out what they purchased. Increment
+	 * a counter for each price point, so they can be displayed elsewhere. 
+	 * Not 100% because keys can change in EDD, but it's the best way I think.
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return array $totals The number of backers for each price point
+	 */
 	public function backers_per_price() {
 		$backers = $this->backers();
 		$prices  = edd_get_variable_prices( $this->ID );
@@ -541,6 +714,15 @@ class ATCF_Campaign {
 		return $totals;
 	}
 
+	/**
+	 * Campaign Days Remaining
+	 *
+	 * Calculate the end date, minus today's date, and output a number.
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return int The number of days remaining
+	 */
 	public function days_remaining() {
 		$expires = new DateTime( $this->end_date() );
 
@@ -555,6 +737,16 @@ class ATCF_Campaign {
 		return $return;
 	}
 
+	/**
+	 * Campaign Percent Completed
+	 *
+	 * MATH!
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @param boolean $formatted Return formatted currency or not
+	 * @return sting $percent The percent completed (formatted with a % or not)
+	 */
 	public function percent_completed( $formatted = true ) {
 		$goal    = $this->goal(false);
 		$current = $this->current_amount(false);
@@ -571,6 +763,14 @@ class ATCF_Campaign {
 		return $percent;
 	}
 
+	/**
+	 * Current amount funded.
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @param boolean $formatted Return formatted currency or not
+	 * @return sting $total The amount funded (currency formatted or not)
+	 */
 	public function current_amount( $formatted = true ) {
 		$total = edd_get_download_earnings_stats( $this->ID );
 		
@@ -580,6 +780,17 @@ class ATCF_Campaign {
 		return $total;
 	}
 
+	/**
+	 * Campaign Active
+	 *
+	 * Check if the campaign has expired based on time, or it has
+	 * manually been expired (via meta)
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @param boolean $formatted Return formatted currency or not
+	 * @return sting $percent The percent completed (formatted with a % or not)
+	 */
 	public function is_active() {
 		$active  = true;
 
@@ -597,6 +808,13 @@ class ATCF_Campaign {
 		return apply_filters( 'atcf_campaign_active', $active, $this );
 	}
 
+	/**
+	 * Campaign Funded
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return boolean
+	 */
 	public function is_funded() {
 		if ( $this->current_amount(false) >= $this->goal(false) )
 			return true;
@@ -780,15 +998,3 @@ function atcf_shortcode_submit_process() {
 	exit();
 }
 add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
-
-/**
- * Endpoints
- *
- * 
- *
- * @return void
- */  
-function atcf_add_endpoints() {
-	add_rewrite_endpoint( 'backers', EP_ALL );
-}
-add_action( 'init', 'atcf_add_endpoints' );

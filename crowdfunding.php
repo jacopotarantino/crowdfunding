@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /** Check if Easy Digital Downloads is active */
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
@@ -23,7 +23,7 @@ include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 final class AT_CrowdFunding {
 
 	/**
-	 *
+	 * @var crowdfunding The one true AT_CrowdFunding
 	 */
 	private static $instance;
 
@@ -33,7 +33,7 @@ final class AT_CrowdFunding {
 	 * Ensures that only one instance of Crowd Funding exists in memory at any one
 	 * time. Also prevents needing to define globals all over the place.
 	 *
-	 * @since CrowdFunding 0.1-alpha
+	 * @since AT_CrowdFunding 0.1-alpha
 	 *
 	 * @return The one true Crowd Funding
 	 */
@@ -54,7 +54,9 @@ final class AT_CrowdFunding {
 	 * Set some smart defaults to class variables. Allow some of them to be
 	 * filtered to allow for early overriding.
 	 *
-	 * @since CrowdFunding 0.1-alpha
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return void
 	 */
 	private function setup_globals() {
 		/** Versions **********************************************************/
@@ -84,9 +86,11 @@ final class AT_CrowdFunding {
 	}
 
 	/**
-	 * Include required files
+	 * Include required files.
 	 *
-	 * @since CrowdFunding 0.1-alpha
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return void
 	 */
 	private function includes() {
 		require( $this->includes_dir . 'campaign.php' );
@@ -104,12 +108,13 @@ final class AT_CrowdFunding {
 	/**
 	 * Setup the default hooks and actions
 	 *
-	 * @since CrowdFunding 0.1-alpha
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return void
 	 */
 	private function setup_actions() {
 		add_filter( 'template_include', array( $this, 'template_loader' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-
+		
 		do_action( 'atcf_setup_actions' );
 
 		$this->load_textdomain();
@@ -120,14 +125,14 @@ final class AT_CrowdFunding {
 	 *
 	 * Handles template usage so that we can use our own templates instead of the themes.
 	 *
-	 * Templates are in the 'templates' folder. CrowdFunding looks for theme
-	 * overides in /theme/crowdfunding/ by default
+	 * Templates are in the 'templates' folder. AT_CrowdFunding looks for theme
+	 * overides in /theme_directory/crowdfunding/ by default
 	 *
 	 * @see https://github.com/woothemes/woocommerce/blob/master/woocommerce.php
 	 *
 	 * @access public
 	 * @param mixed $template
-	 * @return string
+	 * @return string $template The path of the file to include
 	 */
 	public function template_loader( $template ) {
 		global $wp_query;
@@ -156,18 +161,10 @@ final class AT_CrowdFunding {
 		return $template;
 	}
 
-	public function enqueue_scripts() {
-		wp_enqueue_script( 'atcf-scripts', $this->plugin_url . '/assets/js/crowdfunding.js', array( 'jquery' ) );
-
-		wp_localize_script( 'atcf-scripts', 'CrowdFundingL10n', array(
-			'oneReward' => __( 'At least one reward is required.', 'atcf' )
-		) );
-	}
-
 	/**
 	 * Loads the plugin language files
 	 *
-	 * @since CrowdFunding 0.1-alpha
+	 * @since AT_CrowdFunding 0.1-alpha
 	 */
 	public function load_textdomain() {
 		// Traditional WordPress plugin locale filter
@@ -201,11 +198,10 @@ final class AT_CrowdFunding {
  *
  * Example: <?php $crowdfunding = crowdfunding(); ?>
  *
- * @since v1.4
+ * @since AT_CrowdFunding 0.1-alpha
  *
  * @return The one true Crowd Funding Instance
  */
-
 function crowdfunding() {
 	return AT_CrowdFunding::instance();
 }
