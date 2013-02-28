@@ -49,7 +49,7 @@ class ATCF_Campaigns {
 		add_filter( 'edd_default_downloads_name', array( $this, 'download_names' ) );
 		add_filter( 'edd_download_supports', array( $this, 'download_supports' ) );
 
-		do_action( 'atcf_campaigns_nopriv' );
+		do_action( 'atcf_campaigns_actions' );
 		
 		if ( ! is_admin() )
 			return;
@@ -65,7 +65,7 @@ class ATCF_Campaigns {
 		add_action( 'admin_action_atcf-collect-funds', array( $this, 'collect_funds' ) );
 		add_filter( 'post_updated_messages', array( $this, 'messages' ) );
 
-		do_action( 'atcf_campaigns' );
+		do_action( 'atcf_campaigns_actions_admin' );
 	}
 
 	/**
