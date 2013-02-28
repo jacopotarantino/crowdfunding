@@ -6,6 +6,8 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
+
 class ATCF_Campaign_Export extends EDD_Export {
 	/**
 	 * Our export type. Used for export-type specific filters / actions
@@ -15,7 +17,7 @@ class ATCF_Campaign_Export extends EDD_Export {
 	/**
 	 * Set the CSV columns
 	 *
-	 * 
+	 * @return array $cols
 	 */
 	public function csv_cols() {
 		$cols = array(
@@ -33,21 +35,22 @@ class ATCF_Campaign_Export extends EDD_Export {
 			'user'     => __( 'User', 'atcf' ),
 			'status'   => __( 'Status', 'atcf' )
 		);
+
 		return $cols;
 	}
 
 	/**
 	 * Get the data being exported
 	 *
-	 * @access      public
-	 * @since       1.4.4
-	 * @return      array
+	 * @return array $data
 	 */
 	public function get_data() {
 		global $wpdb;
 
-		$data = array();
-		$campaign = new ATCT_Campaign( absint( $_POST[ 'edd_export_campaign' ] ) );
+		$campaign_id = absint( $_POST[ 'edd_export_campaign_id' ] );
+
+		$data     = array();
+		$campaign = atcf_get_campaign( $campaign_id );
 
 		$backers  = $campaign->backers();
 
@@ -94,12 +97,14 @@ class ATCF_Campaign_Export extends EDD_Export {
 				$user = false;
 			}
 
+			$shipping = $payment_meta[ 'shipping' ];
+
 			$data[] = array(
 				'id'       => $payment->ID,
 				'email'    => $payment_meta['email'],
 				'first'    => $user_info['first_name'],
 				'last'     => $user_info['last_name'],
-				'shipping' => $payment_meta[ 'shipping' ],
+				'shipping' => ! empty ( $shipping ) ? $shipping[ 'shipping_address' ] . "\n" . $shipping[ 'shipping_address_2' ] . "\n" . $shipping[ 'shipping_city' ] . ', ' . $shipping[ 'shipping_state' ] . $shipping[ 'shipping_zip' ] . "\n" . $shipping[ 'shipping_country' ] : '',
 				'products' => $products,
 				'amount'   => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ) ),
 				'tax'      => html_entity_decode( edd_payment_tax( $payment->ID, $payment_meta ) ),
@@ -119,3 +124,60 @@ class ATCF_Campaign_Export extends EDD_Export {
 		return $data;
 	}
 }
+
+/**
+ * 
+ */
+function atcf_export_campaign() {
+	$campaign_id = absint( $_POST[ 'edd_export_campaign_id' ] );
+
+	if ( 0 != $campaign_id ) {
+		$campaign_export = new ATCF_Campaign_Export();
+
+		$campaign_export->export();
+	}
+}
+add_action( 'edd_export_campaign', 'atcf_export_campaign' );
+
+/**
+ * 
+ */
+function atcf_campaign_export_box() {
+	?>
+	<div class="metabox-holder">
+		<div id="post-body">
+			<div id="post-body-content">
+				<div class="postbox">
+					<h3><span><?php _e( 'Export Campaign Data', 'edd'); ?></span></h3>
+					<div class="inside">
+						<p><?php _e( 'Download a CSV of all pledges recorded.', 'edd' ); ?></p>
+						<p>
+							<form method="post">
+								<select name="edd_export_campaign_id">
+									<option value="0"><?php printf( __( 'Select %s', 'atcf' ), edd_get_label_singular() ); ?></option>
+
+									<?php
+									$campaigns = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
+
+									foreach( $campaigns as $campaign ) {
+										$_campaign = atcf_get_campaign( $campaign );
+
+										if ( ! $_campaign->is_funded() )
+											continue;
+
+										echo '<option value="' . $campaign->ID . '">' . $campaign->post_title . '</option>';
+									}
+									?>
+								</select>
+								<input type="hidden" name="edd-action" value="export_campaign"/>
+								<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
+							</form>
+						</p>
+					</div><!-- .inside -->
+				</div><!-- .postbox -->
+			</div><!-- .post-body-content -->
+		</div><!-- .post-body -->
+	</div><!-- .metabox-holder -->
+	<?php
+}
+add_action( 'edd_reports_tab_export', 'atcf_campaign_export_box', 1 );

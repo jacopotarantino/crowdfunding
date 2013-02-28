@@ -115,10 +115,15 @@ final class AT_CrowdFunding {
 	 */
 	private function setup_actions() {
 		add_filter( 'template_include', array( $this, 'template_loader' ) );
+		add_action( 'init', array( $this, 'export' ) );
 		
 		do_action( 'atcf_setup_actions' );
 
 		$this->load_textdomain();
+	}
+
+	function export() {
+		require( $this->includes_dir . 'export.php' );
 	}
 
 	/**

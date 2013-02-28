@@ -887,6 +887,12 @@ class ATCF_Campaign {
 	}
 }
 
+function atcf_get_campaign( $campaign ) {
+	$campaign = new ATCF_Campaign( $campaign );
+
+	return $campaign;
+}
+
 /** Frontend Submission *******************************************************/
 
 /**
