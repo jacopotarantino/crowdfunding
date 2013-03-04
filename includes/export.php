@@ -1,6 +1,10 @@
 <?php
 /**
- * 
+ * Export
+ *
+ * Support exporting data for a specific campaign/download.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
  */
 
 // Exit if accessed directly
@@ -126,7 +130,11 @@ class ATCF_Campaign_Export extends EDD_Export {
 }
 
 /**
- * 
+ * Export action. Monitor backened and create a new export.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @return void
  */
 function atcf_export_campaign() {
 	$campaign_id = absint( $_POST[ 'edd_export_campaign_id' ] );
@@ -140,7 +148,11 @@ function atcf_export_campaign() {
 add_action( 'edd_export_campaign', 'atcf_export_campaign' );
 
 /**
- * 
+ * Export metabox
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @return void
  */
 function atcf_campaign_export_box() {
 	?>

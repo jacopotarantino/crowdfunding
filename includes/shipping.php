@@ -1,5 +1,23 @@
 <?php
+/**
+ * Shipping
+ *
+ * Since EDD is for digital goods, it does not collect shipping information by
+ * default. This remedies that, by adding shipping fields on checkout.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/**
+ * Add the HTML fields.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
 function atcf_shipping_address_fields() {
 	ob_start(); ?>
 	<script>
@@ -78,6 +96,15 @@ function atcf_shipping_address_fields() {
 }
 add_action( 'edd_purchase_form_user_info', 'atcf_shipping_address_fields' );
 
+/**
+ * Validate shipping information
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @param arrray $valid_data An existing array of valid data
+ * @param array $data The form $_POST data
+ * @return void
+ */
 function atcf_shipping_validate_meta( $valid_data, $data ) {
 	$shipping_info  = array();
 	$shipping_info[ 'shipping_address' ]   = isset( $data[ 'shipping_address' ] )   ? sanitize_text_field( $data[ 'shipping_address' ] )   : '';
@@ -107,6 +134,14 @@ function atcf_shipping_validate_meta( $valid_data, $data ) {
 }
 add_action( 'edd_checkout_error_checks', 'atcf_shipping_validate_meta', 10, 2);
 
+/**
+ * Save payment meta.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @param arrray $payment_meta Array of payment meta about to be saved
+ * @return array $payment_meta An updated array of payment meta
+ */
 function atcf_shipping_save_meta( $payment_meta ) {
 	$payment_meta[ 'shipping' ][ 'shipping_address' ]   = isset( $_POST[ 'shipping_address' ] )   ? sanitize_text_field( $_POST[ 'shipping_address' ] )   : '';
 	$payment_meta[ 'shipping' ][ 'shipping_address_2' ] = isset( $_POST[ 'shipping_address_2' ] ) ? sanitize_text_field( $_POST[ 'shipping_address_2' ] ) : '';
@@ -118,7 +153,14 @@ function atcf_shipping_save_meta( $payment_meta ) {
 }
 add_filter( 'edd_payment_meta', 'atcf_shipping_save_meta' );
 
-
+/**
+ * Display shipping payment meta.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @param arrray $payment_meta Array of payment meta about to be saved
+ * @return void
+ */
 function atcf_payment_view_details( $payment_meta ) {
 	if ( ! isset ( $payment_meta[ 'shipping' ] ) )
 		return;

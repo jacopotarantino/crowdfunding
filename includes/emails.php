@@ -1,13 +1,30 @@
 <?php
+/**
+ * Emails
+ *
+ * Handle a bit of extra email info.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Trigger Purchase Receipt
  *
  * Causes the purchase receipt to be emailed when initially pledged.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @param int $payment_id The ID of the payment
+ * @param string $new_status The status we are changing to
+ * @param string $old_status The old status we are changing from
+ * @return void
  */
 function atcf_trigger_pending_purchase_receipt( $payment_id, $new_status, $old_status ) {
 	// Make sure we don't send a purchase receipt while editing a payment
-	if ( isset( $_POST['edd-action'] ) && $_POST['edd-action'] == 'edit_payment' )
+	if ( isset( $_POST[ 'edd-action' ] ) && $_POST[ 'edd-action' ] == 'edit_payment' )
 		return;
 
 	// Check if the payment was already set to complete
@@ -23,11 +40,22 @@ function atcf_trigger_pending_purchase_receipt( $payment_id, $new_status, $old_s
 }
 add_action( 'edd_update_payment_status', 'edd_trigger_purchase_receipt', 10, 3 );
 
+/**
+ * Build the purchase email.
+ *
+ * Figure out who to send to, who it's from, etc.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @param int $payment_id The ID of the payment
+ * @param boolean $admin_notice Alert admins, or not
+ * @return void
+ */
 function atcf_email_pending_purchase_receipt( $payment_id, $admin_notice = true ) {
 	global $edd_options;
 
 	$payment_data = edd_get_payment_meta( $payment_id );
-	$user_info = maybe_unserialize( $payment_data['user_info'] );
+	$user_info    = maybe_unserialize( $payment_data['user_info'] );
 
 	if ( isset( $user_info['id'] ) && $user_info['id'] > 0 ) {
 		$user_data = get_userdata($user_info['id']);
@@ -38,18 +66,17 @@ function atcf_email_pending_purchase_receipt( $payment_id, $admin_notice = true 
 		$name = $user_info['email'];
 	}
 
-	$message = edd_get_email_body_header();
+	$message  = edd_get_email_body_header();
 	$message .= atcf_get_email_body_content( $payment_id, $payment_data );
 	$message .= edd_get_email_body_footer();
 
-	$from_name = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
+	$from_name  = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
 	$from_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
 
 	$subject = apply_filters( 'atcf_pending_purchase_subject', __( 'Your pledge has been received', 'atcf' ), $payment_id );
-
 	$subject = edd_email_template_tags( $subject, $payment_data, $payment_id );
 
-	$headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
+	$headers  = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
 	$headers .= "Reply-To: ". $from_email . "\r\n";
 	$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: text/html; charset=utf-8\r\n";
@@ -64,11 +91,21 @@ function atcf_email_pending_purchase_receipt( $payment_id, $admin_notice = true 
 	}
 }
 
+/**
+ * Get the actual pending email body content. Default text, can be filtered, and will
+ * use all template tags that EDD supports.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ *
+ * @param int $payment_id The ID of the payment
+ * @param array $payment_data The relevant payment data
+ * @return string $email_body The actual email body
+ */
 function atcf_get_email_body_content( $payment_id = 0, $payment_data = array() ) {
 	global $edd_options;
 
 	$default_email_body = __( 'Dear {name}', 'atcf' ) . "\n\n";
-	$default_email_body .= sprintf( __( 'Thank you for your pledge. You will only be charged your pledge amount if the %s receives 100% funding.', 'atcf' ), strtolower( edd_get_label_singular() ) ) . "\n\n";
+	$default_email_body .= sprintf( __( 'Thank you for your pledge. Your will only be charged your pledge amount if the %s receives 100% funding.', 'atcf' ), strtolower( edd_get_label_singular() ) ) . "\n\n";
 	$default_email_body .= "{sitename}";
 
 	$email = $default_email_body;

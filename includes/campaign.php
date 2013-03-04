@@ -11,6 +11,9 @@
  * @since AT_CrowdFunding 0.1-alpha
  */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /** Global Campaigns *******************************************************/
 
 /** Start me up! */
