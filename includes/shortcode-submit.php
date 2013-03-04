@@ -1,13 +1,22 @@
 <?php
+/**
+ * Shortcode.
+ *
+ * [appthemer_crowdfunding_submit] creates a submission form.
+ *
+ * @since AT_CrowdFunding 0.1-alpha
+ */
 
-/** Build Shortcode *******************************************************/
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * 
+ * Base page/form. All fields are loaded through an action,
+ * so the form can be extended for ever, fields can be removed, added, etc.
  *
  * @since CrowdFunding 0.1-alpha
  *
- * @return void
+ * @return $form
  */
 function atcf_shortcode_submit() {
 	$crowdfunding = crowdfunding();
@@ -39,7 +48,7 @@ function atcf_shortcode_submit() {
 add_shortcode( 'appthemer_crowdfunding_submit', 'atcf_shortcode_submit' );
 
 /**
- * 
+ * Campaign Title
  *
  * @since CrowdFunding 0.1-alpha
  *
@@ -58,7 +67,7 @@ function atcf_shortcode_submit_field_title() {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_title', 10 );
 
 /**
- * Goal Field
+ * Campaign Goal
  *
  * @since CrowdFunding 0.1-alpha
  *
@@ -78,7 +87,7 @@ function atcf_shortcode_submit_field_goal() {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_goal', 20 );
 
 /**
- * 
+ * Campaign Length 
  *
  * @since CrowdFunding 0.1-alpha
  *
@@ -95,7 +104,7 @@ function atcf_shortcode_submit_field_length() {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_length', 30 );
 
 /**
- * Category Field
+ * Campaign Category
  *
  * @since CrowdFunding 0.1-alpha
  *
@@ -118,7 +127,7 @@ function atcf_shortcode_submit_field_category() {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_category', 35 );
 
 /**
- * 
+ * Campaign Author
  *
  * @since CrowdFunding 0.1-alpha
  *
@@ -135,7 +144,7 @@ function atcf_shortcode_submit_field_author() {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_author', 36 );
 
 /**
- * 
+ * Campaign Location
  *
  * @since CrowdFunding 0.1-alpha
  *
@@ -152,7 +161,7 @@ function atcf_shortcode_submit_field_location() {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_location', 38 );
 
 /**
- * 
+ * Campaign Description
  *
  * @since CrowdFunding 0.1-alpha
  *
@@ -180,7 +189,7 @@ function atcf_shortcode_submit_field_description() {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_description', 40 );
 
 /**
- * 
+ * Campaign Export
  *
  * @since CrowdFunding 0.1-alpha
  *
@@ -197,7 +206,7 @@ function atcf_shortcode_submit_field_excerpt() {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_excerpt', 50 );
 
 /**
- * 
+ * Campaign Images
  *
  * @since CrowdFunding 0.1-alpha
  *
@@ -214,7 +223,7 @@ function atcf_shortcode_submit_field_images() {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_images', 60 );
 
 /**
- * 
+ * Campaign Video
  *
  * @since CrowdFunding 0.1-alpha
  *
@@ -231,7 +240,7 @@ function atcf_shortcode_submit_field_video() {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_video', 65 );
 
 /**
- * Backer Rewards
+ * Campaign Backer Rewards
  *
  * @since CrowdFunding 0.1-alpha
  *
@@ -277,7 +286,7 @@ function atcf_shortcode_submit_field_rewards() {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_rewards', 90 );
 
 /**
- * Goal Field
+ * Campaign PayPal Email
  *
  * @since CrowdFunding 0.1-alpha
  *
@@ -295,6 +304,13 @@ function atcf_shortcode_submit_field_paypal_email() {
 }
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_email', 100 );
 
+/**
+ * Success Message
+ *
+ * @since CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
 function atcf_shortcode_submit_before() {
 	if ( ! isset ( $GET[ 'success' ] ) || $_GET[ 'success' ] != true )
 		return;
