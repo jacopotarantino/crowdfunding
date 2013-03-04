@@ -789,16 +789,19 @@ class ATCF_Campaign {
 	 */
 	public function days_remaining() {
 		$expires = new DateTime( $this->end_date() );
-
 		$now     = new DateTime();
-		$diff    = $now->diff( $expires );
 
-		if ( $diff->invert )
+		if ( $now > $expires )
 			return 0;
 
-		$return = $diff->format( '%a' );
+		$diff = $expires->getTimestamp() - $now->getTimestamp();
 
-		return $return;
+		if ( $diff < 0 )
+			return 0;
+
+		$days = $diff / 86400;
+
+		return floor( $days );
 	}
 
 	/**
@@ -858,12 +861,7 @@ class ATCF_Campaign {
 	public function is_active() {
 		$active  = true;
 
-		$expires = new DateTime( $this->end_date() );
-
-		$now     = new DateTime();
-		$diff    = $now->diff( $expires );
-
-		if ( $diff->invert )
+		if ( $this->days_remaining() == 0 )
 			$active = false;
 
 		if ( $this->__get( '_campaign_expired' ) )

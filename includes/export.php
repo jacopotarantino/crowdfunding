@@ -12,7 +12,7 @@ class ATCF_Campaign_Export extends EDD_Export {
 	/**
 	 * Our export type. Used for export-type specific filters / actions
 	 */
-	public $export_type = 'payments';
+	public $export_type = 'backers';
 
 	/**
 	 * Set the CSV columns
