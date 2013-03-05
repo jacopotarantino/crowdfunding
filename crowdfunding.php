@@ -97,6 +97,7 @@ final class AT_CrowdFunding {
 		require( $this->includes_dir . 'theme-stuff.php' );
 		require( $this->includes_dir . 'shortcode-submit.php' );
 		require( $this->includes_dir . 'shipping.php' );
+		require( $this->includes_dir . 'logs.php' );
 
 		do_action( 'atcf_include_files' );
 
