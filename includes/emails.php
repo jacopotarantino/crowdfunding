@@ -104,8 +104,20 @@ function atcf_email_pending_purchase_receipt( $payment_id, $admin_notice = true 
 function atcf_get_email_body_content( $payment_id = 0, $payment_data = array() ) {
 	global $edd_options;
 
+	$downloads = edd_get_payment_meta_downloads( $payment_id );
+	$campaign  = '';
+
+	if ( $downloads ) {
+		foreach ( $downloads as $download ) {
+			$id       = isset( $payment_data[ 'cart_details' ] ) ? $download[ 'id' ] : $download;
+			$campaign = get_the_title( $id );
+			
+			continue;
+		}
+	}
+
 	$default_email_body = __( 'Dear {name}', 'atcf' ) . "\n\n";
-	$default_email_body .= sprintf( __( 'Thank you for your pledge. Your will only be charged your pledge amount if the %s receives 100% funding.', 'atcf' ), strtolower( edd_get_label_singular() ) ) . "\n\n";
+	$default_email_body .= sprintf( __( 'Thank you for your pledging to support %1$s. This email is just to let you know your pledge was processed without a hitch! You will only be charged your pledge amount if the %2$s receives 100% funding.', 'atcf' ), $campaign, strtolower( edd_get_label_singular() ) ) . "\n\n";
 	$default_email_body .= "{sitename}";
 
 	$email = $default_email_body;
