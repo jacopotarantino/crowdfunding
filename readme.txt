@@ -15,15 +15,23 @@ Sell digital downloads through WordPress with this complete digital downloads ma
 Features of the plugin include:
 
 * Crowd fund anything you want!
-* Compatible with PayPal Adaptive Payments API for pre-approved purchases.
+* Compatible with PayPal Adaptive Payments API for pre-approved purchases. When a person commits to funding your project they are only charged if your campaign reaches its pre-defined goal.
 * Compatible with all standard payment gateways that Easy Digital Downloads supports, i.e Stripe, PayPal Pro/Express.
-* Works both as a donation plugin and a crowd funding plugin.
+* Works both as a donation plugin and a Crowdfunding plugin.
+* Easy to theme and integrate into your own site which uses Easy Digital Downloads.
 
-**Languages**
+== Languages ==
 
-Currently AppThemer Crowd Funding as been translated into the following languages:
+Currently AppThemer Crowdfunding as been translated into the following languages:
 
 * English
+
+Would you like to help translate the plugin into more languages? [Contact Us] (http://appthemer.com/).
+
+
+== Compatible Themes ==
+
+The first compatible theme that has been released is called "Fundify" from AppThemer.com
 
 == Installation ==
 
