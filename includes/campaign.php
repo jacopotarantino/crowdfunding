@@ -722,8 +722,8 @@ class ATCF_Campaign {
 
 		$backers = $edd_logs->get_connected_logs( array(
 			'post_parent' => $this->ID, 
-			'log_type'    => 'sale',
-			'post_status' => array( 'publish', 'preapproval' )
+			'log_type'    => 'preapproval',
+			'post_status' => array( 'publish' )
 		) );
 
 		return $backers;
