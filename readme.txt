@@ -12,11 +12,11 @@ License: GNU Version 2 or Any Later Version
 
 == Description ==
 
-Crowdfunding by AppThemer is a funding platform for WordPress. Integrated seamlessly with Easy Digital Downloads, the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
+Crowdfunding by AppThemer is a funding platform for WordPress. An extension that seamlessly integrates with Easy Digital Downloads, the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
 
 "Backers" can pledge specified amounts of money towards a project and receive rewards for their contributions. Pledge amounts are only collected if a campaign reaches its goal in the time specified.
 
-Run your own crowd sourcing website for anything you can imagine.
+Run your own crowd funding website for anything you can imagine.
 
 **Follow this plugin on [Git Hub](https://github.com/spencerfinnell/crowdfunding/)**
 
@@ -42,9 +42,10 @@ Would you like to help translate the plugin into more languages? [Contact Us] (h
 
 == Installation ==
 
-1. Activate the plugin
-2. Create a new page for your frontend submission form add this shortcode to the page: [appthemer_crowdfunding_submit] - (this is optional)
-2. Go to Campaigns > Add New to create a new campaign
+1. Install the Easy Digital Downloads plugin and activate it, if you haven't already.
+2. Install the AppThemer Crowdfunding plugin and activate it.
+3. Create a new page for your frontend submission form add this shortcode to the page: [appthemer_crowdfunding_submit] - (this is optional).
+4. Go to Campaigns > Add New to create a new campaign.
 
 == Frequently Asked Questions ==
 
