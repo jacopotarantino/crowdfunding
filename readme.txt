@@ -32,11 +32,11 @@ Features of the plugin include:
 
 **GET INVOLVED**
 
-**Developers can contribute to the source code of the project on [Git Hub](https://github.com/spencerfinnell/crowdfunding/)**
+**Developers can contribute to the source code of the project on [GitHub](https://github.com/spencerfinnell/crowdfunding/)**
 
 **COMPATIBLE THEMES**
 
-The first compatible theme that has been released is called "Fundify" from [AppThemer](https://AppThemer.com)
+The first compatible theme that has been released is called "Fundify" from [AppThemer](https://AppThemer.com).
 
 == Languages ==
 
@@ -69,12 +69,12 @@ Not currently at this time. However, it is very easy to integrate with a theme. 
 
 == Changelog ==
 
-= 1.0 =
+= 0.1-alpha =
 
-* First offical release!
+* First official alpha release!
 
 == Upgrade Notice ==
 
-= 1.0 =
+= 0.1-alpha =
 
-* First offical release!
+* First official alpha release!
