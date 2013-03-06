@@ -782,7 +782,7 @@ class ATCF_Campaign {
 				$price_id = $item[ 'item_number' ][ 'options' ][ 'price_id' ];
 
 				if ( ! isset( $totals[$price_id] ) )
-					$totals[$price_id] = 1;
+					$totals[$price_id] = isset ( $totals[$price_id] ) ? $totals[$price_id] : 0;
 				else
 					$totals[$price_id] = $totals[$price_id] + 1;
 			}
