@@ -46,8 +46,6 @@ class ATCF_Campaigns {
 		
 		remove_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing' );
 
-		add_action( 'init', array( $this, 'endpoints' ) );
-
 		add_filter( 'edd_download_labels', array( $this, 'download_labels' ) );
 		add_filter( 'edd_default_downloads_name', array( $this, 'download_names' ) );
 		add_filter( 'edd_download_supports', array( $this, 'download_supports' ) );
@@ -70,18 +68,6 @@ class ATCF_Campaigns {
 		add_filter( 'post_updated_messages', array( $this, 'messages' ) );
 
 		do_action( 'atcf_campaigns_actions_admin' );
-	}
-
-	/**
-	 * Add Endpoint for backers. This allows us to monitor
-	 * the query to create "fake" URLs for seeing backers.
-	 *
-	 * @since AT_CrowdFunding 0.1-alpha
-	 *
-	 * @return void
-	 */
-	function endpoints() {
-		add_rewrite_endpoint( 'backers', EP_ALL );
 	}
 
 	/**
@@ -181,7 +167,7 @@ class ATCF_Campaigns {
 
 		switch ( $column ) {
 			case 'funded' :
-				$funded = $campaign->amount_funded();
+				$funded = $campaign->current_amount(true);
 
 				echo $funded;
 				break;
@@ -869,8 +855,8 @@ class ATCF_Campaign {
 		$total   = 0;
 		$backers = $this->backers();
 
-		if ( empty( $backers ) )
-			return $total;
+		if ( 0 == $backers )
+			$backers = array();
 
 		foreach ( $backers as $backer ) {
 			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );

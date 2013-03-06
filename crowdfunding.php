@@ -117,10 +117,24 @@ final class AT_CrowdFunding {
 	private function setup_actions() {
 		add_filter( 'template_include', array( $this, 'template_loader' ) );
 		add_action( 'init', array( $this, 'export' ) );
+
+		add_action( 'init', array( $this, 'endpoints' ) );
 		
 		do_action( 'atcf_setup_actions' );
 
 		$this->load_textdomain();
+	}
+
+	/**
+	 * Add Endpoint for backers. This allows us to monitor
+	 * the query to create "fake" URLs for seeing backers.
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @return void
+	 */
+	function endpoints() {
+		add_rewrite_endpoint( 'backers', EP_PERMALINK | EP_PAGES );
 	}
 
 	function export() {
@@ -147,9 +161,9 @@ final class AT_CrowdFunding {
 		$find = array();
 		$file = '';
 
-		if ( isset( $wp_query->query[ 'backers' ] ) && is_singular( 'download' ) ) {
+		if ( isset ( $wp_query->query_vars[ 'backers' ] ) && is_singular( 'download' ) ) {
 			$file   = 'single-campaign-backers.php';
-		} else if ( is_single() && get_post_type() == 'download' ) {
+		} else if ( is_singular( 'download' ) ) {
 			$file 	= 'single-campaign.php';
 		} else if ( is_post_type_archive( 'download' ) ) {
 			$file   = 'archive-campaigns.php';
