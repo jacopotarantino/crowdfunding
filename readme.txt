@@ -7,6 +7,8 @@ Requires at least: 3.5
 Tested up to: 3.5
 Stable Tag: 0.1
 
+License: GNU Version 2 or Any Later Version
+
 == Description ==
 
 Crowdfunding by AppThemer is a funding platform for WordPress. Integrated seamlessly with Easy Digital Downloads, the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
