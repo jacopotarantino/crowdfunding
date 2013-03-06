@@ -58,6 +58,7 @@ class ATCF_Campaigns {
 			return;
 
 		add_filter( 'manage_edit-download_columns', array( $this, 'dashboard_columns' ), 11, 1 );
+		add_filter( 'manage_download_posts_custom_column', array( $this, 'dashboard_column_item' ), 11, 2 );
 		
 		add_action( 'add_meta_boxes', array( $this, 'remove_meta_boxes' ), 11 );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
@@ -160,11 +161,33 @@ class ATCF_Campaigns {
 			'cb'                => '<input type="checkbox"/>',
 			'title'             => __( 'Name', 'atcf' ),
 			'download_category' => __( 'Categories', 'atcf' ),
-			'earnings'          => __( 'Amount Funded', 'atcf' ),
+			'funded'            => __( 'Amount Funded', 'atcf' ),
 			'date'              => __( 'Expires', 'atcf' )
 		);
 
 		return $columns;
+	}
+
+	/**
+	 * Download Column Items
+	 *
+	 * @since AT_CrowdFunding 0.1-alpha
+	 *
+	 * @param array $supports The post type supports
+	 * @return array $supports The modified post type supports
+	 */
+	function dashboard_column_item( $column, $post_id ) {
+		$campaign = atcf_get_campaign( $post_id );
+
+		switch ( $column ) {
+			case 'funded' :
+				$funded = $campaign->amount_funded();
+
+				echo $funded;
+				break;
+			default : 
+				break;
+		}
 	}
 
 	/**
