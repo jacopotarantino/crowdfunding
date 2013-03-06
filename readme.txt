@@ -7,10 +7,15 @@ Requires at least: 3.5
 Tested up to: 3.5
 Stable Tag: 0.1
 
-
-Sell digital downloads through WordPress with this complete digital downloads management plugin
-
 == Description ==
+
+Crowdfunding by AppThemer is a funding platform for WordPress. Integrated seamlessly with Easy Digital Downloads, the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
+
+"Backers" can pledge specified amounts of money towards a project and receive rewards for their contributions. Pledge amounts are only collected if a campaign reaches its goal in the time specified.
+
+Run your own crowd sourcing website for anything you can imagine.
+
+**Follow this plugin on [Git Hub](https://github.com/spencerfinnell/crowdfunding/)**
 
 Features of the plugin include:
 
@@ -20,6 +25,10 @@ Features of the plugin include:
 * Works both as a donation plugin and a Crowdfunding plugin.
 * Easy to theme and integrate into your own site which uses Easy Digital Downloads.
 
+**Compatible Themes**
+
+The first compatible theme that has been released is called "Fundify" from AppThemer.com
+
 == Languages ==
 
 Currently AppThemer Crowdfunding as been translated into the following languages:
@@ -27,11 +36,6 @@ Currently AppThemer Crowdfunding as been translated into the following languages
 * English
 
 Would you like to help translate the plugin into more languages? [Contact Us] (http://appthemer.com/).
-
-
-== Compatible Themes ==
-
-The first compatible theme that has been released is called "Fundify" from AppThemer.com
 
 == Installation ==
 
@@ -49,14 +53,11 @@ Not currently at this time. However, it is very easy to integrate with a theme. 
 
 1. Campaign Configuration
 
-* http://appthemer.com/marketing/wp.org/crowd-funding-screen-shot-one.png
-
 == Changelog ==
 
 = 1.0 =
 
 * First offical release!
-
 
 == Upgrade Notice ==
 
