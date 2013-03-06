@@ -1,6 +1,7 @@
 === AppThemer Crowdfunding ===
 Author URI: http://appthemer.com
 Plugin URI: http://appthemer.com
+Donate link: http://appthemer.com
 Contributors: SpencerFinnell, AdamPickering
 Tags: download, downloads, e-store, eshop, digital downloads, crowd funding, crowdfunding, crowdsource, 
 Requires at least: 3.5
