@@ -337,6 +337,7 @@ class ATCF_Campaigns {
 		if ( is_wp_error( $errors ) )
 			wp_die( $errors->get_error_messages() );
 		else {
+			update_post_meta( $this->ID, '_campaign_expired', 1 );
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 13, 'collected' => $num_collected ), admin_url( 'post.php' ) ) );
 			exit();
 		}
@@ -842,7 +843,16 @@ class ATCF_Campaign {
 	 * @return sting $total The amount funded (currency formatted or not)
 	 */
 	public function current_amount( $formatted = true ) {
-		$total = edd_get_download_earnings_stats( $this->ID );
+		$total   = 0;
+		$backers = $this->backers();
+
+		if ( empty( $backers ) )
+			return $total;
+
+		foreach ( $backers as $backer ) {
+			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
+			$total      = $total + edd_get_payment_amount( $payment_id );
+		}
 		
 		if ( $formatted )
 			return edd_currency_filter( edd_format_amount( $total ) );
