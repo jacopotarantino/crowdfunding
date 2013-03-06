@@ -752,7 +752,7 @@ class ATCF_Campaign {
 		if ( ! $backers )
 			return 0;
 
-		return count( $backers );
+		return absint( count( $backers ) );
 	}
 
 	/**
