@@ -45,7 +45,7 @@ Would you like to help translate the plugin into more languages? [Contact Us] (h
 
 == Frequently Asked Questions ==
 
-= Does this plugin work with any theme? =
+**Does this plugin work with any theme?**
 
 Not currently at this time. However, it is very easy to integrate with a theme. There are a few custom templates that need to be set up. Simply create a single-campaign.php, archive-campaigns.php, and single-campaign-backers.php and you are ready to go. These files act like a standard archive or single template in WordPress.
 
