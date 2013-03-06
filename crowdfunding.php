@@ -98,6 +98,7 @@ final class AT_CrowdFunding {
 		require( $this->includes_dir . 'shortcode-submit.php' );
 		require( $this->includes_dir . 'shipping.php' );
 		require( $this->includes_dir . 'logs.php' );
+		require( $this->includes_dir . 'export.php' );
 
 		do_action( 'atcf_include_files' );
 
@@ -115,14 +116,47 @@ final class AT_CrowdFunding {
 	 * @return void
 	 */
 	private function setup_actions() {
-		add_filter( 'template_include', array( $this, 'template_loader' ) );
-		add_action( 'init', array( $this, 'export' ) );
+		add_action( 'init', array( $this, 'is_edd_activated' ), 1 );
 
+		add_filter( 'template_include', array( $this, 'template_loader' ) );
 		add_action( 'init', array( $this, 'endpoints' ) );
 		
 		do_action( 'atcf_setup_actions' );
 
 		$this->load_textdomain();
+	}
+
+	
+	/**
+	 * Easy Digital Downloads
+	 *
+	 * @return void
+	 */
+	function is_edd_activated() {
+		if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {
+			if ( is_plugin_active( $this->basename ) ) {
+				deactivate_plugins( $this->basename );
+				unset ($_GET[ 'activate' ] ); // Ghetto
+
+				add_action( 'admin_notices', array( $this, 'edd_notice' ) );
+			}
+		}
+	}
+
+	/**
+	 * Admin notice.
+	 *
+	 * @return	string
+	 */
+	function edd_notice() {
+?>
+		<div class="updated">
+			<p><?php printf( 
+						__( '<strong>Notice:</strong> Crowdfunding by AppThemer requires <a href="%s">Easy Digital Downloads</a> in order to function properly.', 'atcf' ), 
+						wp_nonce_url( network_admin_url( 'update.php?action=install-plugin&plugin=easy-digital-downloads' ), 'install-plugin_easy-digital-downloads' )
+				); ?></p>
+		</div>
+<?php
 	}
 
 	/**
@@ -135,10 +169,6 @@ final class AT_CrowdFunding {
 	 */
 	function endpoints() {
 		add_rewrite_endpoint( 'backers', EP_PERMALINK | EP_PAGES );
-	}
-
-	function export() {
-		require( $this->includes_dir . 'export.php' );
 	}
 
 	/**
