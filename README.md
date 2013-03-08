@@ -1,4 +1,4 @@
-# AppThemer Crowd Funding #
+# AppThemer Crowdfunding #
 
 **Author URI:** http://appthemer.com
 **Plugin URI:** http://appthemer.com
@@ -9,7 +9,7 @@
 **Tested up to:** 3.5
 **Stable Tag:** 0.2
 
-A crowd funding platform in the likes of Kickstarter and Indigogo
+A crowdfunding platform in the likes of Kickstarter and Indigogo
 
 ## Description ##
 
