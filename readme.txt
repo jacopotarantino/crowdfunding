@@ -71,10 +71,11 @@ Not currently at this time. However, it is very easy to integrate with a theme. 
 
 = 0.2-alpha: March 7, 2013 =
 
-* Fix: Better loading of exports. Dont activate if EDD is not active.
+* Fix: Better loading of exports. 
 * Fix: Shipping fixes, backers, etc.
 * Fix: Load backers at the correct time.
 * Fix: Count amount based on preapproval, not total earnings. 
+* New: Dont activate if EDD is not active.
 * New: Text filters.
 * New: Update readme.txt
 
