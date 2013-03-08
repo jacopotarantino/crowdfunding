@@ -69,12 +69,21 @@ Not currently at this time. However, it is very easy to integrate with a theme. 
 
 == Changelog ==
 
-= 0.1-alpha =
+= 0.2-alpha: March 7, 2013 =
+
+* Fix: Better loading of exports. Dont activate if EDD is not active.
+* Fix: Shipping fixes, backers, etc.
+* Fix: Load backers at the correct time.
+* Fix: Count amount based on preapproval, not total earnings. 
+* New: Text filters.
+* New: Update readme.txt
+
+= 0.1-alpha: March 6, 2013 =
 
 * First official alpha release!
 
 == Upgrade Notice ==
 
-= 0.1-alpha =
+= 0.2-alpha =
 
-* First official alpha release!
+* A ton of bug fixes and improvments in this release.
