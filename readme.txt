@@ -6,7 +6,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: download, downloads, e-store, eshop, digital downloads, crowd funding, crowdfunding, crowdsource, 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 0.1
+Stable Tag: 0.2
 
 License: GNU Version 2 or Any Later Version
 
