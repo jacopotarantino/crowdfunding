@@ -8,7 +8,7 @@
  * ATCF_Campaigns - Mostly admin things, and changing some settings of EDD
  * ATCF_Campaign  - A singular campaign. Includes getter methods for accessing a single campaign's info
  *
- * @since AT_CrowdFunding 0.2-alpha
+ * @since AT_CrowdFunding 0.1-alpha
  */
 
 // Exit if accessed directly
