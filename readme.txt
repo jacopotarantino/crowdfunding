@@ -16,7 +16,7 @@ Crowdfunding by AppThemer is a funding platform for WordPress. An extension that
 
 "Backers" can pledge specified amounts of money towards a project and receive rewards for their contributions. Pledge amounts are only collected if a campaign reaches its goal in the time specified.
 
-Run your own crowd funding website for anything you can imagine.
+Run your own crowdfunding website for anything you can imagine.
 
 Note: The AppThemer Crowdfunding plugin is designed to work alongside the [PayPal Adaptive Payments gateway](https://easydigitaldownloads.com/extension/paypal-adaptive-payments/?ref=7) so that pledges are collected but no funds are taken until the campaign reaches its goal. The plugin will also work along side any other gateway that Easy Digital Downloads supports but funds will be taken immediately.
 
