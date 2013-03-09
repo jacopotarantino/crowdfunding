@@ -7,7 +7,7 @@
 **Tags:** download, downloads, e-store, eshop, digital downloads, crowd funding, crowdfunding, crowdsource, 
 **Requires at least:** 3.5
 **Tested up to:** 3.5
-**Stable Tag:** 0.2
+**Stable Tag:** 0.3-alpha
 
 A crowdfunding platform in the likes of Kickstarter and Indigogo
 
@@ -40,6 +40,11 @@ Developers can contribute to the source code of the project on GitHub
 The first compatible theme that has been released is called "Fundify" from AppThemer.
 
 ## Changelog ##
+
+### 0.3-alpha: X ###
+
+* Fix: Better theme support. Check for some EDD templates, as well as standard WordPress files.
+* New: Themes without explicit support will output default EDD variable pricing.
 
 ### 0.2-alpha: March 7, 2013 ###
 
