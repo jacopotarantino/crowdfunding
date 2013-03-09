@@ -1,17 +1,17 @@
-# AppThemer Crowdfunding #
+=== AppThemer Crowdfunding ===
 
-**Author URI:** http://appthemer.com
-**Plugin URI:** http://appthemer.com
-**Donate link:** http://appthemer.com
-**Contributors:** SpencerFinnell, adampickering
-**Tags:** download, downloads, e-store, eshop, digital downloads, crowd funding, crowdfunding, crowdsource, 
-**Requires at least:** 3.5
-**Tested up to:** 3.5
-**Stable Tag:** 0.3-alpha
+Author URI: http://appthemer.com
+Plugin URI: http://appthemer.com
+Donate link: http://appthemer.com
+Contributors: SpencerFinnell, adampickering
+Tags: download, downloads, e-store, eshop, digital downloads, crowd funding, crowdfunding, crowdsource, 
+Requires at least: 3.5
+Tested up to: 3.5
+Stable Tag: 0.3-alpha
 
 A crowdfunding platform in the likes of Kickstarter and Indigogo
 
-## Description ##
+== Description ==
 
 Crowdfunding by AppThemer is a funding platform for WordPress. An extension that seamlessly integrates with Easy Digital Downloads, the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
 
@@ -21,7 +21,7 @@ Run your own crowdfunding website for anything you can imagine.
 
 Note: The AppThemer Crowdfunding plugin is designed to work alongside the PayPal Adaptive Payments gateway so that pledges are collected but no funds are taken until the campaign reaches its goal. The plugin will also work along side any other gateway that Easy Digital Downloads supports but funds will be taken immediately.
 
-## Features ##
+== Features ==
 
 Features of the plugin include:
 
@@ -31,22 +31,22 @@ Features of the plugin include:
 * Works both as a donation plugin and a Crowdfunding plugin.
 * Easy to theme and integrate into your own site which uses Easy Digital Downloads.
 
-## Get Involved ##
+== Get Involved ==
 
 Developers can contribute to the source code of the project on GitHub
 
-## Compatible Themes ##
+== Compatible Themes ==
 
 The first compatible theme that has been released is called "Fundify" from AppThemer.
 
-## Changelog ##
+== Changelog ==
 
-### 0.3-alpha: X ###
+= 0.3-alpha: X =
 
 * Fix: Better theme support. Check for some EDD templates, as well as standard WordPress files.
 * New: Themes without explicit support will output default EDD variable pricing.
 
-### 0.2-alpha: March 7, 2013 ###
+= 0.2-alpha: March 7, 2013 =
 
 * Fix: Better loading of exports.
 * Fix: Shipping fixes, backers, etc.
@@ -56,6 +56,6 @@ The first compatible theme that has been released is called "Fundify" from AppTh
 * New: Text filters.
 * New: Update readme.txt
 
-### 0.1-alpha: March 6, 2013 ###
+= 0.1-alpha: March 6, 2013 =
 
 * First official alpha release!
