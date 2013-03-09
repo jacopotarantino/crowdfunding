@@ -311,8 +311,8 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_
  *
  * @return void
  */
-function atcf_shortcode_submit_before() {
-	if ( ! isset ( $GET[ 'success' ] ) || $_GET[ 'success' ] != true )
+function atcf_shortcode_submit_before_success() {
+	if ( ! isset ( $_GET[ 'success' ] ) )
 		return;
 
 	$message = apply_filters( 'atcf_shortcode_submit_success', __( 'Success! Your campaign has been received. It will be reviewed shortly.', 'atcf' ) );
@@ -320,4 +320,4 @@ function atcf_shortcode_submit_before() {
 	<p class="edd_success"><?php echo esc_attr( $message ); ?></p>	
 <?php
 }
-add_action( 'atcf_shortcode_submit_before', 'atcf_shortcode_submit_before' );
+add_action( 'atcf_shortcode_submit_before', 'atcf_shortcode_submit_before_success', 1 );
