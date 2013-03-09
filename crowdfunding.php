@@ -188,21 +188,23 @@ final class AT_CrowdFunding {
 	public function template_loader( $template ) {
 		global $wp_query;
 		
-		$find = array();
-		$file = '';
+		$find  = array();
+		$files = array();
 
 		if ( isset ( $wp_query->query_vars[ 'backers' ] ) && is_singular( 'download' ) ) {
-			$file   = 'single-campaign-backers.php';
+			$files = array( 'single-campaign-backers.php' );
 		} else if ( is_singular( 'download' ) ) {
-			$file 	= 'single-campaign.php';
+			$files = array( 'single-campaign.php', 'single-download.php', 'single.php' );
 		} else if ( is_post_type_archive( 'download' ) ) {
-			$file   = 'archive-campaigns.php';
+			$files = array( 'archive-campaigns.php', 'archive-download.php', 'archive.php' );
 		}
 
-		$find[] = $file;
-		$find[] = $this->template_url . $file;
+		foreach ( $files as $file ) {
+			$find[] = $file;
+			$find[] = $this->template_url . $file;
+		}
 
-		if ( $file ) {
+		if ( ! empty( $files ) ) {
 			$template = locate_template( $find );
 
 			if ( ! $template ) 

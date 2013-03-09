@@ -59,4 +59,31 @@ function atcf_purchase_variable_pricing( $download_id ) {
 
 	add_action( 'edd_after_price_options', $download_id );
 }
-add_action( 'edd_purchase_link_top', 'atcf_purchase_variable_pricing' );
+
+/**
+ * Remove output of variable pricing, and add our own system.
+ *
+ * @since AT_CrowdFunding 0.3-alpha
+ *
+ * @return void
+ */
+function atcf_theme_variable_pricing() {
+	remove_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing' );
+	add_action( 'edd_purchase_link_top', 'atcf_purchase_variable_pricing' );
+}
+
+/**
+ * Check for theme support, and remove variable pricing display,
+ * as we can assume the theme has implemented it somehow else.
+ *
+ * @since AT_CrowdFunding 0.3-alpha
+ *
+ * @return void
+ */
+function atcf_theme_custom_variable_pricing() {
+	if ( ! current_theme_supports( 'appthemer-crowdfunding' ) )
+		return;
+
+	add_action( 'init', 'atcf_theme_variable_pricing' );
+}
+add_action( 'after_setup_theme', 'atcf_theme_custom_variable_pricing', 100 );
