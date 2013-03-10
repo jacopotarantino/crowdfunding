@@ -26,18 +26,25 @@ Note: The AppThemer Crowdfunding plugin is designed to work alongside the PayPal
 Features of the plugin include:
 
 * Crowd fund anything you want!
+* Frontend form submission to easily collect campaign information.
 * Compatible with PayPal Adaptive Payments API for pre-approved purchases. When a person commits to funding your project they are only charged if your campaign reaches its pre-defined goal.
-* Compatible with all standard payment gateways that Easy Digital Downloads supports, i.e Stripe, PayPal Pro/Express.
+* Compatible with all standard payment gateways that Easy Digital Downloads supports, i.e Stripe, PayPal Pro/Express (payments will be charged immediately).
 * Works both as a donation plugin and a Crowdfunding plugin.
 * Easy to theme and integrate into your own site which uses Easy Digital Downloads.
 
-== Get Involved ==
+== Frequently Asked Questions ==
 
-Developers can contribute to the source code of the project on GitHub
+= Does this plugin work with any theme? =
+
+Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
 == Compatible Themes ==
 
 The first compatible theme that has been released is called "Fundify" from AppThemer.
+
+== Get Involved ==
+
+Developers can contribute to the source code of the project on GitHub (https://github.com/spencerfinnell/crowdfunding)
 
 == Changelog ==
 
