@@ -4,7 +4,7 @@
  *
  * Support exporting data for a specific campaign/download.
  *
- * @since AT_CrowdFunding 0.1-alpha
+ * @since Appthemer CrowdFunding 0.1-alpha
  */
 
 // Exit if accessed directly

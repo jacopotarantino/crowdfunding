@@ -4,21 +4,21 @@
  *
  * Some stuff themes can use, and theme compatability. 
  *
- * @since AT_CrowdFunding 0.1-alpha
+ * @since Appthemer CrowdFunding 0.1-alpha
  */
 
 /**
  * Extend WP_Query with some predefined defaults to query
  * only campaign items.
  *
- * @since AT_CrowdFunding 0.1-alpha
+ * @since Appthemer CrowdFunding 0.1-alpha
  */
 class ATCF_Campaign_Query extends WP_Query {
 	/**
 	 * Extend WP_Query with some predefined defaults to query
 	 * only campaign items.
 	 *
-	 * @since AT_CrowdFunding 0.1-alpha
+	 * @since Appthemer CrowdFunding 0.1-alpha
 	 *
 	 * @param array $args
 	 * @return void
@@ -42,7 +42,7 @@ class ATCF_Campaign_Query extends WP_Query {
  * Themes can hook into `atcf_campaign_contribute_options` to output
  * their own prices, if they choose to implement a custom solution.
  *
- * @since AT_CrowdFunding 0.1-alpha
+ * @since Appthemer CrowdFunding 0.1-alpha
  */
 function atcf_purchase_variable_pricing( $download_id ) {
 	$variable_pricing = edd_has_variable_prices( $download_id );
@@ -63,7 +63,7 @@ function atcf_purchase_variable_pricing( $download_id ) {
 /**
  * Remove output of variable pricing, and add our own system.
  *
- * @since AT_CrowdFunding 0.3-alpha
+ * @since Appthemer CrowdFunding 0.3-alpha
  *
  * @return void
  */
@@ -76,7 +76,7 @@ function atcf_theme_variable_pricing() {
  * Check for theme support, and remove variable pricing display,
  * as we can assume the theme has implemented it somehow else.
  *
- * @since AT_CrowdFunding 0.3-alpha
+ * @since Appthemer CrowdFunding 0.3-alpha
  *
  * @return void
  */

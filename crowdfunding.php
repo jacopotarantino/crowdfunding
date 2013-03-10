@@ -18,9 +18,9 @@ include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 /**
  * Main Crowd Funding Class
  *
- * @since AT_CrowdFunding 0.1-alpha
+ * @since Appthemer CrowdFunding 0.1-alpha
  */
-final class AT_CrowdFunding {
+final class ATCF_CrowdFunding {
 
 	/**
 	 * @var crowdfunding The one true AT_CrowdFunding
@@ -33,7 +33,7 @@ final class AT_CrowdFunding {
 	 * Ensures that only one instance of Crowd Funding exists in memory at any one
 	 * time. Also prevents needing to define globals all over the place.
 	 *
-	 * @since AT_CrowdFunding 0.1-alpha
+	 * @since Appthemer CrowdFunding 0.1-alpha
 	 *
 	 * @return The one true Crowd Funding
 	 */
@@ -54,7 +54,7 @@ final class AT_CrowdFunding {
 	 * Set some smart defaults to class variables. Allow some of them to be
 	 * filtered to allow for early overriding.
 	 *
-	 * @since AT_CrowdFunding 0.1-alpha
+	 * @since Appthemer CrowdFunding 0.1-alpha
 	 *
 	 * @return void
 	 */
@@ -88,7 +88,7 @@ final class AT_CrowdFunding {
 	/**
 	 * Include required files.
 	 *
-	 * @since AT_CrowdFunding 0.1-alpha
+	 * @since Appthemer CrowdFunding 0.1-alpha
 	 *
 	 * @return void
 	 */
@@ -111,7 +111,7 @@ final class AT_CrowdFunding {
 	/**
 	 * Setup the default hooks and actions
 	 *
-	 * @since AT_CrowdFunding 0.1-alpha
+	 * @since Appthemer CrowdFunding 0.1-alpha
 	 *
 	 * @return void
 	 */
@@ -130,7 +130,7 @@ final class AT_CrowdFunding {
 	/**
 	 * Easy Digital Downloads
 	 *
-	 * @since AT_CrowdFunding 0.2-alpha
+	 * @since Appthemer CrowdFunding 0.2-alpha
 	 *
 	 * @return void
 	 */
@@ -148,7 +148,7 @@ final class AT_CrowdFunding {
 	/**
 	 * Admin notice.
 	 *
-	 * @since AT_CrowdFunding 0.2-alpha
+	 * @since Appthemer CrowdFunding 0.2-alpha
 	 *
 	 * @return void
 	 */
@@ -167,7 +167,7 @@ final class AT_CrowdFunding {
 	 * Add Endpoint for backers. This allows us to monitor
 	 * the query to create "fake" URLs for seeing backers.
 	 *
-	 * @since AT_CrowdFunding 0.1-alpha
+	 * @since Appthemer CrowdFunding 0.1-alpha
 	 *
 	 * @return void
 	 */
@@ -221,7 +221,7 @@ final class AT_CrowdFunding {
 	/**
 	 * Loads the plugin language files
 	 *
-	 * @since AT_CrowdFunding 0.1-alpha
+	 * @since Appthemer CrowdFunding 0.1-alpha
 	 */
 	public function load_textdomain() {
 		// Traditional WordPress plugin locale filter
@@ -254,12 +254,12 @@ final class AT_CrowdFunding {
  *
  * Example: <?php $crowdfunding = crowdfunding(); ?>
  *
- * @since AT_CrowdFunding 0.1-alpha
+ * @since Appthemer CrowdFunding 0.1-alpha
  *
  * @return The one true Crowd Funding Instance
  */
 function crowdfunding() {
-	return AT_CrowdFunding::instance();
+	return ATCF_CrowdFunding::instance();
 }
 
 crowdfunding();

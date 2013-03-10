@@ -4,7 +4,7 @@
  *
  * [appthemer_crowdfunding_submit] creates a submission form.
  *
- * @since AT_CrowdFunding 0.1-alpha
+ * @since Appthemer CrowdFunding 0.1-alpha
  */
 
 // Exit if accessed directly

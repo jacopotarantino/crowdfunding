@@ -4,7 +4,7 @@
  *
  * Support exporting data for a specific campaign/download.
  *
- * @since AT_CrowdFunding 0.1-alpha
+ * @since Appthemer CrowdFunding 0.1-alpha
  */
 
 // Exit if accessed directly
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Export action. Monitor backened and create a new export.
  *
- * @since AT_CrowdFunding 0.1-alpha
+ * @since Appthemer CrowdFunding 0.1-alpha
  *
  * @return void
  */
@@ -35,7 +35,7 @@ add_action( 'edd_export_campaign', 'atcf_export_campaign' );
 /**
  * Export metabox
  *
- * @since AT_CrowdFunding 0.1-alpha
+ * @since Appthemer CrowdFunding 0.1-alpha
  *
  * @return void
  */
