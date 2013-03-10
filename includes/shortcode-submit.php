@@ -34,7 +34,7 @@ function atcf_shortcode_submit() {
 		<?php do_action( 'atcf_shortcode_submit_fields' ); ?>
 
 		<p class="atcf-submit-campaign-submit">
-			<input type="submit" value="<?php _e( 'Submit Project', 'atcf' ); ?>">
+			<input type="submit" value="<?php printf( esc_attr__( 'Submit %s', 'atcf' ), edd_get_label_singular() ); ?>">
 			<input type="hidden" name="action" value="atcf-campaign-submit" />
 			<?php wp_nonce_field( 'atcf-campaign-submit' ) ?>
 		</p>
@@ -60,7 +60,7 @@ function atcf_shortcode_submit_field_title() {
 
 	<p class="atcf-submit-title">
 		<label for="title"><?php _e( 'Title', 'atcf' ); ?></label>
-		<input type="text" name="title" id="title" placeholder="<?php _e( 'Title', 'atcf' ); ?>">
+		<input type="text" name="title" id="title" placeholder="<?php esc_attr_e( 'Title', 'atcf' ); ?>">
 	</p>
 <?php
 }
@@ -256,12 +256,12 @@ function atcf_shortcode_submit_field_rewards() {
 
 			<p class="atcf-submit-campaign-reward-price">
 				<label for="rewards[0][price]"><?php printf( __( 'Contribution Amount (%s)', 'atcf' ), edd_currency_filter( '' ) ); ?></label>
-				<input class="name" type="text" name="rewards[0][price]" id="rewards[0][price]" placeholder="<?php _e( '$20', 'atcf' ); ?>">
+				<input class="name" type="text" name="rewards[0][price]" id="rewards[0][price]" placeholder="20">
 			</p>
 
 			<p class="atcf-submit-campaign-reward-description">
 				<label for="rewards[0][description]"><?php _e( 'Description', 'atcf' ); ?></label>
-				<input class="description" type="text" name="rewards[0][description]" id="rewards[0][description]" rows="3" placeholder="<?php _e( 'Description of reward for this level of contribution.', 'atcf' ); ?>" />
+				<input class="description" type="text" name="rewards[0][description]" id="rewards[0][description]" rows="3" placeholder="<?php esc_attr_e( 'Description of reward for this level of contribution.', 'atcf' ); ?>" />
 			</p>
 
 			<p class="atcf-submit-campaign-reward-file">
@@ -298,7 +298,7 @@ function atcf_shortcode_submit_field_paypal_email() {
 
 	<p class="atcf-submit-campaign-paypal-email">
 		<label for="email"><?php _e( 'PayPal Email:', 'atcf' ); ?></label>
-		<input type="text" name="email" id="email" placeholder="<?php _e( 'PayPal Email', 'atcf' ); ?>">
+		<input type="text" name="email" id="email" placeholder="<?php esc_attr_e( 'PayPal Email', 'atcf' ); ?>">
 	</p>
 <?php
 }
