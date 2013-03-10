@@ -5,7 +5,7 @@
  * Description: A crowd funding platform in the likes of Kickstarter and Indigogo
  * Author:      AppThemer
  * Author URI:  http://appthemer.com
- * Version:     0.2-alpha
+ * Version:     0.3-alpha
  * Text Domain: atcf
  */
 
@@ -18,7 +18,7 @@ include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 /**
  * Main Crowd Funding Class
  *
- * @since v1.4
+ * @since AT_CrowdFunding 0.1-alpha
  */
 final class AT_CrowdFunding {
 
@@ -61,7 +61,7 @@ final class AT_CrowdFunding {
 	private function setup_globals() {
 		/** Versions **********************************************************/
 
-		$this->version    = '0.1-alpha';
+		$this->version    = '0.3-alpha';
 		$this->db_version = '1';
 
 		/** Paths *************************************************************/
@@ -82,7 +82,7 @@ final class AT_CrowdFunding {
 
 		/** Misc **************************************************************/
 
-		$this->domain       = 'crowdfunding'; 
+		$this->domain       = 'atcf'; 
 	}
 
 	/**
@@ -130,6 +130,8 @@ final class AT_CrowdFunding {
 	/**
 	 * Easy Digital Downloads
 	 *
+	 * @since AT_CrowdFunding 0.2-alpha
+	 *
 	 * @return void
 	 */
 	function is_edd_activated() {
@@ -146,7 +148,9 @@ final class AT_CrowdFunding {
 	/**
 	 * Admin notice.
 	 *
-	 * @return	string
+	 * @since AT_CrowdFunding 0.2-alpha
+	 *
+	 * @return void
 	 */
 	function edd_notice() {
 ?>
@@ -192,11 +196,11 @@ final class AT_CrowdFunding {
 		$files = array();
 
 		if ( isset ( $wp_query->query_vars[ 'backers' ] ) && is_singular( 'download' ) ) {
-			$files = array( 'single-campaign-backers.php' );
+			$files = apply_filters( 'atcf_crowdfunding_templates_backers', array( 'single-campaign-backers.php' ) );
 		} else if ( is_singular( 'download' ) ) {
-			$files = array( 'single-campaign.php', 'single-download.php', 'single.php' );
+			$files = apply_filters( 'atcf_crowdfunding_templates_campaign', array( 'single-campaign.php', 'single-download.php', 'single.php' ) );
 		} else if ( is_post_type_archive( 'download' ) ) {
-			$files = array( 'archive-campaigns.php', 'archive-download.php', 'archive.php' );
+			$files = apply_filters( 'atcf_crowdfunding_templates_archive', array( 'archive-campaigns.php', 'archive-download.php', 'archive.php' ) );
 		}
 
 		foreach ( $files as $file ) {
@@ -221,23 +225,22 @@ final class AT_CrowdFunding {
 	 */
 	public function load_textdomain() {
 		// Traditional WordPress plugin locale filter
-		$locale        = apply_filters( 'plugin_locale',  get_locale(), $this->domain );
+		$locale        = apply_filters( 'plugin_locale', get_locale(), $this->domain );
 		$mofile        = sprintf( '%1$s-%2$s.mo', $this->domain, $locale );
 
 		// Setup paths to current locale file
 		$mofile_local  = $this->lang_dir . $mofile;
 		$mofile_global = WP_LANG_DIR . '/' . $this->domain . '/' . $mofile;
 
-		// Look in global /wp-content/languages/crowdfunding folder
+		// Look in global /wp-content/languages/atcf folder
 		if ( file_exists( $mofile_global ) ) {
 			return load_textdomain( $this->domain, $mofile_global );
 
-		// Look in local /wp-content/plugins/crowdfunding/languages/ folder
+		// Look in local /wp-content/plugins/appthemer-crowdfunding/languages/ folder
 		} elseif ( file_exists( $mofile_local ) ) {
 			return load_textdomain( $this->domain, $mofile_local );
 		}
 
-		// Nothing found
 		return false;
 	}
 }
