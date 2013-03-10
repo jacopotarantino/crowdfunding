@@ -39,7 +39,7 @@ final class ATCF_CrowdFunding {
 	 */
 	public static function instance() {
 		if ( ! isset ( self::$instance ) ) {
-			self::$instance = new AT_CrowdFunding;
+			self::$instance = new ATCF_CrowdFunding;
 			self::$instance->setup_globals();
 			self::$instance->includes();
 			self::$instance->setup_actions();
