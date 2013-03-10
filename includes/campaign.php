@@ -929,12 +929,11 @@ function atcf_shortcode_submit_process() {
 	if ( empty( $_POST['action' ] ) || ( 'atcf-campaign-submit' !== $_POST[ 'action' ] ) )
 		return;
 
-	if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'atcf-campaign-submit' ) )
+	if ( ! wp_verify_nonce( $_POST[ '_wpnonce' ], 'atcf-campaign-submit' ) )
 		return;
 
 	if ( ! function_exists( 'wp_handle_upload' ) ) {
-		require_once( ABSPATH . 'wp-admin/includes/file.php' );
-		require_once( ABSPATH . 'wp-admin/includes/image.php' );
+		require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 	}
 
 	$errors           = null;
