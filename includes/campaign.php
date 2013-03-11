@@ -342,7 +342,7 @@ class ATCF_Campaigns {
 		}
 
 		if ( is_wp_error( $errors ) )
-			wp_die( $errors->get_error_messages() );
+			wp_die( print_r( $errors->get_error_messages() ) );
 		else {
 			update_post_meta( $this->ID, '_campaign_expired', 1 );
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 13, 'collected' => $num_collected ), admin_url( 'post.php' ) ) );
