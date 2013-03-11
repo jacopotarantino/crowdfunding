@@ -177,7 +177,7 @@ function atcf_payment_view_details( $payment_meta ) {
 	<li>
 		<?php echo $shipping[ 'shipping_address' ]; ?><br />
 		<?php echo isset ( $shipping[ 'shipping_address_2' ] ) ? $shipping[ 'shipping_address_2' ] : ''; ?><br />
-		<?php echo $shipping[ 'shipping_city' ]; ?>, <?php echo $shipping[ 'shipping_state' ]; ?> <?php echo $shipping[ 'shipping_zip' ]; ?><br />
+		<?php echo $shipping[ 'shipping_city' ]; ?>, <?php echo isset ( $shipping[ 'shipping_state' ] ) ? $shipping[ 'shipping_state' ] : ''; ?> <?php echo $shipping[ 'shipping_zip' ]; ?><br />
 		<?php echo $shipping[ 'shipping_country' ]; ?>
 	</li>
 <?php

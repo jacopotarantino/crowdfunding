@@ -854,7 +854,7 @@ class ATCF_Campaign {
 		$backers = $this->backers();
 
 		if ( 0 == $backers )
-			$backers = array();
+			return $formatted ? edd_currency_filter( edd_format_amount( 0 ) ) : 0;
 
 		foreach ( $backers as $backer ) {
 			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
