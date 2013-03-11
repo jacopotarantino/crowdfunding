@@ -285,7 +285,7 @@ class ATCF_Campaigns {
 		$paypal_adaptive = new PayPalAdaptivePaymentsGateway();
 		$payments        = $campaign->backers();
 		$num_collected   = 0;
-		$errors          = null;
+		$errors          = new WP_Error();
 
 		$owner           = $edd_options[ 'epap_receivers' ];
 		$owner           = explode( '|', $owner );
@@ -316,7 +316,7 @@ class ATCF_Campaigns {
 		
 			/** Already paid or other error */
 			if ( $amount > $paid ) {
-				$errors = new WP_Error( 'already-paid-' . $payment_id, __( 'This payment has already been collected.', 'atcf' ) );
+				$errors->add( 'already-paid-' . $payment_id, __( 'This payment has already been collected.', 'atcf' ) );
 				
 				continue;
 			}
@@ -334,15 +334,15 @@ class ATCF_Campaigns {
 					
 					edd_update_payment_status( $_GET['payment_id'], 'publish' );
 				} else {
-					$errors = new WP_Error( 'invalid-response-' . $payment_id, __( 'There was an error collecting funds.', 'atcf' ), $payment );
+					$errors->add( 'invalid-response-' . $payment_id, sprintf( __( 'There was an error collecting funds for payment %d. PayPal responded with %s', 'atcf' ), $payment_id, $responsecode ), $payment );
 				}
 			} else {
-				$errors = new WP_Error( 'payment-error-' . $payment_id, __( 'There was an error.', 'atcf' ) );
+				$errors->add( 'payment-error-' . $payment_id, __( 'There was an error.', 'atcf' ) );
 			}
 		}
 
 		if ( is_wp_error( $errors ) )
-			wp_die( print_r( $errors->get_error_messages() ) );
+			wp_die( $errors );
 		else {
 			update_post_meta( $this->ID, '_campaign_expired', 1 );
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 13, 'collected' => $num_collected ), admin_url( 'post.php' ) ) );
@@ -858,6 +858,11 @@ class ATCF_Campaign {
 
 		foreach ( $backers as $backer ) {
 			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
+			$payment    = get_post( $payment_id );
+			
+			if ( empty( $payment ) )
+				continue;
+
 			$total      = $total + edd_get_payment_amount( $payment_id );
 		}
 		
