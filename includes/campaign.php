@@ -213,8 +213,8 @@ class ATCF_Campaigns {
 
 		$campaign = new ATCF_Campaign( $post );
 
-		if ( $campaign->is_funded() && class_exists( 'PayPalAdaptivePaymentsGateway' ) )
-			add_meta_box( 'cf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
+		if ( $campaign->is_funded() && ! $campaign->is_collected() && class_exists( 'PayPalAdaptivePaymentsGateway' ) )
+			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
 		add_meta_box( 'atcf_campaign_video', __( 'Campaign Video', 'atcf' ), '_atcf_metabox_campaign_video', 'download', 'normal', 'high' );
@@ -310,12 +310,12 @@ class ATCF_Campaigns {
 			$payment_id      = get_post_meta( $payment->ID, '_edd_log_payment_id', true );
 
 			$sender_email    = get_post_meta( $payment_id, '_edd_epap_sender_email', true );
-			$amount          = get_post_meta( $payment_id, '_edd_epap_sender_amount', true );
-			$paid            = get_post_meta( $payment_id, '_edd_epap_sender_paid', true );
+			$amount          = get_post_meta( $payment_id, '_edd_epap_amount', true );
+			$paid            = get_post_meta( $payment_id, '_edd_epap_paid', true );
 			$preapproval_key = get_post_meta( $payment_id, '_edd_epap_preapproval_key', true );
 
 			/** Already paid or other error */
-			if ( $amount > $paid ) {
+			if ( $paid > $amount ) {
 				$errors->add( 'already-paid-' . $payment_id, __( 'This payment has already been collected.', 'atcf' ) );
 				
 				continue;
@@ -327,24 +327,33 @@ class ATCF_Campaigns {
 				if ( $responsecode == 'SUCCESS' || $responsecode == 'SUCCESSWITHWARNING' ) {
 					$pay_key = $payment[ 'payKey' ];
 					
-					add_post_meta( $_GET[ 'payment_id'], '_edd_epap_pay_key', $pay_key );
-					add_post_meta( $_GET[ 'payment_id'], '_edd_epap_preapproval_paid', true );
+					add_post_meta( $payment_id, '_edd_epap_pay_key', $pay_key );
+					add_post_meta( $payment_id, '_edd_epap_preapproval_paid', true );
 
 					$num_collected = $num_collected + 1;
 					
-					edd_update_payment_status( $_GET['payment_id'], 'publish' );
+					edd_update_payment_status( $payment_id, 'publish' );
 				} else {
-					$errors->add( 'invalid-response-' . $payment_id, sprintf( __( 'There was an error collecting funds for payment %d. PayPal responded with %s', 'atcf' ), $payment_id, json_encode( $payment ) ), $payment );
+					$errors->add( 
+						'invalid-response-' . $payment_id, 
+						sprintf( 
+							__( 'There was an error collecting funds for payment <a href="%1$s">#%2$d</a>. PayPal responded with %3$s', 'atcf' ), 
+							admin_url( 'edit.php?post_type=download&page=edd-payment-history&edd-action=edit-payment&purchase_id=' . $payment_id ), 
+							$payment_id, 
+							'<pre style="max-width: 100%; overflow: scroll; height: 200px;">' . print_r( array_merge( $payment,  compact( 'payment_id', 'preapproval_key', 'sender_email', 'amount', 'receivers' ) ), true ) . '</pre>'
+						)
+					);
 				}
 			} else {
 				$errors->add( 'payment-error-' . $payment_id, __( 'There was an error.', 'atcf' ) );
 			}
 		}
 
-		if ( is_wp_error( $errors ) )
+		if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
 			wp_die( $errors );
 		else {
 			update_post_meta( $this->ID, '_campaign_expired', 1 );
+			update_post_meta( $this->ID, '_campaign_bulk_collected', 1 );
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 13, 'collected' => $num_collected ), admin_url( 'post.php' ) ) );
 			exit();
 		}
@@ -893,6 +902,10 @@ class ATCF_Campaign {
 			$active = false;
 
 		return apply_filters( 'atcf_campaign_active', $active, $this );
+	}
+
+	public function is_collected() {
+		return $this->__get( '_campaign_bulk_collected' );
 	}
 
 	/**
