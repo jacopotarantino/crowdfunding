@@ -48,9 +48,12 @@ Developers can contribute to the source code of the project on GitHub (https://g
 
 == Changelog ==
 
-= 0.3-alpha: X =
+= 0.3-alpha: March 12, 2013 =
 
 * Fix: Better theme support. Check for some EDD templates, as well as standard WordPress files.
+* Fix: Actually collect funds!
+* Fix: Better errors when submitting a campaign, or collecting funds.
+* New: If PayPal Adaptive Payments is not active, track normal payments.
 * New: Themes without explicit support will output default EDD variable pricing.
 
 = 0.2-alpha: March 7, 2013 =

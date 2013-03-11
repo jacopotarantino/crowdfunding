@@ -889,8 +889,7 @@ class ATCF_Campaign {
 	 *
 	 * @since Appthemer CrowdFunding 0.1-alpha
 	 *
-	 * @param boolean $formatted Return formatted currency or not
-	 * @return sting $percent The percent completed (formatted with a % or not)
+	 * @return boolean
 	 */
 	public function is_active() {
 		$active  = true;
@@ -901,9 +900,22 @@ class ATCF_Campaign {
 		if ( $this->__get( '_campaign_expired' ) )
 			$active = false;
 
+		if ( $this->is_collected() )
+			$active = false;
+
 		return apply_filters( 'atcf_campaign_active', $active, $this );
 	}
 
+	/**
+	 * Funds Collected
+	 *
+	 * When funds are collected in bulk, remember that, so we can end the
+	 * campaign, and not repeat things.
+	 *
+	 * @since Appthemer CrowdFunding 0.3-alpha
+	 *
+	 * @return boolean
+	 */
 	public function is_collected() {
 		return $this->__get( '_campaign_bulk_collected' );
 	}
