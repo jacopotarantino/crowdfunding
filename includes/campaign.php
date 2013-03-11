@@ -307,13 +307,13 @@ class ATCF_Campaigns {
 		);
 
 		foreach ( $payments as $payment ) {
-			$payment_id      = $payment->ID;
+			$payment_id      = get_post_meta( $payment->ID, '_edd_log_payment_id', true );
 
 			$sender_email    = get_post_meta( $payment_id, '_edd_epap_sender_email', true );
 			$amount          = get_post_meta( $payment_id, '_edd_epap_sender_amount', true );
 			$paid            = get_post_meta( $payment_id, '_edd_epap_sender_paid', true );
 			$preapproval_key = get_post_meta( $payment_id, '_edd_epap_preapproval_key', true );
-		
+
 			/** Already paid or other error */
 			if ( $amount > $paid ) {
 				$errors->add( 'already-paid-' . $payment_id, __( 'This payment has already been collected.', 'atcf' ) );
@@ -334,7 +334,7 @@ class ATCF_Campaigns {
 					
 					edd_update_payment_status( $_GET['payment_id'], 'publish' );
 				} else {
-					$errors->add( 'invalid-response-' . $payment_id, sprintf( __( 'There was an error collecting funds for payment %d. PayPal responded with %s', 'atcf' ), $payment_id, $responsecode ), $payment );
+					$errors->add( 'invalid-response-' . $payment_id, sprintf( __( 'There was an error collecting funds for payment %d. PayPal responded with %s', 'atcf' ), $payment_id, json_encode( $payment ) ), $payment );
 				}
 			} else {
 				$errors->add( 'payment-error-' . $payment_id, __( 'There was an error.', 'atcf' ) );
