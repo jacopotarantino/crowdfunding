@@ -730,7 +730,7 @@ class ATCF_Campaign {
 
 		$backers = $edd_logs->get_connected_logs( array(
 			'post_parent' => $this->ID, 
-			'log_type'    => 'preapproval',
+			'log_type'    => class_exists( 'PayPalAdaptivePaymentsGateway' ) ? 'preapproval' : 'sale',
 			'post_status' => array( 'publish' )
 		) );
 
