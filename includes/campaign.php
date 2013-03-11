@@ -1002,7 +1002,7 @@ function atcf_shortcode_submit_process() {
 
 	/** Check Email */
 	if ( ! is_email( $email ) )
-		$errors = new WP_Error( 'invalid-email', __( 'Please provide a valid PayPal email address.', 'atcf' ) );
+		$errors->add( 'invalid-email', __( 'Please provide a valid PayPal email address.', 'atcf' ) );
 
 	do_action( 'atcf_campaign_submit_validate', $_POST, $errors );
 
