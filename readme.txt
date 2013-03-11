@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: download, downloads, e-store, eshop, digital downloads, crowd funding, crowdfunding, crowdsource, 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 0.3-alpha
+Stable Tag: 0.4
 
 A crowdfunding platform in the likes of Kickstarter and Indigogo
 
@@ -32,6 +32,14 @@ Features of the plugin include:
 * Works both as a donation plugin and a Crowdfunding plugin.
 * Easy to theme and integrate into your own site which uses Easy Digital Downloads.
 
+== Installation ==
+
+1. Install the Easy Digital Downloads plugin and activate it, if you haven't already.
+2. Install the AppThemer Crowdfunding plugin and activate it.
+3. (Optional) Install the PayPal Adaptive Payments plugin. (https://easydigitaldownloads.com/extension/paypal-adaptive-payments/)
+4. Create a new page for your frontend submission form add this shortcode to the page: [appthemer_crowdfunding_submit] - (this is optional).
+5. Go to Campaigns > Add New to create a new campaign.
+
 == Frequently Asked Questions ==
 
 = Does this plugin work with any theme? =
@@ -44,11 +52,15 @@ The first compatible theme that has been released is called "Fundify" from AppTh
 
 == Get Involved ==
 
-Developers can contribute to the source code of the project on GitHub (https://github.com/spencerfinnell/crowdfunding)
+Developers can contribute to the source code of the project on GitHub (https://github.com/appthemer/crowdfunding)
 
 == Changelog ==
 
-= 0.3-alpha: March 12, 2013 =
+= 0.4: March 12, 2013 =
+
+* Release with Fundify theme.
+
+= 0.3-alpha: March 11, 2013 =
 
 * Fix: Better theme support. Check for some EDD templates, as well as standard WordPress files.
 * Fix: Actually collect funds!
