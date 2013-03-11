@@ -941,7 +941,7 @@ function atcf_shortcode_submit_process() {
 		require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 	}
 
-	$errors           = null;
+	$errors           = new WP_Error();
 	$prices           = array();
 	$edd_files        = array();
 	$upload_overrides = array( 'test_form' => false );
@@ -963,11 +963,11 @@ function atcf_shortcode_submit_process() {
 
 	/** Check Title */
 	if ( empty( $title ) )
-		$errors = new WP_Error( 'invalid-title', __( 'Please add a title to this campaign.', 'atcf' ) );
+		$errors->add( 'invalid-title', __( 'Please add a title to this campaign.', 'atcf' ) );
 
 	/** Check Goal */
 	if ( ! is_numeric( $goal ) )
-		$errors = new WP_Error( 'invalid-goal', sprintf( __( 'Please enter a valid goal amount. All goals are set in the %s currency.', 'atcf' ), $edd_options[ 'currency' ] ) );
+		$errors->add( 'invalid-goal', sprintf( __( 'Please enter a valid goal amount. All goals are set in the %s currency.', 'atcf' ), $edd_options[ 'currency' ] ) );
 
 	/** Check Length */
 	$length = absint( $length );
@@ -986,7 +986,7 @@ function atcf_shortcode_submit_process() {
 
 	/** Check Content */
 	if ( empty( $content ) )
-		$errors = new WP_Error( 'invalid-content', __( 'Please add content to this campaign.', 'atcf' ) );
+		$errors->add( 'invalid-content', __( 'Please add content to this campaign.', 'atcf' ) );
 
 	/** Check Excerpt */
 	if ( empty( $excerpt ) )
@@ -994,11 +994,11 @@ function atcf_shortcode_submit_process() {
 
 	/** Check Image */
 	if ( empty( $image ) )
-		$errors = new WP_Error( 'invalid-previews', __( 'Please add a campaign image.', 'atcf' ) );
+		$errors->add( 'invalid-previews', __( 'Please add a campaign image.', 'atcf' ) );
 
 	/** Check Rewards */
 	if ( empty( $rewards ) )
-		$errors = new WP_Error( 'invalid-rewards', __( 'Please add at least one reward to the campaign.', 'atcf' ) );
+		$errors->add( 'invalid-rewards', __( 'Please add at least one reward to the campaign.', 'atcf' ) );
 
 	/** Check Email */
 	if ( ! is_email( $email ) )
@@ -1007,7 +1007,7 @@ function atcf_shortcode_submit_process() {
 	do_action( 'atcf_campaign_submit_validate', $_POST, $errors );
 
 	if ( is_wp_error( $errors ) )
-		wp_die( $errors->get_error_message() );
+		wp_die( $errors );
 
 	$args = apply_filters( 'atcf_campaign_submit_data', array(
 		'post_type'    => 'download',
