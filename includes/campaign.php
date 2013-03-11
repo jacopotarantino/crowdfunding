@@ -295,7 +295,7 @@ class ATCF_Campaigns {
 		$campaign_amount = 100 - $owner_amount;
 		$campaign_email  = $campaign->paypal_email();
 
-		$receivers       = array(
+		/*$receivers       = array(
 			array(
 				'email'  => trim( $campaign_email ),
 				'amount' => absint( $campaign_amount )
@@ -304,7 +304,9 @@ class ATCF_Campaigns {
 				'email'  => trim( $owner_email ),
 				'amount' => absint( $owner_amount )
 			)
-		);
+		);*/
+
+		$receivers = "$campaign_email|$campaign_amount\n$owner_email|$owner_amount";
 
 		foreach ( $payments as $payment ) {
 			$payment_id      = $payment->ID;
