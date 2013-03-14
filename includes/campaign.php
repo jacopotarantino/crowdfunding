@@ -979,6 +979,7 @@ function atcf_shortcode_submit_process() {
 	$category  = $_POST[ 'cat' ];
 	$content   = $_POST[ 'description' ];
 	$excerpt   = $_POST[ 'excerpt' ];
+	$author    = $_POST[ 'name' ];
 
 	$image     = $_FILES[ 'image' ];
 
@@ -1032,7 +1033,7 @@ function atcf_shortcode_submit_process() {
 
 	do_action( 'atcf_campaign_submit_validate', $_POST, $errors );
 
-	if ( is_wp_error( $errors ) )
+	if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
 		wp_die( $errors );
 
 	$args = apply_filters( 'atcf_campaign_submit_data', array(
@@ -1053,6 +1054,7 @@ function atcf_shortcode_submit_process() {
 	add_post_meta( $campaign, 'campaign_email', sanitize_text_field( $email ) );
 	add_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
 	add_post_meta( $campaign, 'campaign_location', sanitize_text_field( $location ) );
+	add_post_meta( $campaign, 'campaign_author', sanitize_text_field( $author ) );
 	
 	foreach ( $rewards as $key => $reward ) {
 		$edd_files[] = array(

@@ -136,7 +136,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_categor
 function atcf_shortcode_submit_field_author() {
 ?>
 	<p class="atcf-submit-campaign-author">
-		<label for="length"><?php _e( 'Name/Organization Name', 'atcf' ); ?></label>
+		<label for="name"><?php _e( 'Name/Organization Name', 'atcf' ); ?></label>
 		<input type="text" name="name" id="name">
 	</p>
 <?php
