@@ -56,6 +56,7 @@ Would you like to help translate the plugin into more languages? [Contact Us] (h
 == Frequently Asked Questions ==
 
 **Does this plugin work with any theme?**
+<<<<<<< HEAD
 
 Not currently at this time. However, it is very easy to integrate with a theme. There are a few custom templates that need to be set up. Simply create a single-campaign.php, archive-campaigns.php, and single-campaign-backers.php and you are ready to go. These files act like a standard archive or single template in WordPress.
 
@@ -70,6 +71,18 @@ Not currently at this time. However, it is very easy to integrate with a theme. 
 == Changelog ==
 
 = 0.4.1: March 14, 2013 =
+=======
+
+Not currently at this time. However, it is very easy to integrate with a theme. There are a few custom templates that need to be set up. Simply create a single-campaign.php, archive-campaigns.php, and single-campaign-backers.php and you are ready to go. These files act like a standard archive or single template in WordPress.
+
+== Screenshots ==
+
+1. Campaign Configuration
+2. Edit Campaign Page
+3. Frontend preview using the "Fundify" theme.
+4. Frontend preview of the frontend submission form using the "Fundify" theme.
+5. Frontend preview of the checkout page using the "Fundify" theme.
+>>>>>>> 721a8a4a218a12049a10b31d50acc4dca67b8e2c
 
 * Fix: When there are no errors, don't kill the frontend submission.
 * Fix: Save the author/organization name on frontend submission.
