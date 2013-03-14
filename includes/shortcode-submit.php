@@ -294,11 +294,17 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_rewards
  */
 function atcf_shortcode_submit_field_paypal_email() {
 ?>
-	<h3 class="atcf-submit-section payment-information"><?php _e( 'Payment Information', 'atcf' ); ?></h3>
+	<h3 class="atcf-submit-section payment-information"><?php _e( 'Your Information', 'atcf' ); ?></h3>
+
+	<p class="atcf-submit-campaign-contact-email">
+		<label for="email"><?php _e( 'Contact Email:', 'atcf' ); ?></label>
+		<input type="text" name="contact-email" id="contact-email" />
+		<span class="description"><?php _e( 'An account will be created for you with this email address. It must be active.', 'atcf' ); ?></span>
+	</p>
 
 	<p class="atcf-submit-campaign-paypal-email">
 		<label for="email"><?php _e( 'PayPal Email:', 'atcf' ); ?></label>
-		<input type="text" name="email" id="email" placeholder="<?php esc_attr_e( 'PayPal Email', 'atcf' ); ?>">
+		<input type="text" name="email" id="email" />
 	</p>
 <?php
 }

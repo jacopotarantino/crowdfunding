@@ -987,6 +987,7 @@ function atcf_shortcode_submit_process() {
 	$files     = $_FILES[ 'files' ];
 
 	$email     = $_POST[ 'email' ];
+	$c_email   = $_POST[ 'contact-email' ];
 
 	/** Check Title */
 	if ( empty( $title ) )
@@ -1028,13 +1029,23 @@ function atcf_shortcode_submit_process() {
 		$errors->add( 'invalid-rewards', __( 'Please add at least one reward to the campaign.', 'atcf' ) );
 
 	/** Check Email */
-	if ( ! is_email( $email ) )
-		$errors->add( 'invalid-email', __( 'Please provide a valid PayPal email address.', 'atcf' ) );
+	if ( ! is_email( $email ) || ! is_email( $c_email ) )
+		$errors->add( 'invalid-email', __( 'Please make sure all email addresses are valid.', 'atcf' ) );
+
+	if ( email_exists( $c_email ) )
+		$errors->add( 'invalid-c-email', __( 'That contact email address already exists.', 'atcf' ) );		
 
 	do_action( 'atcf_campaign_submit_validate', $_POST, $errors );
 
 	if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
 		wp_die( $errors );
+
+	$password = wp_generate_password( 12, false );
+	$user_id = wp_create_user( $c_email, $password, $c_email );
+	
+	$user = new WP_User( $user_id );
+	$user->set_role( 'campaign_contributor' );
+
 
 	$args = apply_filters( 'atcf_campaign_submit_data', array(
 		'post_type'    => 'download',
