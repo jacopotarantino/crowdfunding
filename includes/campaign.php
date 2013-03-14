@@ -237,6 +237,7 @@ class ATCF_Campaigns {
 		$fields[] = '_campaign_featured';
 		$fields[] = 'campaign_goal';
 		$fields[] = 'campaign_email';
+		$fields[] = 'campaign_contact_email';
 		$fields[] = 'campaign_end_date';
 		$fields[] = 'campaign_video';
 		$fields[] = 'campaign_location';
@@ -566,6 +567,11 @@ function _atcf_metabox_campaign_info() {
 		<input type="text" name="campaign_email" id="campaign_email" value="<?php echo esc_attr( $campaign->paypal_email() ); ?>" class="regular-text" />
 	</p>
 
+	<p>
+		<label for="campaign_email"><strong><?php _e( 'Contact Email:', 'atcf' ); ?></strong></label><br />
+		<input type="text" name="campaign_contact_email" id="campaign_contact_email" value="<?php echo esc_attr( $campaign->contact_email() ); ?>" class="regular-text" />
+	</p>
+
 	<style>#end-aa { width: 3.4em } #end-jj, #end-hh, #end-mn { width: 2em; }</style>
 
 	<p>
@@ -703,6 +709,17 @@ class ATCF_Campaign {
 	}
 
 	/**
+	 * Campaign Contact Email
+	 *
+	 * @since Appthemer CrowdFunding 0.5
+	 *
+	 * @return sting Campaign Contact Email
+	 */
+	public function contact_email() {
+		return $this->__get( 'campaign_contact_email' );
+	}
+
+	/**
 	 * Campaign End Date
 	 *
 	 * @since Appthemer CrowdFunding 0.1-alpha
@@ -787,6 +804,12 @@ class ATCF_Campaign {
 
 		foreach ( $backers as $log ) {
 			$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
+
+			$payment    = get_post( $payment_id );
+			
+			if ( empty( $payment ) )
+				continue;
+
 			$cart_items = edd_get_payment_meta_cart_details( $payment_id );
 			
 			foreach ( $cart_items as $item ) {
@@ -1041,11 +1064,19 @@ function atcf_shortcode_submit_process() {
 		wp_die( $errors );
 
 	$password = wp_generate_password( 12, false );
-	$user_id = wp_create_user( $c_email, $password, $c_email );
 	
-	$user = new WP_User( $user_id );
-	$user->set_role( 'campaign_contributor' );
+	$user_id  = wp_insert_user( array(
+		'user_login'           => $c_email, 
+		'user_pass'            => $password, 
+		'user_email'           => $c_email,
+		'user_nicename'        => $author,
+		'display_name'         => $author,
+		'show_admin_bar_front' => 'false',
+		'role'                 => 'campaign_contributor'
+	) );
 
+	$secure_cookie = is_ssl() ? true : false;
+	wp_set_auth_cookie( $user_id, true, $secure_cookie );
 
 	$args = apply_filters( 'atcf_campaign_submit_data', array(
 		'post_type'    => 'download',
@@ -1053,6 +1084,7 @@ function atcf_shortcode_submit_process() {
 		'post_title'   => $title,
 		'post_content' => $content,
 		'post_excerpt' => $excerpt,
+		'post_author'  => $user_id,
 		'tax_input'    => array(
 			'download_category' => array( $category )
 		)
