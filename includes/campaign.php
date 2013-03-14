@@ -787,6 +787,12 @@ class ATCF_Campaign {
 
 		foreach ( $backers as $log ) {
 			$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
+
+			$payment    = get_post( $payment_id );
+			
+			if ( empty( $payment ) )
+				continue;
+
 			$cart_items = edd_get_payment_meta_cart_details( $payment_id );
 			
 			foreach ( $cart_items as $item ) {
