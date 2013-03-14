@@ -778,8 +778,8 @@ class ATCF_Campaign {
 		$prices  = edd_get_variable_prices( $this->ID );
 		$totals  = array();
 
-		if ( empty( $backers ) )
-			return $totals;
+		if ( ! is_array( $backers ) )
+			$backers = array();
 
 		foreach ( $prices as $price ) {
 			$totals[$price[ 'amount' ]] = 0;
