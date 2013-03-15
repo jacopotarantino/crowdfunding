@@ -988,6 +988,7 @@ function atcf_shortcode_submit_process() {
 	$author    = $_POST[ 'name' ];
 
 	$image     = $_FILES[ 'image' ];
+	$video     = $_POST[ 'video' ];
 
 	$rewards   = $_POST[ 'rewards' ];
 	$files     = $_FILES[ 'files' ];
@@ -1061,6 +1062,7 @@ function atcf_shortcode_submit_process() {
 	add_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
 	add_post_meta( $campaign, 'campaign_location', sanitize_text_field( $location ) );
 	add_post_meta( $campaign, 'campaign_author', sanitize_text_field( $author ) );
+	add_post_meta( $campaign, 'campaign_video', esc_url( $video ) );
 	
 	foreach ( $rewards as $key => $reward ) {
 		$edd_files[] = array(
@@ -1096,8 +1098,8 @@ function atcf_shortcode_submit_process() {
 	}
 
 	if ( '' != $image[ 'name' ] ) {
-		$upload = wp_handle_upload( $images, $upload_overrides );
-
+		$upload = wp_handle_upload( $image, $upload_overrides );
+		
 		$attachment = array(
 			'guid'           => $upload[ 'url' ], 
 			'post_mime_type' => $upload[ 'type' ],
