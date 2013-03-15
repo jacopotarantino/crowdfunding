@@ -2,12 +2,14 @@
 
 Author URI: http://appthemer.com
 Plugin URI: http://appthemer.com
-Donate link: http://appthemer.com
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=contact@appthemer.com&item_name=Donation+for+Crowdfunding
 Contributors: SpencerFinnell, adampickering
 Tags: download, downloads, e-store, eshop, digital downloads, crowd funding, crowdfunding, crowdsource, 
 Requires at least: 3.5
 Tested up to: 3.5
 Stable Tag: 0.4.1
+License: GPLv3
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 A crowdfunding platform in the likes of Kickstarter and Indigogo
 
@@ -21,7 +23,7 @@ Run your own crowdfunding website for anything you can imagine.
 
 Note: The AppThemer Crowdfunding plugin is designed to work alongside the PayPal Adaptive Payments gateway so that pledges are collected but no funds are taken until the campaign reaches its goal. The plugin will also work along side any other gateway that Easy Digital Downloads supports but funds will be taken immediately.
 
-** Features **
+= Features =
 
 Features of the plugin include:
 
@@ -46,11 +48,11 @@ Features of the plugin include:
 
 Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
-** Compatible Themes **
+= Premium Themes =
 
-The first compatible theme that has been released is called "Fundify" from AppThemer.
+The first compatible theme that has been released is called "Fundify" from [AppThemer](http://appthemer.com/fundify.html/).
 
-** Get Involved **
+= Get Involved =
 
 Developers can contribute to the source code of the project on GitHub (https://github.com/appthemer/crowdfunding)
 
