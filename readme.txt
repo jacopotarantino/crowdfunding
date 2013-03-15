@@ -26,6 +26,7 @@ Note: The AppThemer Crowdfunding plugin is designed to work alongside the PayPal
 = Features =
 
 Features of the plugin include:
+
 * Crowd fund anything you want!
 * Frontend form submission to easily collect campaign information.
 * Compatible with PayPal Adaptive Payments API for pre-approved purchases. When a person commits to funding your project they are only charged if your campaign reaches its pre-defined goal.
@@ -39,7 +40,7 @@ The first compatible theme that has been released is called "Fundify" from [AppT
 
 = Get Involved =
 
-Developers can contribute to the source code of the project on GitHub (https://github.com/appthemer/crowdfunding)
+Developers can contribute to the source code of the project on [GitHub](https://github.com/appthemer/crowdfunding)
 
 == Installation ==
 
