@@ -5,7 +5,7 @@
  * Description: A crowd funding platform in the likes of Kickstarter and Indigogo
  * Author:      AppThemer
  * Author URI:  http://appthemer.com
- * Version:     0.4-alpha
+ * Version:     0.4.1-alpha
  * Text Domain: atcf
  */
 
