@@ -34,7 +34,7 @@ var CrowdFunding = (function($) {
 						.attr( 'for', label );
 				});
 
-				newReward.insertAfter( $( '.atcf-submit-campaign-reward.static' ) );
+				newReward.insertBefore( $( '.atcf-submit-campaign-add-reward' ) );
 			});
 		},
 

@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function atcf_shortcode_submit() {
 	$crowdfunding = crowdfunding();
 
-	wp_enqueue_script( 'atcf-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding.js', array( 'jquery' ) );
+	wp_enqueue_script( 'atcf-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding.js', array( 'jquery' ), 20130315 );
 
 	wp_localize_script( 'atcf-scripts', 'CrowdFundingL10n', array(
 		'oneReward' => __( 'At least one reward is required.', 'atcf' )

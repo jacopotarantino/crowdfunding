@@ -51,6 +51,8 @@ function atcf_purchase_variable_pricing( $download_id ) {
 		return;
 
 	$prices = edd_get_variable_prices( $download_id );
+	usort( $prices, 'atcf_sort_variable_prices' );
+
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 
 	do_action( 'edd_before_price_options', $download_id ); 
@@ -58,6 +60,18 @@ function atcf_purchase_variable_pricing( $download_id ) {
 	do_action( 'atcf_campaign_contribute_options', $prices, $type, $download_id );
 
 	add_action( 'edd_after_price_options', $download_id );
+}
+
+/**
+ * Always show prices in increasing order.
+ *
+ * @since Appthemer CrowdFunding 0.5.1
+ *
+ * @see atcf_purchase_variable_pricing
+ * @return array
+ */
+function atcf_sort_variable_prices( $a, $b ) {
+	return $a[ 'amount' ] - $b[ 'amount' ];
 }
 
 /**
