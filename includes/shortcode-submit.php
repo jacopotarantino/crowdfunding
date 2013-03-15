@@ -21,18 +21,18 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function atcf_shortcode_submit( $editing = false ) {
 	$crowdfunding = crowdfunding();
 
-	wp_enqueue_script( 'atcf-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding.js', array( 'jquery' ) );
-
-	wp_localize_script( 'atcf-scripts', 'CrowdFundingL10n', array(
-		'oneReward' => __( 'At least one reward is required.', 'atcf' )
-	) );
-
 	$campaign = null;
 
 	if ( $editing ) {
 		global $post;
 
 		$campaign = atcf_get_campaign( $post );
+	} else {
+		wp_enqueue_script( 'atcf-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding.js', array( 'jquery' ) );
+
+		wp_localize_script( 'atcf-scripts', 'CrowdFundingL10n', array(
+			'oneReward' => __( 'At least one reward is required.', 'atcf' )
+		) );
 	}
 
 	ob_start();
@@ -43,8 +43,8 @@ function atcf_shortcode_submit( $editing = false ) {
 
 		<p class="atcf-submit-campaign-submit">
 			<input type="submit" value="<?php printf( esc_attr__( 'Submit %s', 'atcf' ), edd_get_label_singular() ); ?>">
-			<input type="hidden" name="action" value="atcf-campaign-submit" />
-			<?php wp_nonce_field( 'atcf-campaign-submit' ) ?>
+			<input type="hidden" name="action" value="atcf-campaign-<?php echo $editing ? 'edit' : 'submit'; ?>" />
+			<?php wp_nonce_field( 'atcf-campaign-' . ( $editing ? 'edit' : 'submit' ) ); ?>
 		</p>
 	</form>
 	<?php do_action( 'atcf_shortcode_submit_after', $editing, $campaign ); ?>
@@ -135,7 +135,7 @@ function atcf_shortcode_submit_field_category( $editing, $campaign ) {
 			$categories = array();
 
 		foreach( $categories as $category ) {
-			$selected = $category->slug;
+			$selected = $category->term_id;
 			break;
 		}
 	}
@@ -167,7 +167,7 @@ function atcf_shortcode_submit_field_description( $editing, $campaign ) {
 	<div class="atcf-submit-campaign-description">
 		<label for="description"><?php _e( 'Description', 'atcf' ); ?></label>
 		<?php 
-			wp_editor( $editing ? apply_filters( 'the_content', $campaign->data->post_content ) : '', 'description', apply_filters( 'atcf_submit_field_description_editor_args', array( 
+			wp_editor( $editing ? wp_richedit_pre( $campaign->data->post_content ) : '', 'description', apply_filters( 'atcf_submit_field_description_editor_args', array( 
 				'media_buttons' => false,
 				'teeny'         => true,
 				'quicktags'     => false,
@@ -246,6 +246,8 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_video',
  * @return void
  */
 function atcf_shortcode_submit_field_rewards( $editing, $campaign ) {
+	if ( $editing )
+		return;
 ?>
 	<h3 class="atcf-submit-section backer-rewards"><?php _e( 'Backer Rewards', 'atcf' ); ?></h3>
 
@@ -298,7 +300,7 @@ function atcf_shortcode_submit_field_paypal_email( $editing, $campaign ) {
 	<p class="atcf-submit-campaign-contact-email">
 		<label for="email"><?php _e( 'Contact Email', 'atcf' ); ?></label>
 		<input type="text" name="contact-email" id="contact-email" value="<?php echo $editing ? $campaign->contact_email() : null; ?>" />
-		<span class="description"><?php _e( 'An account will be created for you with this email address. It must be active.', 'atcf' ); ?></span>
+		<?php if ( ! $editing ) : ?><span class="description"><?php _e( 'An account will be created for you with this email address. It must be active.', 'atcf' ); ?></span><?php endif; ?>
 	</p>
 
 	<p class="atcf-submit-campaign-paypal-email">

@@ -1095,6 +1095,7 @@ function atcf_shortcode_submit_process() {
 	/** Extra Campaign Information */
 	add_post_meta( $campaign, 'campaign_goal', apply_filters( 'edd_metabox_save_edd_price', $goal ) );
 	add_post_meta( $campaign, 'campaign_email', sanitize_text_field( $email ) );
+	add_post_meta( $campaign, 'campaign_contact_email', sanitize_text_field( $c_email ) );
 	add_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
 	add_post_meta( $campaign, 'campaign_location', sanitize_text_field( $location ) );
 	add_post_meta( $campaign, 'campaign_author', sanitize_text_field( $author ) );
@@ -1133,7 +1134,7 @@ function atcf_shortcode_submit_process() {
 	}
 
 	if ( '' != $image[ 'name' ] ) {
-		$upload = wp_handle_upload( $images, $upload_overrides );
+		$upload = wp_handle_upload( $image, $upload_overrides );
 
 		$attachment = array(
 			'guid'           => $upload[ 'url' ], 
@@ -1168,6 +1169,88 @@ function atcf_shortcode_submit_process() {
 	exit();
 }
 add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
+
+/**
+ * Process shortcode submission.
+ *
+ * @since Appthemer CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
+function atcf_campaign_edit() {
+	global $edd_options, $post;
+	
+	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
+		return;
+	
+	if ( empty( $_POST['action' ] ) || ( 'atcf-campaign-edit' !== $_POST[ 'action' ] ) )
+		return;
+
+	if ( ! wp_verify_nonce( $_POST[ '_wpnonce' ], 'atcf-campaign-edit' ) )
+		return;
+
+	if ( ! ( $post->post_author == get_current_user_id() || current_user_can( 'manage_options' ) ) )
+		return;
+
+	if ( ! function_exists( 'wp_handle_upload' ) ) {
+		require_once( ABSPATH . 'wp-admin/includes/admin.php' );
+	}
+
+	$errors           = new WP_Error();
+	
+	$category  = $_POST[ 'cat' ];
+	$content   = $_POST[ 'description' ];
+	$excerpt   = $_POST[ 'excerpt' ];
+
+	$email     = $_POST[ 'email' ];
+	$c_email   = $_POST[ 'contact-email' ];
+	$author    = $_POST[ 'name' ];
+	$location  = $_POST[ 'location' ];
+
+	/** Check Category */
+	$category = absint( $category );
+
+	/** Check Content */
+	if ( empty( $content ) )
+		$errors->add( 'invalid-content', __( 'Please add content to this campaign.', 'atcf' ) );
+
+	/** Check Excerpt */
+	if ( empty( $excerpt ) )
+		$excerpt = null;
+
+	/** Check Email */
+	if ( ! is_email( $email ) || ! is_email( $c_email ) )
+		$errors->add( 'invalid-email', __( 'Please make sure all email addresses are valid.', 'atcf' ) );
+
+	do_action( 'atcf_edit_campaign_validate', $_POST, $errors );
+
+	if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
+		wp_die( $errors );
+
+	$args = apply_filters( 'atcf_edit_campaign_data', array(
+		'ID'           => $post->ID,
+		'post_content' => $content,
+		'post_excerpt' => $excerpt,
+		'tax_input'    => array(
+			'download_category' => array( $category )
+		)
+	), $_POST );
+
+	$campaign = wp_update_post( $args, true );
+
+	/** Extra Campaign Information */
+	update_post_meta( $post->ID, 'campaign_email', sanitize_text_field( $email ) );
+	add_post_meta( $campaign, 'campaign_contact_email', sanitize_text_field( $c_email ) );
+	update_post_meta( $post->ID, 'campaign_location', sanitize_text_field( $location ) );
+	update_post_meta( $post->ID, 'campaign_author', sanitize_text_field( $author ) );
+
+	do_action( 'atcf_edit_campaign_after', $post->ID, $_POST );
+
+	$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', add_query_arg( array( 'success' => 'true' ), get_permalink() ) );
+	wp_safe_redirect( $redirect );
+	exit();
+}
+add_action( 'template_redirect', 'atcf_campaign_edit' );
 
 /**
  * Price Options Heading
