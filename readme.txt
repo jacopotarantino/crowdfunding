@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: download, downloads, e-store, eshop, digital downloads, crowd funding, crowdfunding, crowdsource, 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 0.4.1
+Stable Tag: 0.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -58,7 +58,7 @@ Yes. However, it won't look much different than a standard EDD install. Template
 
 == Changelog ==
 
-= 0.4.1: March 12, 2013 =
+= 0.5: March 12, 2013 =
 
 * Fix: Don't kill the frontend form submission when there are no errors.
 * Fix: Save campaign author/organization on frontend form submission.
