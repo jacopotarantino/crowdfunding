@@ -60,6 +60,7 @@ Developers can contribute to the source code of the project on GitHub (https://g
 
 * Fix: Don't kill the frontend form submission when there are no errors.
 * Fix: Save campaign author/organization on frontend form submission.
+* Fix: Properly save preview image and/or video on frontend form submission.
 
 = 0.4: March 12, 2013 =
 
