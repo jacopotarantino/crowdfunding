@@ -821,7 +821,10 @@ class ATCF_Campaign {
 		if ( $now > $expires )
 			return 0;
 
-		$diff = $expires->getTimestamp() - $now->getTimestamp();
+		/**
+		 * 5.3: $diff = $expires->getTimestamp() - $now->getTimestamp();
+		 */
+		$diff = $expires->format( 'U' ) - $now->format( 'U' );
 
 		if ( $diff < 0 )
 			return 0;
