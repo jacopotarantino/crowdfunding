@@ -63,6 +63,7 @@ Yes. However, it won't look much different than a standard EDD install. Template
 * Fix: When adding rewards via frontend, make sure blank fields are added in the correct spot.
 * Fix: Always show backer rewards in ascending price order, no matter how they are entered.
 * Fix: Don't use getTimestamp() method on DateTime (not supported in 5.2) -- format() instead.
+* New: Added french translation to plugin.
 
 = 0.5: March 14, 2013 =
 
