@@ -18,28 +18,36 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @return $form
  */
-function atcf_shortcode_submit() {
+function atcf_shortcode_submit( $editing = false ) {
 	$crowdfunding = crowdfunding();
+	$campaign     = null;
 
-	wp_enqueue_script( 'atcf-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding.js', array( 'jquery' ), 20130315 );
+	if ( $editing ) {
+		global $post;
 
-	wp_localize_script( 'atcf-scripts', 'CrowdFundingL10n', array(
-		'oneReward' => __( 'At least one reward is required.', 'atcf' )
-	) );
+		$campaign = atcf_get_campaign( $post );
+	} else {
+		wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'assets/js/jquery.validate.min.js');
+		wp_enqueue_script( 'atcf-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding.js', array( 'jquery', 'jquery-validation' ) );
+
+		wp_localize_script( 'atcf-scripts', 'CrowdFundingL10n', array(
+			'oneReward' => __( 'At least one reward is required.', 'atcf' )
+		) );
+	}
 
 	ob_start();
 ?>
-	<?php do_action( 'atcf_shortcode_submit_before' ); ?>
+	<?php do_action( 'atcf_shortcode_submit_before', $editing, $campaign ); ?>
 	<form action="" method="post" class="atcf-submit-campaign" enctype="multipart/form-data">
-		<?php do_action( 'atcf_shortcode_submit_fields' ); ?>
+		<?php do_action( 'atcf_shortcode_submit_fields', $editing, $campaign ); ?>
 
 		<p class="atcf-submit-campaign-submit">
 			<input type="submit" value="<?php printf( esc_attr__( 'Submit %s', 'atcf' ), edd_get_label_singular() ); ?>">
-			<input type="hidden" name="action" value="atcf-campaign-submit" />
-			<?php wp_nonce_field( 'atcf-campaign-submit' ) ?>
+			<input type="hidden" name="action" value="atcf-campaign-<?php echo $editing ? 'edit' : 'submit'; ?>" />
+			<?php wp_nonce_field( 'atcf-campaign-' . ( $editing ? 'edit' : 'submit' ) ); ?>
 		</p>
 	</form>
-	<?php do_action( 'atcf_shortcode_submit_after' ); ?>
+	<?php do_action( 'atcf_shortcode_submit_after', $editing, $campaign ); ?>
 <?php
 	$form = ob_get_clean();
 
@@ -54,7 +62,9 @@ add_shortcode( 'appthemer_crowdfunding_submit', 'atcf_shortcode_submit' );
  *
  * @return void
  */
-function atcf_shortcode_submit_field_title() {
+function atcf_shortcode_submit_field_title( $editing, $campaign ) {
+	if ( $editing )
+		return;
 ?>
 	<h3 class="atcf-submit-section campaign-information"><?php _e( 'Campaign Information', 'atcf' ); ?></h3>
 
@@ -64,7 +74,7 @@ function atcf_shortcode_submit_field_title() {
 	</p>
 <?php
 }
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_title', 10 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_title', 10, 2 );
 
 /**
  * Campaign Goal
@@ -73,8 +83,11 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_title',
  *
  * @return void
  */
-function atcf_shortcode_submit_field_goal() {
+function atcf_shortcode_submit_field_goal( $editing, $campaign ) {
 	global $edd_options;
+
+	if ( $editing )
+		return;
 
 	$currencies = edd_get_currencies();
 ?>
@@ -84,7 +97,7 @@ function atcf_shortcode_submit_field_goal() {
 	</p>
 <?php
 }
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_goal', 20 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_goal', 20, 2 );
 
 /**
  * Campaign Length 
@@ -93,7 +106,9 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_goal', 
  *
  * @return void
  */
-function atcf_shortcode_submit_field_length() {
+function atcf_shortcode_submit_field_length( $editing, $campaign ) {
+	if ( $editing  )
+		return;
 ?>
 	<p class="atcf-submit-campaign-length">
 		<label for="length"><?php _e( 'Length (Days)', 'atcf' ); ?></label>
@@ -101,7 +116,7 @@ function atcf_shortcode_submit_field_length() {
 	</p>
 <?php
 }
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_length', 30 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_length', 30, 2 );
 
 /**
  * Campaign Category
@@ -110,7 +125,20 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_length'
  *
  * @return void
  */
-function atcf_shortcode_submit_field_category() {
+function atcf_shortcode_submit_field_category( $editing, $campaign ) {
+	if ( $editing ) {
+		$categories = get_the_terms( $campaign->ID, 'download_category' );
+
+		$selected = 0;
+
+		if ( ! $categories )
+			$categories = array();
+
+		foreach( $categories as $category ) {
+			$selected = $category->term_id;
+			break;
+		}
+	}
 ?>
 	<p class="atcf-submit-campaign-category">
 		<label for="category"><?php _e( 'Category', 'atcf' ); ?></label>			
@@ -118,47 +146,14 @@ function atcf_shortcode_submit_field_category() {
 			wp_dropdown_categories( array( 
 				'orderby'    => 'name', 
 				'hide_empty' => 0,
-				'taxonomy'   => 'download_category'
+				'taxonomy'   => 'download_category',
+				'selected'   => $editing ? $selected : 0
 			) );
 		?>
 	</p>
 <?php
 }
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_category', 35 );
-
-/**
- * Campaign Author
- *
- * @since CrowdFunding 0.1-alpha
- *
- * @return void
- */
-function atcf_shortcode_submit_field_author() {
-?>
-	<p class="atcf-submit-campaign-author">
-		<label for="name"><?php _e( 'Name/Organization Name', 'atcf' ); ?></label>
-		<input type="text" name="name" id="name">
-	</p>
-<?php
-}
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_author', 36 );
-
-/**
- * Campaign Location
- *
- * @since CrowdFunding 0.1-alpha
- *
- * @return void
- */
-function atcf_shortcode_submit_field_location() {
-?>
-	<p class="atcf-submit-campaign-location">
-		<label for="length"><?php _e( 'Location', 'atcf' ); ?></label>
-		<input type="text" name="location" id="location">
-	</p>
-<?php
-}
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_location', 38 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_category', 40, 2 );
 
 /**
  * Campaign Description
@@ -167,12 +162,12 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_locatio
  *
  * @return void
  */
-function atcf_shortcode_submit_field_description() {
+function atcf_shortcode_submit_field_description( $editing, $campaign ) {
 ?>
 	<div class="atcf-submit-campaign-description">
 		<label for="description"><?php _e( 'Description', 'atcf' ); ?></label>
 		<?php 
-			wp_editor( '', 'description', apply_filters( 'atcf_submit_field_description_editor_args', array( 
+			wp_editor( $editing ? wp_richedit_pre( $campaign->data->post_content ) : '', 'description', apply_filters( 'atcf_submit_field_description_editor_args', array( 
 				'media_buttons' => false,
 				'teeny'         => true,
 				'quicktags'     => false,
@@ -186,7 +181,7 @@ function atcf_shortcode_submit_field_description() {
 	</div>
 <?php
 }
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_description', 40 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_description', 50, 2 );
 
 /**
  * Campaign Export
@@ -195,15 +190,15 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_descrip
  *
  * @return void
  */
-function atcf_shortcode_submit_field_excerpt() {
+function atcf_shortcode_submit_field_excerpt( $editing, $campaign ) {
 ?>
 	<p class="atcf-submit-campaign-excerpt">
 		<label for="excerpt"><?php _e( 'Excerpt', 'atcf' ); ?></label>
-		<textarea name="excerpt" id="excerpt"></textarea>
+		<textarea name="excerpt" id="excerpt" value="<?php echo $editing ? $campaign->data->post_excerpt : null; ?>"></textarea>
 	</p>
 <?php
 }
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_excerpt', 50 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_excerpt', 60, 2 );
 
 /**
  * Campaign Images
@@ -212,7 +207,9 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_excerpt
  *
  * @return void
  */
-function atcf_shortcode_submit_field_images() {
+function atcf_shortcode_submit_field_images( $editing, $campaign ) {
+	if ( $editing )
+		return;
 ?>
 	<p class="atcf-submit-campaign-images">
 		<label for="excerpt"><?php _e( 'Preview Image', 'atcf' ); ?></label>
@@ -220,7 +217,7 @@ function atcf_shortcode_submit_field_images() {
 	</p>
 <?php
 }
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_images', 60 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_images', 70, 2 );
 
 /**
  * Campaign Video
@@ -229,7 +226,9 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_images'
  *
  * @return void
  */
-function atcf_shortcode_submit_field_video() {
+function atcf_shortcode_submit_field_video( $editing, $campaign ) {
+	if ( $editing )
+		return;
 ?>
 	<p class="atcf-submit-campaign-video">
 		<label for="length"><?php _e( 'Video URL', 'atcf' ); ?></label>
@@ -237,7 +236,7 @@ function atcf_shortcode_submit_field_video() {
 	</p>
 <?php
 }
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_video', 65 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_video', 80, 2 );
 
 /**
  * Campaign Backer Rewards
@@ -246,7 +245,9 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_video',
  *
  * @return void
  */
-function atcf_shortcode_submit_field_rewards() {
+function atcf_shortcode_submit_field_rewards( $editing, $campaign ) {
+	if ( $editing )
+		return;
 ?>
 	<h3 class="atcf-submit-section backer-rewards"><?php _e( 'Backer Rewards', 'atcf' ); ?></h3>
 
@@ -283,7 +284,7 @@ function atcf_shortcode_submit_field_rewards() {
 	</div>
 <?php
 }
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_rewards', 90 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_rewards', 90, 2 );
 
 /**
  * Campaign PayPal Email
@@ -292,17 +293,57 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_rewards
  *
  * @return void
  */
-function atcf_shortcode_submit_field_paypal_email() {
+function atcf_shortcode_submit_field_paypal_email( $editing, $campaign ) {
 ?>
-	<h3 class="atcf-submit-section payment-information"><?php _e( 'Payment Information', 'atcf' ); ?></h3>
+	<h3 class="atcf-submit-section payment-information"><?php _e( 'Your Information', 'atcf' ); ?></h3>
+
+	<p class="atcf-submit-campaign-contact-email">
+		<label for="email"><?php _e( 'Contact Email', 'atcf' ); ?></label>
+		<input type="text" name="contact-email" id="contact-email" value="<?php echo $editing ? $campaign->contact_email() : null; ?>" />
+		<?php if ( ! $editing ) : ?><span class="description"><?php _e( 'An account will be created for you with this email address. It must be active.', 'atcf' ); ?></span><?php endif; ?>
+	</p>
 
 	<p class="atcf-submit-campaign-paypal-email">
-		<label for="email"><?php _e( 'PayPal Email:', 'atcf' ); ?></label>
-		<input type="text" name="email" id="email" placeholder="<?php esc_attr_e( 'PayPal Email', 'atcf' ); ?>">
+		<label for="email"><?php _e( 'PayPal Email', 'atcf' ); ?></label>
+		<input type="text" name="email" id="email" value="<?php echo $editing ? $campaign->paypal_email() : null; ?>" />
 	</p>
 <?php
 }
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_email', 100 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_email', 100, 2 );
+
+/**
+ * Campaign Author
+ *
+ * @since CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
+function atcf_shortcode_submit_field_author( $editing, $campaign ) {
+?>
+	<p class="atcf-submit-campaign-author">
+		<label for="name"><?php _e( 'Name/Organization Name', 'atcf' ); ?></label>
+		<input type="text" name="name" id="name" value="<?php echo $editing ? $campaign->author() : null; ?>" />
+	</p>
+<?php
+}
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_author', 110, 2 );
+
+/**
+ * Campaign Location
+ *
+ * @since CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
+function atcf_shortcode_submit_field_location( $editing, $campaign ) {
+?>
+	<p class="atcf-submit-campaign-location">
+		<label for="length"><?php _e( 'Location', 'atcf' ); ?></label>
+		<input type="text" name="location" id="location" value="<?php echo $editing ? $campaign->location() : null; ?>" />
+	</p>
+<?php
+}
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_location', 120, 2 );
 
 /**
  * Success Message

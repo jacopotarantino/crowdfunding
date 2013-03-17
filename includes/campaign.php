@@ -237,6 +237,7 @@ class ATCF_Campaigns {
 		$fields[] = '_campaign_featured';
 		$fields[] = 'campaign_goal';
 		$fields[] = 'campaign_email';
+		$fields[] = 'campaign_contact_email';
 		$fields[] = 'campaign_end_date';
 		$fields[] = 'campaign_video';
 		$fields[] = 'campaign_location';
@@ -566,6 +567,11 @@ function _atcf_metabox_campaign_info() {
 		<input type="text" name="campaign_email" id="campaign_email" value="<?php echo esc_attr( $campaign->paypal_email() ); ?>" class="regular-text" />
 	</p>
 
+	<p>
+		<label for="campaign_email"><strong><?php _e( 'Contact Email:', 'atcf' ); ?></strong></label><br />
+		<input type="text" name="campaign_contact_email" id="campaign_contact_email" value="<?php echo esc_attr( $campaign->contact_email() ); ?>" class="regular-text" />
+	</p>
+
 	<style>#end-aa { width: 3.4em } #end-jj, #end-hh, #end-mn { width: 2em; }</style>
 
 	<p>
@@ -700,6 +706,17 @@ class ATCF_Campaign {
 	 */
 	public function paypal_email() {
 		return $this->__get( 'campaign_email' );
+	}
+
+	/**
+	 * Campaign Contact Email
+	 *
+	 * @since Appthemer CrowdFunding 0.5
+	 *
+	 * @return sting Campaign Contact Email
+	 */
+	public function contact_email() {
+		return $this->__get( 'campaign_contact_email' );
 	}
 
 	/**
@@ -997,12 +1014,15 @@ function atcf_shortcode_submit_process() {
 	$files     = $_FILES[ 'files' ];
 
 	$email     = $_POST[ 'email' ];
+	$c_email   = $_POST[ 'contact-email' ];
 
 	/** Check Title */
 	if ( empty( $title ) )
 		$errors->add( 'invalid-title', __( 'Please add a title to this campaign.', 'atcf' ) );
 
 	/** Check Goal */
+	$goal = atcf_sanitize_goal_save( $goal );
+
 	if ( ! is_numeric( $goal ) )
 		$errors->add( 'invalid-goal', sprintf( __( 'Please enter a valid goal amount. All goals are set in the %s currency.', 'atcf' ), $edd_options[ 'currency' ] ) );
 
@@ -1038,13 +1058,32 @@ function atcf_shortcode_submit_process() {
 		$errors->add( 'invalid-rewards', __( 'Please add at least one reward to the campaign.', 'atcf' ) );
 
 	/** Check Email */
-	if ( ! is_email( $email ) )
-		$errors->add( 'invalid-email', __( 'Please provide a valid PayPal email address.', 'atcf' ) );
+	if ( ! is_email( $email ) || ! is_email( $c_email ) )
+		$errors->add( 'invalid-email', __( 'Please make sure all email addresses are valid.', 'atcf' ) );
+
+	if ( email_exists( $c_email ) )
+		$errors->add( 'invalid-c-email', __( 'That contact email address already exists.', 'atcf' ) );		
 
 	do_action( 'atcf_campaign_submit_validate', $_POST, $errors );
 
 	if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
 		wp_die( $errors );
+
+	$password = wp_generate_password( 12, false );
+	
+	$user_id  = wp_insert_user( array(
+		'user_login'           => $c_email, 
+		'user_pass'            => $password, 
+		'user_email'           => $c_email,
+		'user_nicename'        => $author,
+		'display_name'         => $author,
+		'show_admin_bar_front' => 'false',
+		'role'                 => 'campaign_contributor'
+	) );
+
+	$secure_cookie = is_ssl() ? true : false;
+	wp_set_auth_cookie( $user_id, true, $secure_cookie );
+	wp_new_user_notification( $user_id, $password );
 
 	$args = apply_filters( 'atcf_campaign_submit_data', array(
 		'post_type'    => 'download',
@@ -1052,6 +1091,7 @@ function atcf_shortcode_submit_process() {
 		'post_title'   => $title,
 		'post_content' => $content,
 		'post_excerpt' => $excerpt,
+		'post_author'  => $user_id,
 		'tax_input'    => array(
 			'download_category' => array( $category )
 		)
@@ -1062,6 +1102,7 @@ function atcf_shortcode_submit_process() {
 	/** Extra Campaign Information */
 	add_post_meta( $campaign, 'campaign_goal', apply_filters( 'edd_metabox_save_edd_price', $goal ) );
 	add_post_meta( $campaign, 'campaign_email', sanitize_text_field( $email ) );
+	add_post_meta( $campaign, 'campaign_contact_email', sanitize_text_field( $c_email ) );
 	add_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
 	add_post_meta( $campaign, 'campaign_location', sanitize_text_field( $location ) );
 	add_post_meta( $campaign, 'campaign_author', sanitize_text_field( $author ) );
@@ -1079,7 +1120,7 @@ function atcf_shortcode_submit_process() {
 		);
 	}
 
-	if ( ! empty( $files ) ) {		
+	if ( ! empty( $files ) ) {
 		foreach ( $files[ 'name' ] as $key => $value ) {
 			if ( $files[ 'name' ][$key] ) {
 				$file = array(
@@ -1102,7 +1143,6 @@ function atcf_shortcode_submit_process() {
 
 	if ( '' != $image[ 'name' ] ) {
 		$upload = wp_handle_upload( $image, $upload_overrides );
-		
 		$attachment = array(
 			'guid'           => $upload[ 'url' ], 
 			'post_mime_type' => $upload[ 'type' ],
@@ -1127,7 +1167,10 @@ function atcf_shortcode_submit_process() {
 	add_post_meta( $campaign, '_edd_hide_purchase_link', 'on' );
 	
 	add_post_meta( $campaign, 'edd_variable_prices', $prices );
-	add_post_meta( $campaign, 'edd_download_files', $edd_files );
+
+	if ( ! empty( $files ) ) {
+		add_post_meta( $campaign, 'edd_download_files', $edd_files );
+	}
 
 	do_action( 'atcf_submit_process_after', $campaign, $_POST );
 
@@ -1136,6 +1179,88 @@ function atcf_shortcode_submit_process() {
 	exit();
 }
 add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
+
+/**
+ * Process shortcode submission.
+ *
+ * @since Appthemer CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
+function atcf_campaign_edit() {
+	global $edd_options, $post;
+	
+	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
+		return;
+	
+	if ( empty( $_POST['action' ] ) || ( 'atcf-campaign-edit' !== $_POST[ 'action' ] ) )
+		return;
+
+	if ( ! wp_verify_nonce( $_POST[ '_wpnonce' ], 'atcf-campaign-edit' ) )
+		return;
+
+	if ( ! ( $post->post_author == get_current_user_id() || current_user_can( 'manage_options' ) ) )
+		return;
+
+	if ( ! function_exists( 'wp_handle_upload' ) ) {
+		require_once( ABSPATH . 'wp-admin/includes/admin.php' );
+	}
+
+	$errors    = new WP_Error();
+	
+	$category  = $_POST[ 'cat' ];
+	$content   = $_POST[ 'description' ];
+	$excerpt   = $_POST[ 'excerpt' ];
+
+	$email     = $_POST[ 'email' ];
+	$c_email   = $_POST[ 'contact-email' ];
+	$author    = $_POST[ 'name' ];
+	$location  = $_POST[ 'location' ];
+
+	/** Check Category */
+	$category = absint( $category );
+
+	/** Check Content */
+	if ( empty( $content ) )
+		$errors->add( 'invalid-content', __( 'Please add content to this campaign.', 'atcf' ) );
+
+	/** Check Excerpt */
+	if ( empty( $excerpt ) )
+		$excerpt = null;
+
+	/** Check Email */
+	if ( ! is_email( $email ) || ! is_email( $c_email ) )
+		$errors->add( 'invalid-email', __( 'Please make sure all email addresses are valid.', 'atcf' ) );
+
+	do_action( 'atcf_edit_campaign_validate', $_POST, $errors );
+
+	if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
+		wp_die( $errors );
+
+	$args = apply_filters( 'atcf_edit_campaign_data', array(
+		'ID'           => $post->ID,
+		'post_content' => $content,
+		'post_excerpt' => $excerpt,
+		'tax_input'    => array(
+			'download_category' => array( $category )
+		)
+	), $_POST );
+
+	$campaign = wp_update_post( $args, true );
+
+	/** Extra Campaign Information */
+	update_post_meta( $post->ID, 'campaign_email', sanitize_text_field( $email ) );
+	update_post_meta( $post->ID, 'campaign_contact_email', sanitize_text_field( $c_email ) );
+	update_post_meta( $post->ID, 'campaign_location', sanitize_text_field( $location ) );
+	update_post_meta( $post->ID, 'campaign_author', sanitize_text_field( $author ) );
+
+	do_action( 'atcf_edit_campaign_after', $post->ID, $_POST );
+
+	$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', add_query_arg( array( 'success' => 'true' ), get_permalink() ) );
+	wp_safe_redirect( $redirect );
+	exit();
+}
+add_action( 'template_redirect', 'atcf_campaign_edit' );
 
 /**
  * Price Options Heading

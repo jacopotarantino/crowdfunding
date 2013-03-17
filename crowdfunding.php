@@ -99,6 +99,7 @@ final class ATCF_CrowdFunding {
 		require( $this->includes_dir . 'shipping.php' );
 		require( $this->includes_dir . 'logs.php' );
 		require( $this->includes_dir . 'export.php' );
+		require( $this->includes_dir . 'roles.php' );
 
 		do_action( 'atcf_include_files' );
 
@@ -173,6 +174,7 @@ final class ATCF_CrowdFunding {
 	 */
 	function endpoints() {
 		add_rewrite_endpoint( 'backers', EP_PERMALINK | EP_PAGES );
+		add_rewrite_endpoint( 'edit', EP_PERMALINK | EP_PAGES );
 	}
 
 	/**
@@ -195,7 +197,9 @@ final class ATCF_CrowdFunding {
 		$find  = array();
 		$files = array();
 
-		if ( isset ( $wp_query->query_vars[ 'backers' ] ) && is_singular( 'download' ) ) {
+		if ( isset ( $wp_query->query_vars[ 'edit' ] ) && is_singular( 'download' ) && ( $wp_query->queried_object->post_author == get_current_user_id() || current_user_can( 'manage_options' ) ) ) {
+			$files = apply_filters( 'atcf_crowdfunding_templates_edit', array( 'single-campaign-edit.php' ) );
+		} else if ( isset ( $wp_query->query_vars[ 'backers' ] ) && is_singular( 'download' ) ) {
 			$files = apply_filters( 'atcf_crowdfunding_templates_backers', array( 'single-campaign-backers.php' ) );
 		} else if ( is_singular( 'download' ) ) {
 			$files = apply_filters( 'atcf_crowdfunding_templates_campaign', array( 'single-campaign.php', 'single-download.php', 'single.php' ) );
