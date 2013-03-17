@@ -28,7 +28,8 @@ function atcf_shortcode_submit( $editing = false ) {
 
 		$campaign = atcf_get_campaign( $post );
 	} else {
-		wp_enqueue_script( 'atcf-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding.js', array( 'jquery' ) );
+		wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'assets/js/jquery.validate.min.js');
+		wp_enqueue_script( 'atcf-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding.js', array( 'jquery', 'jquery-validation' ) );
 
 		wp_localize_script( 'atcf-scripts', 'CrowdFundingL10n', array(
 			'oneReward' => __( 'At least one reward is required.', 'atcf' )

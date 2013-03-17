@@ -1005,6 +1005,7 @@ function atcf_shortcode_submit_process() {
 	$author    = $_POST[ 'name' ];
 
 	$image     = $_FILES[ 'image' ];
+	$video     = $_POST[ 'video' ];
 
 	$rewards   = $_POST[ 'rewards' ];
 	$files     = $_FILES[ 'files' ];
@@ -1017,6 +1018,8 @@ function atcf_shortcode_submit_process() {
 		$errors->add( 'invalid-title', __( 'Please add a title to this campaign.', 'atcf' ) );
 
 	/** Check Goal */
+	$goal = atcf_sanitize_goal_save( $goal );
+
 	if ( ! is_numeric( $goal ) )
 		$errors->add( 'invalid-goal', sprintf( __( 'Please enter a valid goal amount. All goals are set in the %s currency.', 'atcf' ), $edd_options[ 'currency' ] ) );
 
@@ -1100,6 +1103,7 @@ function atcf_shortcode_submit_process() {
 	add_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
 	add_post_meta( $campaign, 'campaign_location', sanitize_text_field( $location ) );
 	add_post_meta( $campaign, 'campaign_author', sanitize_text_field( $author ) );
+	add_post_meta( $campaign, 'campaign_video', esc_url( $video ) );
 	
 	foreach ( $rewards as $key => $reward ) {
 		$edd_files[] = array(
@@ -1113,7 +1117,7 @@ function atcf_shortcode_submit_process() {
 		);
 	}
 
-	if ( ! empty( $files ) ) {		
+	if ( ! empty( $files ) ) {
 		foreach ( $files[ 'name' ] as $key => $value ) {
 			if ( $files[ 'name' ][$key] ) {
 				$file = array(
@@ -1161,7 +1165,10 @@ function atcf_shortcode_submit_process() {
 	add_post_meta( $campaign, '_edd_hide_purchase_link', 'on' );
 	
 	add_post_meta( $campaign, 'edd_variable_prices', $prices );
-	add_post_meta( $campaign, 'edd_download_files', $edd_files );
+
+	if ( ! empty( $files ) ) {
+		add_post_meta( $campaign, 'edd_download_files', $edd_files );
+	}
 
 	do_action( 'atcf_submit_process_after', $campaign, $_POST );
 
@@ -1241,7 +1248,7 @@ function atcf_campaign_edit() {
 
 	/** Extra Campaign Information */
 	update_post_meta( $post->ID, 'campaign_email', sanitize_text_field( $email ) );
-	add_post_meta( $campaign, 'campaign_contact_email', sanitize_text_field( $c_email ) );
+	update_post_meta( $post->ID, 'campaign_contact_email', sanitize_text_field( $c_email ) );
 	update_post_meta( $post->ID, 'campaign_location', sanitize_text_field( $location ) );
 	update_post_meta( $post->ID, 'campaign_author', sanitize_text_field( $author ) );
 
