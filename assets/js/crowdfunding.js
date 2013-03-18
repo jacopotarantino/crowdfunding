@@ -29,7 +29,7 @@ var CrowdFunding = (function($) {
 
 				newReward.insertBefore( $( '.atcf-submit-campaign-add-reward' ) );
 			});
-		}
+		});
 	}
 
 	function removeReward() {

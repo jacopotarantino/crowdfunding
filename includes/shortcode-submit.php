@@ -175,6 +175,8 @@ function atcf_shortcode_submit_field_description( $editing, $campaign ) {
 				'tinymce'       => array(
 					'theme_advanced_path'     => false,
 					'theme_advanced_buttons1' => 'bold,italic,bullist,numlist,blockquote,justifyleft,justifycenter,justifyright,link,unlink',
+					'plugins'                 => 'paste',
+					'paste_remove_styles'     => true
 				),
 			) ) ); 
 		?>
