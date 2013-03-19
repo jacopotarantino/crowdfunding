@@ -1035,7 +1035,7 @@ function atcf_shortcode_submit_process() {
 		$length = 42;
 
 	$end_date = new DateTime();
-	$end_date = $end_date->add( new DateInterval( sprintf( 'P%sD', $length ) ) );
+	$end_date = $end_date->modify( sprintf( '+%d day', $length ) );
 	$end_date = get_gmt_from_date( $end_date->format( 'Y-m-d H:i:s' ) );
 
 	/** Check Category */
