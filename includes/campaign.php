@@ -53,6 +53,9 @@ class ATCF_Campaigns {
 		if ( ! is_admin() )
 			return;
 
+		add_filter( 'edd_price_options_heading', 'atcf_edd_price_options_heading' );
+		add_filter( 'edd_variable_pricing_toggle_text', 'atcf_edd_variable_pricing_toggle_text' );
+
 		add_filter( 'manage_edit-download_columns', array( $this, 'dashboard_columns' ), 11, 1 );
 		add_filter( 'manage_download_posts_custom_column', array( $this, 'dashboard_column_item' ), 11, 2 );
 		
@@ -1273,7 +1276,6 @@ add_action( 'template_redirect', 'atcf_campaign_edit' );
 function atcf_edd_price_options_heading( $heading ) {
 	return __( 'Reward Options:', 'atcf' );
 }
-add_filter( 'edd_price_options_heading', 'atcf_edd_price_options_heading' );
 
 /**
  * Reward toggle text
@@ -1286,4 +1288,3 @@ add_filter( 'edd_price_options_heading', 'atcf_edd_price_options_heading' );
 function atcf_edd_variable_pricing_toggle_text( $text ) {
 	return __( 'Enable multiple reward options', 'atcf' );
 }
-add_filter( 'edd_variable_pricing_toggle_text', 'atcf_edd_variable_pricing_toggle_text' );

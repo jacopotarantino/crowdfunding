@@ -265,5 +265,4 @@ final class ATCF_CrowdFunding {
 function crowdfunding() {
 	return ATCF_CrowdFunding::instance();
 }
-
 crowdfunding();
