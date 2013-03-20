@@ -730,7 +730,7 @@ class ATCF_Campaign {
 	 * @return sting Campaign End Date
 	 */
 	public function end_date() {
-		return mysql2date( get_option( 'date_format' ), $this->__get( 'campaign_end_date' ), false );
+		return mysql2date( 'c', $this->__get( 'campaign_end_date' ), false );
 	}
 
 	/**
