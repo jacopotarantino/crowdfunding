@@ -2,9 +2,17 @@
 /**
  * Supplement some settings stuff.
  *
- * @since Appthemer CrowdFunding 0.8
+ * @since Appthemer CrowdFunding 0.7
  */
 
+/**
+ * Add pages to settings. Splice and resplice. Ghetto.
+ *
+ * @since AppThemer Crowdfunding 0.7
+ * 
+ * @param $settings
+ * @return $settings
+ */
 function atcf_settings_general( $settings ) {
 	$pages = get_pages();
 	$pages_options = array( 0 => '' ); // Blank option
@@ -45,6 +53,14 @@ function atcf_settings_general( $settings ) {
 }
 add_filter( 'edd_settings_general', 'atcf_settings_general' );
 
+/**
+ * Add settings to set a flexible fee
+ *
+ * @since AppThemer Crowdfunding 0.7
+ * 
+ * @param $settings
+ * @return $settings
+ */
 function atcf_settings_gateway( $settings ) {
 	$settings[ 'epap_flexible_fee' ] = array(
 			'id'   => 'epap_flexible_fee',

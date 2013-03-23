@@ -694,7 +694,7 @@ class ATCF_Campaign {
 	/**
 	 * Campaign Type
 	 *
-	 * @since Appthemer CrowdFunding 0.8
+	 * @since Appthemer CrowdFunding 0.7
 	 *
 	 * @return string $type The type of campaign
 	 */

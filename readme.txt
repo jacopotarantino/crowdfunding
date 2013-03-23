@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: download, downloads, e-store, eshop, digital downloads, crowd funding, crowdfunding, crowdsource, 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 0.6
+Stable Tag: 0.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
