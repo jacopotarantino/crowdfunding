@@ -119,6 +119,30 @@ function atcf_shortcode_submit_field_length( $editing, $campaign ) {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_length', 30, 2 );
 
 /**
+ * Campaign Type
+ *
+ * @since CrowdFunding 0.8
+ *
+ * @return void
+ */
+function atcf_shortcode_submit_field_type( $editing, $campaign ) {
+	global $edd_options;
+
+	if ( $editing  )
+		return;
+?>
+	<h4><?php _e( 'Funding Type', 'atcf' ); ?> <?php if ( $edd_options[ 'faq_page' ] ) : ?><small> &mdash; <a href="<?php echo esc_url( get_permalink( $edd_options[ 'faq_page' ] ) ); ?>#fees"><?php echo apply_filters( 'atcf_submit_field_type_more_link', __( 'Learn More', 'atcf' ) ); ?></a></small><?php endif; ?></h4>
+
+	<p class="atcf-submit-campaign-type">
+		<label for="type[fixed]"><input type="radio" name="type" id="type[fixed]" value="fixed" checked="checked" /> <?php _e( 'Fixed Funding', 'atcf' ); ?></label> &mdash; <small><?php _e( 'Only collect funds if your goal is met.', 'atcf' ); ?><br />
+		<label for="type[flexible]"><input type="radio" name="type" id="type[flexible]" value="flexible" /> <?php _e( 'Flexible Funding', 'atcf' ); ?></label> &mdash; <small><?php _e( 'Collect all funds received, but pay higher fees.', 'atcf' ); ?>
+		<?php do_action( 'atcf_shortcode_submit_field_type' ); ?>
+	</p>
+<?php
+}
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_type', 35, 2 );
+
+/**
  * Campaign Category
  *
  * @since CrowdFunding 0.1-alpha

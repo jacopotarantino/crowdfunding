@@ -93,6 +93,7 @@ final class ATCF_CrowdFunding {
 	 * @return void
 	 */
 	private function includes() {
+		require( $this->includes_dir . 'settings.php' );
 		require( $this->includes_dir . 'campaign.php' );
 		require( $this->includes_dir . 'theme-stuff.php' );
 		require( $this->includes_dir . 'shortcode-submit.php' );

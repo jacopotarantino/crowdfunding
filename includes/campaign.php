@@ -216,7 +216,7 @@ class ATCF_Campaigns {
 
 		$campaign = new ATCF_Campaign( $post );
 
-		if ( $campaign->is_funded() && ! $campaign->is_collected() && class_exists( 'PayPalAdaptivePaymentsGateway' ) )
+		if ( ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && ! $campaign->is_collected() && class_exists( 'PayPalAdaptivePaymentsGateway' ) )
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
@@ -295,6 +295,10 @@ class ATCF_Campaigns {
 		$owner           = explode( '|', $owner );
 		$owner_email     = $owner[0];
 		$owner_amount    = $owner[1];
+
+		if ( 'flexible' == $campaign->type() ) {
+			$owner_amount = $owner_amount + $edd_options[ 'epap_flexible_fee' ];
+		}
 
 		$campaign_amount = 100 - $owner_amount;
 		$campaign_email  = $campaign->paypal_email();
@@ -454,6 +458,11 @@ function _atcf_metabox_campaign_stats() {
 		<strong><?php _e( 'Days Remaining:', 'atcf' ); ?></strong>
 		<?php echo $campaign->days_remaining(); ?>
 	</p>
+
+	<p>
+		<strong><?php _e( 'Campaign Type:', 'atcf' ); ?></strong>
+		<?php echo $campaign->type(); ?>
+	</p>
 <?php
 	do_action( 'atcf_metabox_campaign_stats_after', $campaign );
 }
@@ -475,7 +484,11 @@ function _atcf_metabox_campaign_funds() {
 
 	do_action( 'atcf_metabox_campaign_funds_before', $campaign );
 ?>
+	<?php if ( 'fixed' == $campaign->type() ) : ?>
 	<p><?php printf( __( 'This %1$s has reached its funding goal. You may now send the funds to the owner. This will end the %1$s.', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?></p>
+	<?php else : ?>
+	<p><?php printf( __( 'This %1$s is flexible. You may collect the funds at any time. This will end the %1$s.', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?></p>
+	<?php endif; ?>
 
 	<?php if ( '' != $campaign->paypal_email() ) : ?>
 	<p><?php printf( __( 'Make sure <code>%s</code> is a valid PayPal email address.', 'atcf' ), $campaign->paypal_email() ); ?></p>
@@ -676,6 +689,22 @@ class ATCF_Campaign {
 			return edd_currency_filter( edd_format_amount( $goal ) );
 
 		return $goal;
+	}
+
+	/**
+	 * Campaign Type
+	 *
+	 * @since Appthemer CrowdFunding 0.8
+	 *
+	 * @return string $type The type of campaign
+	 */
+	public function type() {
+		$type = $this->__get( 'campaign_type' );
+
+		if ( ! $type )
+			$type = __( 'Fixed', 'atcf' );
+
+		return $type;
 	}
 
 	/**
@@ -1004,6 +1033,7 @@ function atcf_shortcode_submit_process() {
 	$title     = $_POST[ 'title' ];
 	$goal      = $_POST[ 'goal' ];
 	$length    = $_POST[ 'length' ];
+	$type      = $_POST[ 'type' ];
 	$location  = $_POST[ 'location' ];
 	$category  = $_POST[ 'cat' ];
 	$content   = $_POST[ 'description' ];
@@ -1104,6 +1134,7 @@ function atcf_shortcode_submit_process() {
 
 	/** Extra Campaign Information */
 	add_post_meta( $campaign, 'campaign_goal', apply_filters( 'edd_metabox_save_edd_price', $goal ) );
+	add_post_meta( $campaign, 'campaign_type', sanitize_text_field( $type ) );
 	add_post_meta( $campaign, 'campaign_email', sanitize_text_field( $email ) );
 	add_post_meta( $campaign, 'campaign_contact_email', sanitize_text_field( $c_email ) );
 	add_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
@@ -1177,7 +1208,9 @@ function atcf_shortcode_submit_process() {
 
 	do_action( 'atcf_submit_process_after', $campaign, $_POST );
 
-	$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', add_query_arg( array( 'success' => 'true' ), get_permalink() ) );
+	$url = isset ( $edd_options[ 'submit_page' ] ) ? get_permalink( $edd_options[ 'submit_page' ] ) : get_permalink();
+
+	$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', add_query_arg( array( 'success' => 'true' ), $url ) );
 	wp_safe_redirect( $redirect );
 	exit();
 }
@@ -1259,7 +1292,7 @@ function atcf_campaign_edit() {
 
 	do_action( 'atcf_edit_campaign_after', $post->ID, $_POST );
 
-	$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', add_query_arg( array( 'success' => 'true' ), get_permalink() ) );
+	$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', add_query_arg( array( 'success' => 'true' ), get_permalink( $post->ID ) ) );
 	wp_safe_redirect( $redirect );
 	exit();
 }
