@@ -72,4 +72,5 @@ function atcf_settings_gateway( $settings ) {
 
 	return $settings;
 }
-add_filter( 'edd_settings_gateways', 'atcf_settings_gateway', 100 );
+if ( class_exists( 'PayPalAdaptivePaymentsGateway' ) )
+	add_filter( 'edd_settings_gateways', 'atcf_settings_gateway', 100 );

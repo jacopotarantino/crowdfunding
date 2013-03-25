@@ -58,12 +58,13 @@ Yes. However, it won't look much different than a standard EDD install. Template
 
 == Changelog ==
 
-= 0.7: X =
+= 0.7: March 26, 2013 =
 
 * New: Funding types -- Fixed (default) or flexible funding. Allow a higher commission to be set on flexible funding.
 * New: Settings to specifiy the page that contains the frontend submission shortcode, as well as an FAQ page.
+* Fix: Some more backward compatibility stuff for DateTime functionality on hosts running PHP < 5.3
 
-= 0.6: March 18 =
+= 0.6: March 18, 2013 =
 
 * Fix: When adding rewards via frontend, make sure blank fields are added in the correct spot.
 * Fix: Always show backer rewards in ascending price order, no matter how they are entered.
