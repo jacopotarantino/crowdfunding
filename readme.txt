@@ -15,7 +15,7 @@ A crowdfunding platform in the likes of Kickstarter and Indigogo
 
 == Description ==
 
-Crowdfunding by AppThemer is a funding platform for WordPress. An extension that seamlessly integrates with Easy Digital Downloads, the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
+Crowdfunding by [AppThemer](http://appthemer.com/fundify.html) is a funding platform for WordPress. An extension that seamlessly integrates with Easy Digital Downloads, the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
 
 "Backers" can pledge specified amounts of money towards a project and receive rewards for their contributions. Pledge amounts are only collected if a campaign reaches its goal in the time specified.
 
