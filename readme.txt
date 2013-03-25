@@ -58,6 +58,11 @@ Yes. However, it won't look much different than a standard EDD install. Template
 
 == Changelog ==
 
+= 0.7: X =
+
+* New: Funding types -- Fixed (default) or flexible funding. Allow a higher commission to be set on flexible funding.
+* New: Settings to specifiy the page that contains the frontend submission shortcode, as well as an FAQ page.
+
 = 0.6: March 18 =
 
 * Fix: When adding rewards via frontend, make sure blank fields are added in the correct spot.

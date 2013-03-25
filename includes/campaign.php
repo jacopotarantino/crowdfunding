@@ -245,6 +245,7 @@ class ATCF_Campaigns {
 		$fields[] = 'campaign_video';
 		$fields[] = 'campaign_location';
 		$fields[] = 'campaign_author';
+		$fields[] = 'campaign_type';
 
 		return $fields;
 	}
@@ -458,11 +459,6 @@ function _atcf_metabox_campaign_stats() {
 		<strong><?php _e( 'Days Remaining:', 'atcf' ); ?></strong>
 		<?php echo $campaign->days_remaining(); ?>
 	</p>
-
-	<p>
-		<strong><?php _e( 'Campaign Type:', 'atcf' ); ?></strong>
-		<?php echo $campaign->type(); ?>
-	</p>
 <?php
 	do_action( 'atcf_metabox_campaign_stats_after', $campaign );
 }
@@ -557,6 +553,12 @@ function _atcf_metabox_campaign_info() {
 			<input type="checkbox" name="_campaign_featured" id="_campaign_featured" value="1" <?php checked( 1, $campaign->featured() ); ?> />
 			<?php _e( 'Featured campaign', 'atcf' ); ?>
 		</label>
+	</p>
+	
+	<p>
+		<label for="campaign_type[fixed]"><input type="radio" name="campaign_type" id="campaign_type[fixed]" value="fixed" <?php checked( 'fixed', $campaign->type() ); ?> /> <?php _e( 'Fixed Funding', 'atcf' ); ?></label></label><br />
+		<label for="campaign_type[flexible]"><input type="radio" name="campaign_type" id="campaign_type[flexible]" value="flexible" <?php checked( 'flexible', $campaign->type() ); ?> /> <?php _e( 'Flexible Funding', 'atcf' ); ?></label>
+			<?php do_action( 'atcf_shortcode_submit_field_type' ); ?>
 	</p>
 
 	<p>
@@ -702,7 +704,7 @@ class ATCF_Campaign {
 		$type = $this->__get( 'campaign_type' );
 
 		if ( ! $type )
-			$type = __( 'Fixed', 'atcf' );
+			$type = __( 'fixed', 'atcf' );
 
 		return $type;
 	}
