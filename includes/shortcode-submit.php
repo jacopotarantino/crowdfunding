@@ -1,6 +1,6 @@
 <?php
 /**
- * Shortcode.
+ * Submit Shortcode.
  *
  * [appthemer_crowdfunding_submit] creates a submission form.
  *
