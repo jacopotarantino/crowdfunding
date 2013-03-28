@@ -866,16 +866,13 @@ class ATCF_Campaign {
 	 * @return int The number of days remaining
 	 */
 	public function days_remaining() {
-		$expires = new DateTime( $this->end_date() );
-		$now     = new DateTime();
+		$expires = strtotime( $this->end_date() );
+		$now     = time();
 
 		if ( $now > $expires )
 			return 0;
 
-		/**
-		 * 5.3: $diff = $expires->getTimestamp() - $now->getTimestamp();
-		 */
-		$diff = $expires->format( 'U' ) - $now->format( 'U' );
+		$diff = $expires - $now;
 
 		if ( $diff < 0 )
 			return 0;
@@ -1069,9 +1066,8 @@ function atcf_shortcode_submit_process() {
 	else if ( $length > 42 )
 		$length = 42;
 
-	$end_date = new DateTime();
-	$end_date = $end_date->modify( sprintf( '+%d day', $length ) );
-	$end_date = get_gmt_from_date( $end_date->format( 'Y-m-d H:i:s' ) );
+	$end_date = strtotime( sprintf( '+%d day', $length ) );
+	$end_date = get_gmt_from_date( date( 'Y-m-d H:i:s', $end_date ) );
 
 	/** Check Category */
 	$category = absint( $category );
