@@ -68,9 +68,43 @@ function atcf_shortcode_profile_info( $user ) {
 add_action( 'atcf_shortcode_profile', 'atcf_shortcode_profile_info', 10, 1 );
 
 /**
+ * Nicename
+ *
+ * @since CrowdFunding 0.8
+ *
+ * @return void
+ */
+function atcf_profile_info_fields_nicename( $user, $userinfo ) {
+?>
+	<p class="atcf-profile-info-first-name">
+		<label for="first-name"><?php _e( 'Name', 'atcf' ); ?></label>
+		<input type="text" name="nicename" id="nicename" value="<?php echo esc_attr( $user->user_nicename ); ?>" />
+	</p>
+<?php
+}
+add_action( 'atcf_profile_info_fields', 'atcf_profile_info_fields_nicename', 10, 2 );
+
+/**
+ * URL
+ *
+ * @since CrowdFunding 0.8
+ *
+ * @return void
+ */
+function atcf_profile_info_fields_url( $user, $userinfo ) {
+?>
+	<p class="atcf-profile-info-url">
+		<label for="url"><?php _e( 'Website/URL', 'atcf' ); ?></label>
+		<input type="text" name="url" id="url" value="<?php echo esc_attr( $user->user_url ); ?>" />
+	</p>
+<?php
+}
+add_action( 'atcf_profile_info_fields', 'atcf_profile_info_fields_url', 20, 2 );
+
+/**
  * Biography
  *
- * @since CrowdFunding 0.1-alpha
+ * @since CrowdFunding 0.8
  *
  * @return void
  */
@@ -82,7 +116,7 @@ function atcf_profile_info_fields_bio( $user, $userinfo ) {
 	</p>
 <?php
 }
-add_action( 'atcf_profile_info_fields', 'atcf_profile_info_fields_bio', 10, 2 );
+add_action( 'atcf_profile_info_fields', 'atcf_profile_info_fields_bio', 30, 2 );
 
 /**
  * Campaign History
@@ -143,3 +177,51 @@ function atcf_shortcode_profile_campaigns( $user ) {
 <?php
 }
 add_action( 'atcf_shortcode_profile', 'atcf_shortcode_profile_campaigns', 20, 1 );
+
+/**
+ * Process shortcode submission.
+ *
+ * @since Appthemer CrowdFunding 0.8
+ *
+ * @return void
+ */
+function atcf_shortcode_profile_info_process() {
+	global $edd_options, $post;
+
+	if ( 'POST' !== strtoupper( $_SERVER[ 'REQUEST_METHOD' ] ) )
+		return;
+	
+	if ( empty( $_POST['action' ] ) || ( 'atcf-profile-update' !== $_POST[ 'action' ] ) )
+		return;
+
+	if ( ! wp_verify_nonce( $_POST[ '_wpnonce' ], 'atcf-profile-update' ) )
+		return;
+
+	$user   = wp_get_current_user();
+	$errors = new WP_Error();
+
+	$bio      = esc_attr( $_POST[ 'bio' ] );
+	$nicename = esc_attr( $_POST[ 'nicename' ] );
+	$url      = esc_url( $_POST[ 'url' ] );
+
+	do_action( 'atcf_shortcode_profile_info_process_validate', $_POST, $errors );
+
+	if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
+		wp_die( $errors );
+
+	wp_update_user( apply_filters( 'atcf_shortcode_profile_info_process_update', array(
+		'ID'            => $user->ID,
+		'description'   => $bio,
+		'user_nicename' => $nicename,
+		'user_url'      => $url
+	) ) );
+
+	do_action( 'atcf_shortcode_profile_info_process_after', $user, $_POST );
+
+	$redirect = apply_filters( 'atcf_shortcode_profile_info_success_redirect', add_query_arg( array( 'success' => 'true' ), get_permalink() ) 
+	);
+
+	wp_safe_redirect( $redirect );
+	exit();
+}
+add_action( 'template_redirect', 'atcf_shortcode_profile_info_process' );
