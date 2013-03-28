@@ -288,11 +288,12 @@ function atcf_shortcode_profile_request_data() {
 	if ( ! wp_verify_nonce( $_GET[ '_wpnonce' ], 'atcf-request-data' ) )
 		return;
 
-	$user   = wp_get_current_user();
-	$errors = new WP_Error();
+	$user         = wp_get_current_user();
+	$errors       = new WP_Error();
 
-	$campaign = absint( $campaign );
-	$campaign = atcf_get_campaign( $campaign );
+	$crowdfunding = crowdfunding();
+	$campaign     = absint( $campaign );
+	$campaign     = atcf_get_campaign( $campaign );
 
 	if ( $user->ID != $campaign->data->post_author )
 		$errors->add( 'non-owner', __( 'You are not the author of this campaign, and cannot request the data.', 'atcf' ) );
@@ -300,7 +301,14 @@ function atcf_shortcode_profile_request_data() {
 	if ( ! empty ( $errors->errors ) )
 		wp_die( $errors );
 
-	// Export PDF
+	if ( 0 != $campaign->ID ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
+		require( $crowdfunding->includes_dir . 'export-campaigns.php' );
+
+		$campaign_export = new ATCF_Campaign_Export();
+
+		$campaign_export->export();
+	}
 
 	$url = isset ( $edd_options[ 'profile_page' ] ) ? get_permalink( $edd_options[ 'profile_page' ] ) : get_permalink();
 

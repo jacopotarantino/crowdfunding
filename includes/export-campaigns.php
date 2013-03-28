@@ -56,6 +56,9 @@ class ATCF_Campaign_Export extends EDD_Export {
 
 		$backers  = $campaign->backers();
 
+		if ( empty( $backers ) )
+			return $data;
+
 		foreach ( $backers as $log ) {
 			$payment_id     = get_post_meta( $log->ID, '_edd_log_payment_id', true );
 			$payment_meta 	= edd_get_payment_meta( $payment_id );
