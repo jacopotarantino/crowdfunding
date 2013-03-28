@@ -31,7 +31,7 @@ function atcf_shortcode_profile() {
 	ob_start();
 
 	echo '<div class="atcf-profile">';
-	do_action( 'atcf_shortcode_submit_after', $user );
+	do_action( 'atcf_shortcode_profile', $user );
 	echo '</div>';
 
 	$form = ob_get_clean();
@@ -91,4 +91,4 @@ function atcf_shortcode_profile_campaigns( $user ) {
 	</ul>
 <?php
 }
-add_action( 'atcf_shortcode_submit_after', 'atcf_shortcode_profile_campaigns', 10, 1 );
+add_action( 'atcf_shortcode_profile', 'atcf_shortcode_profile_campaigns', 10, 1 );
