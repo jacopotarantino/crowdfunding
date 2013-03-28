@@ -154,11 +154,11 @@ function atcf_shortcode_profile_campaigns( $user ) {
 
 				<ul class="actions">
 					<?php if ( ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && ! $campaign->is_collected() && class_exists( 'PayPalAdaptivePaymentsGateway' ) ) : ?>
-					<li><a href="<?php echo esc_url( add_query_arg( array( 'action' => 'atcf-request-payout', 'campaign' => $campaign->ID ) ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Request Payout for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Request Payout', 'atcf' ); ?></a></li>
+					<li><a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'atcf-request-payout', 'campaign' => $campaign->ID ) ), 'atcf-request-payout' ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Request Payout for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Request Payout', 'atcf' ); ?></a></li>
 					<?php endif; ?>
 
 					<?php if ( ( 'flexible' == $campaign->type() || $campaign->is_funded() ) ) : ?>
-					<li><a href="<?php echo esc_url( add_query_arg( array( 'action' => 'atcf-export-data', 'campaign' => $campaign->ID ) ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Export data for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Export Data', 'atcf' ); ?></a></li>
+					<li><a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'atcf-request-data', 'campaign' => $campaign->ID ) ), 'atcf-request-data' ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Export data for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Export Data', 'atcf' ); ?></a></li>
 					<?php endif; ?>
 				</ul>
 
@@ -225,3 +225,89 @@ function atcf_shortcode_profile_info_process() {
 	exit();
 }
 add_action( 'template_redirect', 'atcf_shortcode_profile_info_process' );
+
+/**
+ * Request Payout
+ *
+ * @since Appthemer CrowdFunding 0.8
+ *
+ * @return void
+ */
+function atcf_shortcode_profile_request_payout() {
+	global $edd_options, $post;
+
+	if ( 'GET' !== strtoupper( $_SERVER[ 'REQUEST_METHOD' ] ) )
+		return;
+	
+	if ( empty( $_GET[ 'action' ] ) || ( 'atcf-request-payout' !== $_GET[ 'action' ] ) )
+		return;
+
+	if ( ! wp_verify_nonce( $_GET[ '_wpnonce' ], 'atcf-request-payout' ) )
+		return;
+
+	$user   = wp_get_current_user();
+	$errors = new WP_Error();
+
+	$campaign = absint( $campaign );
+	$campaign = atcf_get_campaign( $campaign );
+
+	if ( $user->ID != $campaign->data->post_author )
+		$errors->add( 'non-owner', __( 'You are not the author of this campaign, and cannot request a payout.', 'atcf' ) );
+
+	if ( ! empty ( $errors->errors ) )
+		wp_die( $errors );
+
+	// Send email to site admin asking for funds.
+
+	$url = isset ( $edd_options[ 'profile_page' ] ) ? get_permalink( $edd_options[ 'profile_page' ] ) : get_permalink();
+
+	$redirect = apply_filters( 'atcf_shortcode_profile_info_success_redirect', add_query_arg( array( 'requested' => $campaign->ID, 'success' => 'true' ), $url ) 
+	);
+
+	wp_safe_redirect( $redirect );
+	exit();
+}
+add_action( 'template_redirect', 'atcf_shortcode_profile_request_payout' );
+
+/**
+ * Request Data
+ *
+ * @since Appthemer CrowdFunding 0.8
+ *
+ * @return void
+ */
+function atcf_shortcode_profile_request_data() {
+	global $edd_options, $post;
+
+	if ( 'GET' !== strtoupper( $_SERVER[ 'REQUEST_METHOD' ] ) )
+		return;
+	
+	if ( empty( $_GET[ 'action' ] ) || ( 'atcf-request-data' !== $_GET[ 'action' ] ) )
+		return;
+
+	if ( ! wp_verify_nonce( $_GET[ '_wpnonce' ], 'atcf-request-data' ) )
+		return;
+
+	$user   = wp_get_current_user();
+	$errors = new WP_Error();
+
+	$campaign = absint( $campaign );
+	$campaign = atcf_get_campaign( $campaign );
+
+	if ( $user->ID != $campaign->data->post_author )
+		$errors->add( 'non-owner', __( 'You are not the author of this campaign, and cannot request the data.', 'atcf' ) );
+
+	if ( ! empty ( $errors->errors ) )
+		wp_die( $errors );
+
+	// Export PDF
+
+	$url = isset ( $edd_options[ 'profile_page' ] ) ? get_permalink( $edd_options[ 'profile_page' ] ) : get_permalink();
+
+	$redirect = apply_filters( 'atcf_shortcode_profile_info_success_redirect', add_query_arg( array( 'exported' => $campaign->ID, 'success' => 'true' ), $url ) 
+	);
+
+	wp_safe_redirect( $redirect );
+	exit();
+}
+add_action( 'template_redirect', 'atcf_shortcode_profile_request_data' );

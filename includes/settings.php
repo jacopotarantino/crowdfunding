@@ -32,6 +32,7 @@ function atcf_settings_general( $settings ) {
 
 	$keys[] = 'faq_page';
 	$keys[] = 'submit_page';
+	$keys[] = 'profile_page';
 
 	$vals[] =  array(
 		'id'      => 'faq_page',
@@ -45,6 +46,14 @@ function atcf_settings_general( $settings ) {
 		'id'      => 'submit_page',
 		'name'    => __( 'Submit Page', 'atcf' ),
 		'desc'    => __( 'The page that contains the <code>[appthemer_crowdfunding_submit]</code> shortcode.', 'atcf' ),
+		'type'    => 'select',
+		'options' => $pages_options
+	);
+
+	$vals[] =  array(
+		'id'      => 'profile_page',
+		'name'    => __( 'Profile Page', 'atcf' ),
+		'desc'    => __( 'The page that contains the <code>[appthemer_crowdfunding_profile]</code> shortcode.', 'atcf' ),
 		'type'    => 'select',
 		'options' => $pages_options
 	);
