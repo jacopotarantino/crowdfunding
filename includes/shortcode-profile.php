@@ -64,16 +64,22 @@ function atcf_shortcode_profile_campaigns( $user ) {
 			</h4>
 
 			<?php if ( 'pending' == get_post()->post_status ) : ?>
-				<span class="campaign-awaiting-review"><?php _e( 'Your campaign is awaiting review.', 'atcf' ); ?></span>
+				<span class="campaign-awaiting-review"><?php _e( 'This campaign is awaiting review.', 'atcf' ); ?></span>
 			<?php else : ?>	
 				<ul class="actions">
 					<li><a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'View', 'atcf' ); ?></a></li>
 					<li><a href="<?php the_permalink(); ?>edit/" title="<?php echo esc_attr( sprintf( __( 'Edit %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Edit', 'atcf' ); ?></a></li>
 					<li><a href="<?php the_permalink(); ?>#comments" title="<?php echo esc_attr( sprintf( __( 'Comments for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Comments', 'atcf' ); ?></a></li>
 					<li><a href="<?php the_permalink(); ?>backers/" title="<?php echo esc_attr( sprintf( __( 'Backers for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Backers', 'atcf' ); ?></a></li>
+				</ul>
+
+				<ul class="actions">
 					<?php if ( ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && ! $campaign->is_collected() && class_exists( 'PayPalAdaptivePaymentsGateway' ) ) : ?>
-					<li><a href="#" title="<?php echo esc_attr( sprintf( __( 'Request Payout for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Request Payout', 'atcf' ); ?></a></li>
-					<li><a href="#" title="<?php echo esc_attr( sprintf( __( 'Export data for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Export Data', 'atcf' ); ?></a></li>
+					<li><a href="<?php echo esc_url( add_query_arg( array( 'action' => 'request-payout', 'campaign' => $campaign->ID ) ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Request Payout for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Request Payout', 'atcf' ); ?></a></li>
+					<?php endif; ?>
+
+					<?php if ( ( 'flexible' == $campaign->type() || $campaign->is_funded() ) ) : ?>
+					<li><a href="<?php echo esc_url( add_query_arg( array( 'action' => 'export-data', 'campaign' => $campaign->ID ) ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Export data for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Export Data', 'atcf' ); ?></a></li>
 					<?php endif; ?>
 				</ul>
 

@@ -323,11 +323,13 @@ function atcf_shortcode_submit_field_paypal_email( $editing, $campaign ) {
 ?>
 	<h3 class="atcf-submit-section payment-information"><?php _e( 'Your Information', 'atcf' ); ?></h3>
 
+	<?php if ( ! is_user_logged_in() ) : ?>
 	<p class="atcf-submit-campaign-contact-email">
 		<label for="email"><?php _e( 'Contact Email', 'atcf' ); ?></label>
 		<input type="text" name="contact-email" id="contact-email" value="<?php echo $editing ? $campaign->contact_email() : null; ?>" />
 		<?php if ( ! $editing ) : ?><span class="description"><?php _e( 'An account will be created for you with this email address. It must be active.', 'atcf' ); ?></span><?php endif; ?>
 	</p>
+	<?php endif; ?>
 
 	<p class="atcf-submit-campaign-paypal-email">
 		<label for="email"><?php _e( 'PayPal Email', 'atcf' ); ?></label>
