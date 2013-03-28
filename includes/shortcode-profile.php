@@ -41,9 +41,53 @@ function atcf_shortcode_profile() {
 add_shortcode( 'appthemer_crowdfunding_profile', 'atcf_shortcode_profile' );
 
 /**
- * Campaign History
+ * Profile Information
+ *
+ * @since CrowdFunding 0.8
+ *
+ * @return void
+ */
+function atcf_shortcode_profile_info( $user ) {
+	$userinfo = get_userdata( $user->ID );
+?>
+	<h3 class="atcf-profile-section bio"><?php _e( 'Profile Information', 'atcf' ); ?></h3>
+
+	<?php do_action( 'atcf_shortcode_profile_info_before', $user ); ?>
+	<form action="" method="post" class="atcf-submit-campaign" enctype="multipart/form-data">
+		<?php do_action( 'atcf_profile_info_fields', $user, $userinfo ); ?>
+
+		<p class="atcf-submit-campaign-submit">
+			<input type="submit" value="<?php esc_attr_e( 'Update', 'atcf' ); ?>">
+			<input type="hidden" name="action" value="atcf-profile-update" />
+			<?php wp_nonce_field( 'atcf-profile-update' ); ?>
+		</p>
+	</form>
+	<?php do_action( 'atcf_shortcode_profile_bio_after', $user ); ?>
+<?php
+}
+add_action( 'atcf_shortcode_profile', 'atcf_shortcode_profile_info', 10, 1 );
+
+/**
+ * Biography
  *
  * @since CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
+function atcf_profile_info_fields_bio( $user, $userinfo ) {
+?>
+	<p class="atcf-profile-info-bio">
+		<label for="bio"><?php _e( 'Biography', 'atcf' ); ?></label>
+		<textarea name="bio" id="bio" rows="4"><?php echo esc_textarea( $user->user_description ); ?></textarea>
+	</p>
+<?php
+}
+add_action( 'atcf_profile_info_fields', 'atcf_profile_info_fields_bio', 10, 2 );
+
+/**
+ * Campaign History
+ *
+ * @since CrowdFunding 0.8
  *
  * @return void
  */
@@ -51,7 +95,8 @@ function atcf_shortcode_profile_campaigns( $user ) {
 	$campaigns = new WP_Query( array(
 		'post_type'   => 'download',
 		'post_author' => $user->ID,
-		'post_status' => array( 'publish', 'pending' )
+		'post_status' => array( 'publish', 'pending' ),
+		'nopaging'    => true
 	) );
 ?>
 	<h3 class="atcf-profile-section your-campaigns"><?php _e( 'Your Campaigns', 'atcf' ); ?></h3>
@@ -75,11 +120,11 @@ function atcf_shortcode_profile_campaigns( $user ) {
 
 				<ul class="actions">
 					<?php if ( ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && ! $campaign->is_collected() && class_exists( 'PayPalAdaptivePaymentsGateway' ) ) : ?>
-					<li><a href="<?php echo esc_url( add_query_arg( array( 'action' => 'request-payout', 'campaign' => $campaign->ID ) ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Request Payout for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Request Payout', 'atcf' ); ?></a></li>
+					<li><a href="<?php echo esc_url( add_query_arg( array( 'action' => 'atcf-request-payout', 'campaign' => $campaign->ID ) ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Request Payout for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Request Payout', 'atcf' ); ?></a></li>
 					<?php endif; ?>
 
 					<?php if ( ( 'flexible' == $campaign->type() || $campaign->is_funded() ) ) : ?>
-					<li><a href="<?php echo esc_url( add_query_arg( array( 'action' => 'export-data', 'campaign' => $campaign->ID ) ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Export data for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Export Data', 'atcf' ); ?></a></li>
+					<li><a href="<?php echo esc_url( add_query_arg( array( 'action' => 'atcf-export-data', 'campaign' => $campaign->ID ) ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Export data for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Export Data', 'atcf' ); ?></a></li>
 					<?php endif; ?>
 				</ul>
 
@@ -97,4 +142,4 @@ function atcf_shortcode_profile_campaigns( $user ) {
 	</ul>
 <?php
 }
-add_action( 'atcf_shortcode_profile', 'atcf_shortcode_profile_campaigns', 10, 1 );
+add_action( 'atcf_shortcode_profile', 'atcf_shortcode_profile_campaigns', 20, 1 );
