@@ -1046,7 +1046,13 @@ function atcf_shortcode_submit_process() {
 	$files     = $_FILES[ 'files' ];
 
 	$email     = $_POST[ 'email' ];
-	$c_email   = $_POST[ 'contact-email' ];
+	
+	if ( isset ( $_POST[ 'contact-email' ] ) )
+		$c_email = $_POST[ 'contact-email' ];
+	else {
+		$current_user = wp_get_current_user();
+		$c_email = $current_user->user_email;
+	}
 
 	/** Check Title */
 	if ( empty( $title ) )
@@ -1092,7 +1098,7 @@ function atcf_shortcode_submit_process() {
 	if ( ! is_email( $email ) || ! is_email( $c_email ) )
 		$errors->add( 'invalid-email', __( 'Please make sure all email addresses are valid.', 'atcf' ) );
 
-	if ( email_exists( $c_email ) )
+	if ( email_exists( $c_email ) && ! isset ( $current_user ) )
 		$errors->add( 'invalid-c-email', __( 'That contact email address already exists.', 'atcf' ) );		
 
 	do_action( 'atcf_campaign_submit_validate', $_POST, $errors );
@@ -1100,21 +1106,23 @@ function atcf_shortcode_submit_process() {
 	if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
 		wp_die( $errors );
 
-	$password = wp_generate_password( 12, false );
-	
-	$user_id  = wp_insert_user( array(
-		'user_login'           => $c_email, 
-		'user_pass'            => $password, 
-		'user_email'           => $c_email,
-		'user_nicename'        => $author,
-		'display_name'         => $author,
-		'show_admin_bar_front' => 'false',
-		'role'                 => 'campaign_contributor'
-	) );
+	if ( ! isset ( $current_user ) ) {
+		$password = wp_generate_password( 12, false );
+		
+		$user_id  = wp_insert_user( array(
+			'user_login'           => $c_email, 
+			'user_pass'            => $password, 
+			'user_email'           => $c_email,
+			'user_nicename'        => $author,
+			'display_name'         => $author,
+			'show_admin_bar_front' => 'false',
+			'role'                 => 'campaign_contributor'
+		) );
 
-	$secure_cookie = is_ssl() ? true : false;
-	wp_set_auth_cookie( $user_id, true, $secure_cookie );
-	wp_new_user_notification( $user_id, $password );
+		$secure_cookie = is_ssl() ? true : false;
+		wp_set_auth_cookie( $user_id, true, $secure_cookie );
+		wp_new_user_notification( $user_id, $password );
+	}
 
 	$args = apply_filters( 'atcf_campaign_submit_data', array(
 		'post_type'    => 'download',
