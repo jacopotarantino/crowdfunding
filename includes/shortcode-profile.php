@@ -248,15 +248,18 @@ function atcf_shortcode_profile_request_payout() {
 	$user   = wp_get_current_user();
 	$errors = new WP_Error();
 
+	$campaign = $_GET[ 'campaign' ];
 	$campaign = absint( $campaign );
 	$campaign = atcf_get_campaign( $campaign );
+
+	if ( 0 == $campaign->ID || 'download' != $campaign->data->post_type )
+		$errors->add( 'no-campaign', __( 'This is not a valid campaign.', 'atcf' ) );
 
 	if ( $user->ID != $campaign->data->post_author )
 		$errors->add( 'non-owner', __( 'You are not the author of this campaign, and cannot request a payout.', 'atcf' ) );
 
 	if ( ! empty ( $errors->errors ) )
 		wp_die( $errors );
-
 
 	$message = edd_get_email_body_header();
 	$message .= sprintf( __( 'A request for payout has been made for <a href="%s">%s</a>.', 'atcf' ), admin_url( sprintf( 'post.php?post=%s&action=edit', $campaign->ID ) ), $campaign->data->post_title );
@@ -265,7 +268,7 @@ function atcf_shortcode_profile_request_payout() {
 	$from_name  = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
 	$from_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
 
-	$subject = apply_filters( 'atcf_request_funds_subject', sprintf( __( 'Payout Request for %s', 'atcf' ), $campaign->data->post_title ), $payment_id );
+	$subject = apply_filters( 'atcf_request_funds_subject', sprintf( __( 'Payout Request for %s', 'atcf' ), $campaign->data->post_title ), $campaign );
 
 	$headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
 	$headers .= "Reply-To: ". $from_email . "\r\n";
@@ -277,13 +280,9 @@ function atcf_shortcode_profile_request_payout() {
 
 	wp_mail( $from_email, $subject, $message, $headers, $attachments );
 
-	if ( $admin_notice ) {
-		do_action( 'atcf_request_funds__notice', $campaign );
-	}
-
 	$url = isset ( $edd_options[ 'profile_page' ] ) ? get_permalink( $edd_options[ 'profile_page' ] ) : get_permalink();
 
-	$redirect = apply_filters( 'atcf_shortcode_profile_info_success_redirect', add_query_arg( array( 'requested' => $campaign->ID, 'success' => 'true' ), $url ) 
+	$redirect = apply_filters( 'atcf_shortcode_profile_info_success_redirect', add_query_arg( array( 'emailed' => $campaign->ID, 'success' => 'true' ), $url ) 
 	);
 
 	wp_safe_redirect( $redirect );
