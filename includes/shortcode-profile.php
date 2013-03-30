@@ -340,3 +340,26 @@ function atcf_shortcode_profile_request_data() {
 	exit();
 }
 add_action( 'template_redirect', 'atcf_shortcode_profile_request_data' );
+
+/**
+ * Success Message
+ *
+ * @since CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
+function atcf_shortcode_profile_info_before_success() {
+	if ( ! isset ( $_GET[ 'success' ] ) )
+		return;
+
+	if ( isset ( $_GET[ 'emailed' ] ) )
+		$message = apply_filters( 'atcf_shortcode_profile_info_before_success_emailed', __( 'Success! We have been notified of your request.', 'atcf' ) );
+	else if ( isset ( $_GET[ 'exported' ] ) )
+		$message = apply_filters( 'atcf_shortcode_profile_info_before_success_exported', __( 'Success! Your download should begin shortly.', 'atcf' ) );
+	else
+		return;
+?>
+	<p class="edd_success"><?php echo esc_attr( $message ); ?></p>	
+<?php
+}
+add_action( 'atcf_shortcode_profile', 'atcf_shortcode_profile_info_before_success', 1 );
