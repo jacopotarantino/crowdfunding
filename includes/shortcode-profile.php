@@ -137,7 +137,7 @@ function atcf_shortcode_profile_campaigns( $user ) {
 
 	<ul class="atcf-profile-campaigns">
 	<?php if ( $campaigns->have_posts() ) : while ( $campaigns->have_posts() ) : $campaigns->the_post(); $campaign = atcf_get_campaign( get_post()->ID ); ?>
-		<li class="campaign">
+		<li class="atcf-profile-campaign-overview">
 			<h4 class="entry-title">
 				<?php the_title(); ?>
 			</h4>
@@ -161,15 +161,6 @@ function atcf_shortcode_profile_campaigns( $user ) {
 					<li><a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'atcf-request-data', 'campaign' => $campaign->ID ) ), 'atcf-request-data' ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Export data for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Export Data', 'atcf' ); ?></a></li>
 					<?php endif; ?>
 				</ul>
-
-				<div class="digits">
-					<div class="bar"><span style="width: <?php echo $campaign->percent_completed(); ?>"></span></div>
-					<ul>
-						<li><?php printf( __( '<strong>%s</strong> Funded', 'fundify' ), $campaign->percent_completed() ); ?></li>
-						<li><?php printf( __( '<strong>%s</strong> Pledged', 'fundify' ), $campaign->current_amount() ); ?></li>
-						<li><?php printf( __( '<strong>%s</strong> Days to Go', 'fundify' ), $campaign->days_remaining() ); ?></li>
-					</ul>
-				</div>
 			<?php endif; ?>
 		</li>	
 	<?php endwhile; endif; wp_reset_query(); ?>
