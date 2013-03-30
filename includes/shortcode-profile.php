@@ -257,7 +257,29 @@ function atcf_shortcode_profile_request_payout() {
 	if ( ! empty ( $errors->errors ) )
 		wp_die( $errors );
 
-	// Send email to site admin asking for funds.
+
+	$message = edd_get_email_body_header();
+	$message .= sprintf( __( 'A request for payout has been made for <a href="%s">%s</a>.', 'atcf' ), admin_url( sprintf( 'post.php?post=%s&action=edit', $campaign->ID ) ), $campaign->data->post_title );
+	$message .= edd_get_email_body_footer();
+
+	$from_name  = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
+	$from_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
+
+	$subject = apply_filters( 'atcf_request_funds_subject', sprintf( __( 'Payout Request for %s', 'atcf' ), $campaign->data->post_title ), $payment_id );
+
+	$headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
+	$headers .= "Reply-To: ". $from_email . "\r\n";
+	$headers .= "MIME-Version: 1.0\r\n";
+	$headers .= "Content-Type: text/html; charset=utf-8\r\n";
+
+	// Allow add-ons to add file attachments
+	$attachments = apply_filters( 'atcf_request_funds_attachments', array(), $campaign );
+
+	wp_mail( $from_email, $subject, $message, $headers, $attachments );
+
+	if ( $admin_notice ) {
+		do_action( 'atcf_request_funds__notice', $campaign );
+	}
 
 	$url = isset ( $edd_options[ 'profile_page' ] ) ? get_permalink( $edd_options[ 'profile_page' ] ) : get_permalink();
 
