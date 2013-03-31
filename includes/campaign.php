@@ -1257,9 +1257,15 @@ function atcf_campaign_edit() {
 	$excerpt   = $_POST[ 'excerpt' ];
 
 	$email     = $_POST[ 'email' ];
-	$c_email   = $_POST[ 'contact-email' ];
 	$author    = $_POST[ 'name' ];
 	$location  = $_POST[ 'location' ];
+
+	if ( isset ( $_POST[ 'contact-email' ] ) )
+		$c_email = $_POST[ 'contact-email' ];
+	else {
+		$current_user = wp_get_current_user();
+		$c_email = $current_user->user_email;
+	}
 
 	/** Check Category */
 	$category = absint( $category );
