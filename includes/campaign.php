@@ -1122,6 +1122,8 @@ function atcf_shortcode_submit_process() {
 		$secure_cookie = is_ssl() ? true : false;
 		wp_set_auth_cookie( $user_id, true, $secure_cookie );
 		wp_new_user_notification( $user_id, $password );
+	} else {
+		$user_id = $current_user->ID;
 	}
 
 	$args = apply_filters( 'atcf_campaign_submit_data', array(

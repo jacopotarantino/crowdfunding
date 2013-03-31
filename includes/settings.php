@@ -71,15 +71,17 @@ add_filter( 'edd_settings_general', 'atcf_settings_general' );
  * @return $settings
  */
 function atcf_settings_gateway( $settings ) {
+	if ( ! class_exists( 'PayPalAdaptivePaymentsGateway' ) )
+		return $settings;
+
 	$settings[ 'epap_flexible_fee' ] = array(
-			'id'   => 'epap_flexible_fee',
-			'name' => __( 'Additional Flexible Fee', 'epap' ),
-			'desc' => __( '%. <span class="description">If a campaign is flexible, increase commission by this percent.</span>', 'atcf' ),
-			'type' => 'text',
-			'size' => 'small'
-		);
+		'id'   => 'epap_flexible_fee',
+		'name' => __( 'Additional Flexible Fee', 'epap' ),
+		'desc' => __( '%. <span class="description">If a campaign is flexible, increase commission by this percent.</span>', 'atcf' ),
+		'type' => 'text',
+		'size' => 'small'
+	);
 
 	return $settings;
 }
-if ( class_exists( 'PayPalAdaptivePaymentsGateway' ) )
-	add_filter( 'edd_settings_gateways', 'atcf_settings_gateway', 100 );
+add_filter( 'edd_settings_gateways', 'atcf_settings_gateway', 100 );
