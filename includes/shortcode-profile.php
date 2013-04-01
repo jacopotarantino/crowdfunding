@@ -128,7 +128,7 @@ add_action( 'atcf_profile_info_fields', 'atcf_profile_info_fields_bio', 30, 2 );
 function atcf_shortcode_profile_campaigns( $user ) {
 	$campaigns = new WP_Query( array(
 		'post_type'   => 'download',
-		'post_author' => $user->ID,
+		'author' => $user->ID,
 		'post_status' => array( 'publish', 'pending' ),
 		'nopaging'    => true
 	) );
