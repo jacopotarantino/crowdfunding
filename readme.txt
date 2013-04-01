@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: download, downloads, e-store, eshop, digital downloads, crowd funding, crowdfunding, crowdsource, 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 0.8
+Stable Tag: 0.8.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -57,6 +57,10 @@ Developers can contribute to the source code of the project on [GitHub](https://
 Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
 == Changelog ==
+
+= 0.8.1: April 1, 2013 =
+
+* Fix: Only show the users campaigns using profile shortcode.
 
 = 0.8: March 31, 2013 =
 
