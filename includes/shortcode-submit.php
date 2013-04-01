@@ -277,6 +277,10 @@ function atcf_shortcode_submit_field_rewards( $editing, $campaign ) {
 ?>
 	<h3 class="atcf-submit-section backer-rewards"><?php _e( 'Backer Rewards', 'atcf' ); ?></h3>
 
+	<p class="atcf-submit-campaign-shipping">
+		<label for="shipping"><input type="checkbox" name="type" id="shipping" value="1" checked="checked" /> <?php _e( 'Collect shipping information on checkout.', 'atcf' ); ?></label>
+	</p>
+
 	<div class="atcf-submit-campaign-rewards">
 		<div class="atcf-submit-campaign-reward static">
 			<?php do_action( 'atcf_shortcode_submit_field_rewards_before' ); ?>

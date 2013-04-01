@@ -238,6 +238,7 @@ class ATCF_Campaigns {
 	 */
 	function meta_boxes_save( $fields ) {
 		$fields[] = '_campaign_featured';
+		$fields[] = '_campaign_physical';
 		$fields[] = 'campaign_goal';
 		$fields[] = 'campaign_email';
 		$fields[] = 'campaign_contact_email';
@@ -554,6 +555,13 @@ function _atcf_metabox_campaign_info() {
 			<?php _e( 'Featured campaign', 'atcf' ); ?>
 		</label>
 	</p>
+
+	<p>
+		<label for="_campaign_physical">
+			<input type="checkbox" name="_campaign_physical" id="_campaign_physical" value="1" <?php checked( 1, $campaign->needs_shipping() ); ?> />
+			<?php _e( 'Collect shipping information on checkout', 'atcf' ); ?>
+		</label>
+	</p>
 	
 	<p>
 		<label for="campaign_type[fixed]"><input type="radio" name="campaign_type" id="campaign_type[fixed]" value="fixed" <?php checked( 'fixed', $campaign->type() ); ?> /> <?php _e( 'Fixed Funding', 'atcf' ); ?></label></label><br />
@@ -671,6 +679,19 @@ class ATCF_Campaign {
 	 */
 	public function featured() {
 		return $this->__get( '_campaign_featured' );
+	}
+
+	/**
+	 * Needs Shipping
+	 *
+	 * @since Appthemer CrowdFunding 0.9
+	 *
+	 * @return sting Requires Shipping
+	 */
+	public function needs_shipping() {
+		$physical = $this->__get( '_campaign_physical' );
+
+		return apply_filters( 'atcf_campaign_needs_shipping', $physical, $this );
 	}
 
 	/**
