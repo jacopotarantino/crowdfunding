@@ -547,6 +547,8 @@ function _atcf_metabox_campaign_info() {
 	$ss = mysql2date( 's', $end_date, false );
 
 	do_action( 'atcf_metabox_campaign_info_before', $campaign );
+
+	$types = atcf_campaign_types();
 ?>	
 	<p>
 		<label for="_campaign_featured">
@@ -556,9 +558,9 @@ function _atcf_metabox_campaign_info() {
 	</p>
 	
 	<p>
-		<label for="campaign_type[fixed]"><input type="radio" name="campaign_type" id="campaign_type[fixed]" value="fixed" <?php checked( 'fixed', $campaign->type() ); ?> /> <?php _e( 'Fixed Funding', 'atcf' ); ?></label></label><br />
-		<label for="campaign_type[flexible]"><input type="radio" name="campaign_type" id="campaign_type[flexible]" value="flexible" <?php checked( 'flexible', $campaign->type() ); ?> /> <?php _e( 'Flexible Funding', 'atcf' ); ?></label>
-			<?php do_action( 'atcf_shortcode_submit_field_type' ); ?>
+		<?php foreach ( atcf_campaign_types_active() as $key => $desc ) : ?>
+		<label for="campaign_type[<?php echo esc_attr( $key ); ?>]"><input type="radio" name="campaign_type" id="campaign_type[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $key, $campaign->type() ); ?> /> <strong><?php echo $types[ $key ][ 'title' ]; ?></strong></label><br />
+		<?php endforeach; ?>
 	</p>
 
 	<p>
@@ -704,7 +706,7 @@ class ATCF_Campaign {
 		$type = $this->__get( 'campaign_type' );
 
 		if ( ! $type )
-			$type = __( 'fixed', 'atcf' );
+			atcf_campaign_type_default();
 
 		return $type;
 	}
@@ -1032,7 +1034,7 @@ function atcf_shortcode_submit_process() {
 	$title     = $_POST[ 'title' ];
 	$goal      = $_POST[ 'goal' ];
 	$length    = $_POST[ 'length' ];
-	$type      = $_POST[ 'type' ];
+	$type      = $_POST[ 'campaign_type' ];
 	$location  = $_POST[ 'location' ];
 	$category  = $_POST[ 'cat' ];
 	$content   = $_POST[ 'description' ];
@@ -1334,4 +1336,48 @@ function atcf_edd_price_options_heading( $heading ) {
  */
 function atcf_edd_variable_pricing_toggle_text( $text ) {
 	return __( 'Enable multiple reward options', 'atcf' );
+}
+
+/**
+ * Campaign Types
+ *
+ * @since AppThemer Crowdfunding 0.9
+ */
+function atcf_campaign_types() {
+	$types = apply_filters( 'atcf_campaign_types', array(
+		'fixed'    => array(
+			'title'       => __( 'Fixed Funding', 'atcf' ),
+			'description' => __( 'Only collect funds if the goal is met.', 'atcf' )
+		),
+		'flexible' => array(
+			'title'       => __( 'Flexible Funding', 'atcf' ),
+			'description' => __( 'Collect funds no matter what. A higher fee may be charged.', 'atcf' )
+		)
+	) );
+
+	return $types;
+}
+
+function atcf_campaign_types_active() {
+	global $edd_options;
+
+	$types  = atcf_campaign_types();
+	$active = isset ( $edd_options[ 'atcf_campaign_types' ] ) ? $edd_options[ 'atcf_campaign_types' ] : null;
+
+	if ( ! $active ) {
+		$keys = array();
+
+		foreach ( $types as $key => $type )
+			$keys[ $key ] = $type[ 'title' ] . ' &mdash; <small>' . $type[ 'description' ] . '</small>';
+
+		return $keys;
+	}
+
+	return $active;
+}
+
+function atcf_campaign_type_default() {
+	$type = apply_filters( 'atcf_campaign_type_default', 'fixed' );
+
+	return $type;
 }

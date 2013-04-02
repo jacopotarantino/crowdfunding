@@ -132,12 +132,15 @@ function atcf_shortcode_submit_field_type( $editing, $campaign ) {
 
 	if ( $editing  )
 		return;
+
+	$types = atcf_campaign_types();
 ?>
 	<h4><?php _e( 'Funding Type', 'atcf' ); ?> <?php if ( $edd_options[ 'faq_page' ] ) : ?><small> &mdash; <a href="<?php echo esc_url( get_permalink( $edd_options[ 'faq_page' ] ) ); ?>#fees"><?php echo apply_filters( 'atcf_submit_field_type_more_link', __( 'Learn More', 'atcf' ) ); ?></a></small><?php endif; ?></h4>
 
 	<p class="atcf-submit-campaign-type">
-		<label for="type[fixed]"><input type="radio" name="type" id="type[fixed]" value="fixed" checked="checked" /> <?php _e( 'Fixed Funding', 'atcf' ); ?></label> &mdash; <small><?php _e( 'Only collect funds if your goal is met.', 'atcf' ); ?><br />
-		<label for="type[flexible]"><input type="radio" name="type" id="type[flexible]" value="flexible" /> <?php _e( 'Flexible Funding', 'atcf' ); ?></label> &mdash; <small><?php _e( 'Collect all funds received, but pay higher fees.', 'atcf' ); ?>
+		<?php foreach ( atcf_campaign_types_active() as $key => $desc ) : ?>
+		<label for="campaign_type[<?php echo esc_attr( $key ); ?>]"><input type="radio" name="campaign_type" id="campaign_type[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $key, atcf_campaign_type_default() ); ?> /> <?php echo $types[ $key ][ 'title' ]; ?></label> &mdash; <small><?php echo $types[ $key ][ 'description' ]; ?></small><br />
+		<?php endforeach; ?>
 		<?php do_action( 'atcf_shortcode_submit_field_type' ); ?>
 	</p>
 <?php

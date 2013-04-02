@@ -86,6 +86,14 @@ function atcf_settings_gateway( $settings ) {
 }
 add_filter( 'edd_settings_gateways', 'atcf_settings_gateway', 100 );
 
+/**
+ * General settings for Crowdfunding
+ *
+ * @since AppThemer Crowdfunding 0.9
+ * 
+ * @param $settings
+ * @return $settings
+ */
 function atcf_settings_general( $settings ) {
 	$settings[ 'atcf_settings' ] = array(
 		'id'   => 'atcf_settings',
@@ -110,6 +118,21 @@ function atcf_settings_general( $settings ) {
 		'type' => 'text',
 		'size' => 'small',
 		'std'  => 42
+	);
+
+	$types = atcf_campaign_types();
+	$_types = array();
+
+	foreach ( $types as $key => $type ) {
+		$_types[ $key ] = $type[ 'title' ] . ' &mdash; <small>' . $type[ 'description' ] . '</small>';
+	}
+
+	$settings[ 'atcf_settings_campaign_types' ] = array(
+		'id'      => 'atcf_campaign_types',
+		'name'    => __( 'Campaign Types', 'atcf' ),
+		'desc'    => __( 'The maximum days a campaign can run for.', 'atcf' ),
+		'type'    => 'multicheck',
+		'options' => $_types
 	);
 
 	return $settings;
