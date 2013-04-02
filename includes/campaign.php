@@ -1067,10 +1067,10 @@ function atcf_shortcode_submit_process() {
 	/** Check Length */
 	$length = absint( $length );
 
-	if ( $length < 14 )
-		$length = 14;
-	else if ( $length > 42 )
-		$length = 42;
+	if ( $length < $edd_options[ 'atcf_campaign_length_min' ] )
+		$length = $edd_options[ 'atcf_campaign_length_min' ];
+	else if ( $length > $edd_options[ 'atcf_campaign_length_max' ] )
+		$length = $edd_options[ 'atcf_campaign_length_min' ];
 
 	$end_date = strtotime( sprintf( '+%d day', $length ) );
 	$end_date = get_gmt_from_date( date( 'Y-m-d H:i:s', $end_date ) );

@@ -13,7 +13,7 @@
  * @param $settings
  * @return $settings
  */
-function atcf_settings_general( $settings ) {
+function atcf_settings_general_pages( $settings ) {
 	$pages = get_pages();
 	$pages_options = array( 0 => '' ); // Blank option
 	if ( $pages ) {
@@ -60,7 +60,7 @@ function atcf_settings_general( $settings ) {
 
 	return array_merge( array_combine( $keys, $vals ), array_combine( $keys2, $vals2 ) );
 }
-add_filter( 'edd_settings_general', 'atcf_settings_general' );
+add_filter( 'edd_settings_general', 'atcf_settings_general_pages' );
 
 /**
  * Add settings to set a flexible fee
@@ -85,3 +85,33 @@ function atcf_settings_gateway( $settings ) {
 	return $settings;
 }
 add_filter( 'edd_settings_gateways', 'atcf_settings_gateway', 100 );
+
+function atcf_settings_general( $settings ) {
+	$settings[ 'atcf_settings' ] = array(
+		'id'   => 'atcf_settings',
+		'name' => '<strong>' . __( 'AppThemer Crowdfunding Settings', 'atcf' ) . '</strong>',
+		'desc' => __( 'Configuration related to crowdfunding.', 'atcf' ),
+		'type' => 'header'
+	);
+
+	$settings[ 'atcf_settings_campaign_minimum' ] = array(
+		'id'   => 'atcf_campaign_length_min',
+		'name' => __( 'Minimum Campaign Length', 'atcf' ),
+		'desc' => __( 'The minimum days a campaign can run for.', 'atcf' ),
+		'type' => 'text',
+		'size' => 'small',
+		'std'  => 14
+	);
+
+	$settings[ 'atcf_settings_campaign_maximum' ] = array(
+		'id'   => 'atcf_campaign_length_max',
+		'name' => __( 'Maximum Campaign Length', 'atcf' ),
+		'desc' => __( 'The maximum days a campaign can run for.', 'atcf' ),
+		'type' => 'text',
+		'size' => 'small',
+		'std'  => 42
+	);
+
+	return $settings;
+}
+add_filter( 'edd_settings_general', 'atcf_settings_general', 100 );
