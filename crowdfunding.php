@@ -100,6 +100,7 @@ final class ATCF_CrowdFunding {
 		require( $this->includes_dir . 'logs.php' );
 		require( $this->includes_dir . 'export.php' );
 		require( $this->includes_dir . 'roles.php' );
+		require( $this->includes_dir . 'permalinks.php' );
 		require( $this->includes_dir . 'shortcode-submit.php' );
 		require( $this->includes_dir . 'shortcode-profile.php' );
 
@@ -122,7 +123,6 @@ final class ATCF_CrowdFunding {
 		add_action( 'init', array( $this, 'is_edd_activated' ), 1 );
 
 		add_filter( 'template_include', array( $this, 'template_loader' ) );
-		add_action( 'init', array( $this, 'endpoints' ) );
 		
 		do_action( 'atcf_setup_actions' );
 
@@ -164,19 +164,6 @@ final class ATCF_CrowdFunding {
 				); ?></p>
 		</div>
 <?php
-	}
-
-	/**
-	 * Add Endpoint for backers. This allows us to monitor
-	 * the query to create "fake" URLs for seeing backers.
-	 *
-	 * @since Appthemer CrowdFunding 0.1-alpha
-	 *
-	 * @return void
-	 */
-	function endpoints() {
-		add_rewrite_endpoint( 'backers', EP_PERMALINK | EP_PAGES );
-		add_rewrite_endpoint( 'edit', EP_PERMALINK | EP_PAGES );
 	}
 
 	/**
