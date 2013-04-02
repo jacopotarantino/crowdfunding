@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Crowd Funding by AppThemer
- * Plugin URI:  http://appthemer.com/crowdfunding
+ * Plugin URI:  https://github.com/AppThemer/crowdfunding/
  * Description: A crowd funding platform in the likes of Kickstarter and Indigogo
  * Author:      AppThemer
  * Author URI:  http://appthemer.com
