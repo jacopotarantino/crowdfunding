@@ -130,7 +130,7 @@ function atcf_settings_general( $settings ) {
 	$settings[ 'atcf_settings_campaign_types' ] = array(
 		'id'      => 'atcf_campaign_types',
 		'name'    => __( 'Campaign Types', 'atcf' ),
-		'desc'    => __( 'The maximum days a campaign can run for.', 'atcf' ),
+		'desc'    => __( 'Select which campaign types are allowed.', 'atcf' ),
 		'type'    => 'multicheck',
 		'options' => $_types
 	);
