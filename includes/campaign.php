@@ -1137,13 +1137,12 @@ function atcf_shortcode_submit_process() {
 		'post_title'   => $title,
 		'post_content' => $content,
 		'post_excerpt' => $excerpt,
-		'post_author'  => $user_id,
-		'tax_input'    => array(
-			'download_category' => array( $category )
-		)
+		'post_author'  => $user_id
 	), $_POST );
 
 	$campaign = wp_insert_post( $args, true );
+
+	wp_set_object_terms( $campaign, array( $category ), 'download_category' );
 
 	/** Extra Campaign Information */
 	add_post_meta( $campaign, 'campaign_goal', apply_filters( 'edd_metabox_save_edd_price', $goal ) );
