@@ -102,6 +102,27 @@ function atcf_profile_info_fields_url( $user, $userinfo ) {
 add_action( 'atcf_profile_info_fields', 'atcf_profile_info_fields_url', 20, 2 );
 
 /**
+ * Contact Methods
+ *
+ * @since CrowdFunding 0.9
+ *
+ * @return void
+ */
+function atcf_profile_info_fields_contactmethods( $user, $userinfo ) {
+	$methods = _wp_get_user_contactmethods();
+
+	foreach ( $methods as $key => $method ) {
+?>
+	<p class="atcf-profile-info-<?php echo $key; ?>">
+		<label for="<?php echo $key; ?>"><?php printf( __( '%s URL', 'atcf' ), $method ); ?></label>
+		<input type="text" name="<?php echo $key; ?>" id="bio" value="<?php echo esc_attr( $user->$key ); ?>" />
+	</p>
+<?php
+	}
+}
+add_action( 'atcf_profile_info_fields', 'atcf_profile_info_fields_contactmethods', 25, 2 );
+
+/**
  * Biography
  *
  * @since CrowdFunding 0.8
@@ -206,6 +227,11 @@ function atcf_shortcode_profile_info_process() {
 		'user_nicename' => $nicename,
 		'user_url'      => $url
 	) ) );
+
+	foreach ( _wp_get_user_contactmethods() as $method => $name ) {
+		if ( isset( $_POST[ $method ] ) )
+			update_user_meta( $user->ID, $method, sanitize_text_field( $_POST[ $method ] ) );
+	}
 
 	do_action( 'atcf_shortcode_profile_info_process_after', $user, $_POST );
 

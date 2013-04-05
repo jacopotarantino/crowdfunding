@@ -44,3 +44,22 @@ function atcf_prevent_admin_access() {
 	}
 }
 add_action( 'admin_init', 'atcf_prevent_admin_access', 1 );
+
+/**
+ * Shim default contact methods.
+ *
+ * @since Appthemer CrowdFunding 0.9
+ *
+ * @return void
+ */
+function atcf_contactmethods( $contactmethods ) {
+	$contactmethods[ 'twitter' ]  = 'Twitter';
+	$contactmethods[ 'facebook' ] = 'Facebook';
+
+	unset( $contactmethods[ 'aim' ] );
+	unset( $contactmethods[ 'yim' ] );
+	unset( $contactmethods[ 'jabber' ] );
+	
+	return $contactmethods;
+}
+add_filter( 'user_contactmethods', 'atcf_contactmethods', 10, 1 );
