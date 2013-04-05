@@ -42,7 +42,7 @@ function atcf_shortcode_submit( $editing = false ) {
 		<?php do_action( 'atcf_shortcode_submit_fields', $editing, $campaign ); ?>
 
 		<p class="atcf-submit-campaign-submit">
-			<input type="submit" value="<?php printf( esc_attr__( 'Submit %s', 'atcf' ), edd_get_label_singular() ); ?>">
+			<input type="submit" value="<?php printf( '%s %s', $editing ? __( 'Update', 'edit object', 'atcf' ) : __( 'Submit', 'submit object', 'atcf' ), edd_get_label_singular() ); ?>">
 			<input type="hidden" name="action" value="atcf-campaign-<?php echo $editing ? 'edit' : 'submit'; ?>" />
 			<?php wp_nonce_field( 'atcf-campaign-' . ( $editing ? 'edit' : 'submit' ) ); ?>
 		</p>
@@ -215,6 +215,38 @@ function atcf_shortcode_submit_field_description( $editing, $campaign ) {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_description', 50, 2 );
 
 /**
+ * Campaign Updates
+ *
+ * @since CrowdFunding 0.1-alpha
+ *
+ * @return void
+ */
+function atcf_shortcode_submit_field_updates( $editing, $campaign ) {
+	if ( ! $editing )
+		return;
+?>
+	<div class="atcf-submit-campaign-updates">
+		<label for="description"><?php _e( 'Updates', 'atcf' ); ?></label>
+		<?php 
+			wp_editor( $campaign->updates(), 'updates', apply_filters( 'atcf_submit_field_updates_editor_args', array( 
+				'media_buttons' => false,
+				'teeny'         => true,
+				'quicktags'     => false,
+				'editor_css'    => '<style>body { background: white; }</style>',
+				'tinymce'       => array(
+					'theme_advanced_path'     => false,
+					'theme_advanced_buttons1' => 'bold,italic,bullist,numlist,blockquote,justifyleft,justifycenter,justifyright,link,unlink',
+					'plugins'                 => 'paste',
+					'paste_remove_styles'     => true
+				),
+			) ) ); 
+		?>
+	</div><br />
+<?php
+}
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_updates', 55, 2 );
+
+/**
  * Campaign Export
  *
  * @since CrowdFunding 0.1-alpha
@@ -328,6 +360,7 @@ function atcf_shortcode_submit_field_paypal_email( $editing, $campaign ) {
 ?>
 	<h3 class="atcf-submit-section payment-information"><?php _e( 'Your Information', 'atcf' ); ?></h3>
 
+	<?php if ( ! $editing ) : ?>
 	<p class="atcf-submit-campaign-contact-email">
 	<?php if ( ! is_user_logged_in() ) : ?>
 		<label for="email"><?php _e( 'Contact Email', 'atcf' ); ?></label>
@@ -338,6 +371,7 @@ function atcf_shortcode_submit_field_paypal_email( $editing, $campaign ) {
 		<?php printf( __( '<strong>Note</strong>: You are currently logged in as %1$s. This %2$s will be associated with that account. Please <a href="%3$s">log out</a> if you would like to make a %2$s under a new account.', 'atcf' ), $current_user->user_email, strtolower( edd_get_label_singular() ), wp_logout_url( get_permalink() ) ); ?>
 	<?php endif; ?>
 	</p>
+	<?php endif; ?>
 
 	<p class="atcf-submit-campaign-paypal-email">
 		<label for="email"><?php _e( 'PayPal Email', 'atcf' ); ?></label>

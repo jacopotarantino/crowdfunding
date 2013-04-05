@@ -220,6 +220,7 @@ class ATCF_Campaigns {
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
+		add_meta_box( 'atcf_campaign_updates', __( 'Campaign Updates', 'atcf' ), '_atcf_metabox_campaign_updates', 'download', 'normal', 'high' );
 		add_meta_box( 'atcf_campaign_video', __( 'Campaign Video', 'atcf' ), '_atcf_metabox_campaign_video', 'download', 'normal', 'high' );
 
 		add_action( 'edd_meta_box_fields', '_atcf_metabox_campaign_info', 5 );
@@ -246,6 +247,7 @@ class ATCF_Campaigns {
 		$fields[] = 'campaign_location';
 		$fields[] = 'campaign_author';
 		$fields[] = 'campaign_type';
+		$fields[] = 'campaign_updates';
 
 		return $fields;
 	}
@@ -519,6 +521,40 @@ function _atcf_metabox_campaign_video() {
 }
 
 /**
+ * Campaign Updates Box
+ *
+ * @since Appthemer CrowdFunding 0.9
+ *
+ * @return void
+ */
+function _atcf_metabox_campaign_updates() {
+	global $post;
+
+	$campaign = atcf_get_campaign( $post );
+
+	do_action( 'atcf_metabox_campaign_updates_before', $campaign );
+?>
+	<?php 
+		wp_editor( $campaign->updates(), 'campaign_updates', apply_filters( 'atcf_submit_field_updates_editor_args', array( 
+			'media_buttons' => false,
+			'teeny'         => true,
+			'quicktags'     => false,
+			'textarea_rows' => 4,
+			'editor_css'    => '<style>body { background: white; }</style>',
+			'tinymce'       => array(
+				'theme_advanced_path'     => false,
+				'theme_advanced_buttons1' => 'bold,italic,bullist,numlist,blockquote,justifyleft,justifycenter,justifyright,link,unlink',
+				'plugins'                 => 'paste',
+				'paste_remove_styles'     => true
+			),
+		) ) );
+	?>
+	<p class="description"><?php _e( 'oEmbed supported video links.', 'atcf' ); ?></p>
+<?php
+	do_action( 'atcf_metabox_campaign_updates_after', $campaign );
+}
+
+/**
  * Campaign Configuration
  *
  * Hook into EDD Download Information and add a bit more stuff.
@@ -638,6 +674,21 @@ function atcf_sanitize_goal_save( $price ) {
 	return $price;
 }
 add_filter( 'edd_metabox_save_campaign_goal', 'atcf_sanitize_goal_save' );
+
+/**
+ * Updates Save
+ *
+ * EDD trys to escape this data, and we don't want that.
+ *
+ * @since Appthemer CrowdFunding 0.9
+ */
+function atcf_sanitize_campaign_updates( $updates ) {
+	$updates = $_POST[ 'campaign_updates' ];
+	$updates = wp_kses_post( $updates );
+
+	return $updates;
+}
+add_filter( 'edd_metabox_save_campaign_updates', 'atcf_sanitize_campaign_updates' );
 
 /** Single Campaign *******************************************************/
 
@@ -775,6 +826,17 @@ class ATCF_Campaign {
 	 */
 	public function video() {
 		return $this->__get( 'campaign_video' );
+	}
+
+	/**
+	 * Campaign Updates
+	 *
+	 * @since Appthemer CrowdFunding 0.9
+	 *
+	 * @return sting Campaign Updates
+	 */
+	public function updates() {
+		return $this->__get( 'campaign_updates' );
 	}
 
 	/**
@@ -1258,6 +1320,7 @@ function atcf_campaign_edit() {
 	
 	$category  = $_POST[ 'cat' ];
 	$content   = $_POST[ 'description' ];
+	$updates   = $_POST[ 'updates' ];
 	$excerpt   = $_POST[ 'excerpt' ];
 
 	$email     = $_POST[ 'email' ];
@@ -1307,6 +1370,7 @@ function atcf_campaign_edit() {
 	update_post_meta( $post->ID, 'campaign_contact_email', sanitize_text_field( $c_email ) );
 	update_post_meta( $post->ID, 'campaign_location', sanitize_text_field( $location ) );
 	update_post_meta( $post->ID, 'campaign_author', sanitize_text_field( $author ) );
+	update_post_meta( $post->ID, 'campaign_updates', wp_kses_post( $updates ) );
 
 	do_action( 'atcf_edit_campaign_after', $post->ID, $_POST );
 
