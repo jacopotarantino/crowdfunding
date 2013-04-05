@@ -12,6 +12,27 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
+ * Do any items in the cart require shipping?
+ *
+ * @since Appthemer CrowdFunding 0.9
+ *
+ * @return void
+ */
+function atcf_shipping_cart_shipping() {
+	$cart_items = edd_get_cart_contents();
+	$needs      = false;
+
+	foreach ( $cart_items as $key => $item ) {
+		$campaign = atcf_get_campaign( $item['id'] );
+
+		if ( $campaign->needs_shipping() )
+			$needs = true;
+	}
+
+	return apply_filters( 'atcf_shipping_cart_shipping', $needs );
+}
+
+/**
  * Add the HTML fields.
  *
  * @since Appthemer CrowdFunding 0.1-alpha
@@ -19,6 +40,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function atcf_shipping_address_fields() {
+	if ( ! atcf_shipping_cart_shipping() )
+		return;
+
 	ob_start(); ?>
 	<script>
 		jQuery(document).ready(function($) {
@@ -112,6 +136,9 @@ add_action( 'edd_purchase_form_before_submit', 'atcf_shipping_address_fields', 1
  * @return void
  */
 function atcf_shipping_validate_meta( $valid_data, $data ) {
+	if ( ! atcf_shipping_cart_shipping() )
+		return $valid_data;
+
 	$shipping_info  = array();
 	$shipping_info[ 'shipping_address' ]   = isset( $data[ 'shipping_address' ] )   ? sanitize_text_field( $data[ 'shipping_address' ] )   : '';
 	$shipping_info[ 'shipping_address_2' ] = isset( $data[ 'shipping_address_2' ] ) ? sanitize_text_field( $data[ 'shipping_address_2' ] ) : '';
@@ -149,6 +176,9 @@ add_action( 'edd_checkout_error_checks', 'atcf_shipping_validate_meta', 10, 2);
  * @return array $payment_meta An updated array of payment meta
  */
 function atcf_shipping_save_meta( $payment_meta ) {
+	if ( ! atcf_shipping_cart_shipping() )
+		return $payment_meta;
+
 	$payment_meta[ 'shipping' ][ 'shipping_address' ]   = isset( $_POST[ 'shipping_address' ] )   ? sanitize_text_field( $_POST[ 'shipping_address' ] )   : '';
 	$payment_meta[ 'shipping' ][ 'shipping_address_2' ] = isset( $_POST[ 'shipping_address_2' ] ) ? sanitize_text_field( $_POST[ 'shipping_address_2' ] ) : '';
 	$payment_meta[ 'shipping' ][ 'shipping_city' ]      = isset( $_POST[ 'shipping_city' ] )      ? sanitize_text_field( $_POST[ 'shipping_city' ] )      : '';
