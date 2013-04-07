@@ -65,6 +65,9 @@ class ATCF_Campaigns {
 		add_filter( 'edd_metabox_fields_save', array( $this, 'meta_boxes_save' ) );
 		add_filter( 'edd_metabox_save_campaign_end_date', 'atcf_campaign_save_end_date' );
 
+		add_action( 'edd_download_price_table_head', 'atcf_pledge_limit_head' );
+		add_action( 'edd_download_price_table_row', 'atcf_pledge_limit_column', 10, 3 );
+
 		add_action( 'admin_action_atcf-collect-funds', array( $this, 'collect_funds' ) );
 		add_filter( 'post_updated_messages', array( $this, 'messages' ) );
 
@@ -431,6 +434,53 @@ function atcf_campaign_save_end_date( $new ) {
 
 	return $end_date;
 }
+
+/**
+ * Price row head
+ *
+ * @since Appthemer CrowdFunding 0.9
+ *
+ * @return void
+ */
+function atcf_pledge_limit_head() {
+?>
+	<th style="width: 30px"><?php _e( 'Limit', 'edd' ); ?></th>
+	<th style="width: 30px"><?php _e( 'Purchased', 'edd' ); ?></th>
+<?php
+}
+
+/**
+ * Price row columns
+ *
+ * @since Appthemer CrowdFunding 0.9
+ *
+ * @return void
+ */
+function atcf_pledge_limit_column( $post_id, $key, $args ) {
+?>
+	<td>
+		<input type="text" class="edd_repeatable_name_field" name="edd_variable_prices[<?php echo $key; ?>][limit]" id="edd_variable_prices[<?php echo $key; ?>][limit]" value="<?php echo $args[ 'limit' ]; ?>" style="width:100%" />
+	</td>
+	<td>
+		<input type="text" class="edd_repeatable_name_field" name="edd_variable_prices[<?php echo $key; ?>][bought]" id="edd_variable_prices[<?php echo $key; ?>][bought]" value="<?php echo $args[ 'bought' ]; ?>" readonly style="width:100%" />
+	</td>
+<?php
+}
+
+/**
+ * Price row fields
+ *
+ * @since Appthemer CrowdFunding 0.9
+ *
+ * @return void
+ */
+function atcf_price_row_args( $args, $value ) {
+	$args[ 'limit' ] = isset( $value[ 'limit' ] ) ? $value[ 'limit' ] : '';
+	$args[ 'bought' ] = isset( $value[ 'bought' ] ) ? $value[ 'bought' ] : 0;
+
+	return $args;
+}
+add_filter( 'edd_price_row_args', 'atcf_price_row_args', 10, 2 );
 
 /**
  * Campaign Stats Box
@@ -1123,6 +1173,7 @@ function atcf_shortcode_submit_process() {
 	$content   = $_POST[ 'description' ];
 	$excerpt   = $_POST[ 'excerpt' ];
 	$author    = $_POST[ 'name' ];
+	$shipping  = $_POST[ 'shipping' ];
 
 	$image     = $_FILES[ 'image' ];
 	$video     = $_POST[ 'video' ];
@@ -1236,6 +1287,7 @@ function atcf_shortcode_submit_process() {
 	add_post_meta( $campaign, 'campaign_location', sanitize_text_field( $location ) );
 	add_post_meta( $campaign, 'campaign_author', sanitize_text_field( $author ) );
 	add_post_meta( $campaign, 'campaign_video', esc_url( $video ) );
+	add_post_meta( $campaign, '_campaign_physical', sanitize_text_field( $shipping ) );
 	
 	foreach ( $rewards as $key => $reward ) {
 		$edd_files[] = array(
@@ -1245,7 +1297,8 @@ function atcf_shortcode_submit_process() {
 
 		$prices[] = array(
 			'name'   => sanitize_text_field( $reward[ 'description' ] ),
-			'amount' => apply_filters( 'edd_metabox_save_edd_price', $reward[ 'price' ] )
+			'amount' => apply_filters( 'edd_metabox_save_edd_price', $reward[ 'price' ] ),
+			'limit'  => sanitize_text_field( $reward[ 'limit' ] )
 		);
 	}
 

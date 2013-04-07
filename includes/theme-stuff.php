@@ -51,8 +51,6 @@ function atcf_purchase_variable_pricing( $download_id ) {
 		return;
 
 	$prices = edd_get_variable_prices( $download_id );
-	usort( $prices, 'atcf_sort_variable_prices' );
-
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 
 	do_action( 'edd_before_price_options', $download_id ); 

@@ -320,7 +320,7 @@ function atcf_shortcode_submit_field_rewards( $editing, $campaign ) {
 	<h3 class="atcf-submit-section backer-rewards"><?php _e( 'Backer Rewards', 'atcf' ); ?></h3>
 
 	<p class="atcf-submit-campaign-shipping">
-		<label for="shipping"><input type="checkbox" name="type" id="shipping" value="1" checked="checked" /> <?php _e( 'Collect shipping information on checkout.', 'atcf' ); ?></label>
+		<label for="shipping"><input type="checkbox" id="shipping" name="shipping" value="1" checked="checked" /> <?php _e( 'Collect shipping information on checkout.', 'atcf' ); ?></label>
 	</p>
 
 	<div class="atcf-submit-campaign-rewards">
@@ -328,13 +328,18 @@ function atcf_shortcode_submit_field_rewards( $editing, $campaign ) {
 			<?php do_action( 'atcf_shortcode_submit_field_rewards_before' ); ?>
 
 			<p class="atcf-submit-campaign-reward-price">
-				<label for="rewards[0][price]"><?php printf( __( 'Contribution Amount (%s)', 'atcf' ), edd_currency_filter( '' ) ); ?></label>
+				<label for="rewards[0][price]"><?php printf( __( 'Amount (%s)', 'atcf' ), edd_currency_filter( '' ) ); ?></label>
 				<input class="name" type="text" name="rewards[0][price]" id="rewards[0][price]" placeholder="20">
 			</p>
 
 			<p class="atcf-submit-campaign-reward-description">
-				<label for="rewards[0][description]"><?php _e( 'Description', 'atcf' ); ?></label>
+				<label for="rewards[0][description]"><?php _e( 'Reward', 'atcf' ); ?></label>
 				<input class="description" type="text" name="rewards[0][description]" id="rewards[0][description]" rows="3" placeholder="<?php esc_attr_e( 'Description of reward for this level of contribution.', 'atcf' ); ?>" />
+			</p>
+
+			<p class="atcf-submit-campaign-reward-limit">
+				<label for="rewards[0][limit]"><?php _e( 'Limit', 'atcf' ); ?></label>
+				<input class="description" type="text" name="rewards[0][limit]" id="rewards[0][limit]" />
 			</p>
 
 			<p class="atcf-submit-campaign-reward-file">
