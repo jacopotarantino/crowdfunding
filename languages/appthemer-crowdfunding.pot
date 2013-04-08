@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AppThemer Crowdfunding\n"
-"POT-Creation-Date: 2013-04-07 21:15-0500\n"
-"PO-Revision-Date: 2013-04-07 21:15-0500\n"
+"POT-Creation-Date: 2013-04-08 16:54-0500\n"
+"PO-Revision-Date: 2013-04-08 16:54-0500\n"
 "Last-Translator: Spencer Finnell <spencerfinnell@gmail.com>\n"
 "Language-Team: AppThemer <contact@appthemer.com>\n"
 "MIME-Version: 1.0\n"
@@ -181,8 +181,12 @@ msgid ""
 "collection."
 msgstr ""
 
-#: ../includes/campaign.php:569 ../includes/campaign.php:603
+#: ../includes/campaign.php:569
 msgid "oEmbed supported video links."
+msgstr ""
+
+#: ../includes/campaign.php:603
+msgid "Notes and updates about the campaign."
 msgstr ""
 
 #: ../includes/campaign.php:643

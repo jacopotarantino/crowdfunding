@@ -600,7 +600,7 @@ function _atcf_metabox_campaign_updates() {
 			),
 		) ) );
 	?>
-	<p class="description"><?php _e( 'oEmbed supported video links.', 'atcf' ); ?></p>
+	<p class="description"><?php _e( 'Notes and updates about the campaign.', 'atcf' ); ?></p>
 <?php
 	do_action( 'atcf_metabox_campaign_updates_after', $campaign );
 }
