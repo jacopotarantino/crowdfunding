@@ -585,21 +585,7 @@ function _atcf_metabox_campaign_updates() {
 
 	do_action( 'atcf_metabox_campaign_updates_before', $campaign );
 ?>
-	<?php 
-		wp_editor( $campaign->updates(), 'campaign_updates', apply_filters( 'atcf_submit_field_updates_editor_args', array( 
-			'media_buttons' => false,
-			'teeny'         => true,
-			'quicktags'     => false,
-			'textarea_rows' => 4,
-			'editor_css'    => '<style>body { background: white; }</style>',
-			'tinymce'       => array(
-				'theme_advanced_path'     => false,
-				'theme_advanced_buttons1' => 'bold,italic,bullist,numlist,blockquote,justifyleft,justifycenter,justifyright,link,unlink',
-				'plugins'                 => 'paste',
-				'paste_remove_styles'     => true
-			),
-		) ) );
-	?>
+	<textarea name="campaign_updates" rows="4" class="widefat"><?php echo esc_textarea( $campaign->updates() ); ?></textarea>
 	<p class="description"><?php _e( 'Notes and updates about the campaign.', 'atcf' ); ?></p>
 <?php
 	do_action( 'atcf_metabox_campaign_updates_after', $campaign );
