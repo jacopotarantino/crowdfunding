@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: download, downloads, e-store, eshop, digital downloads, crowd funding, crowdfunding, crowdsource, 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 0.8.1
+Stable Tag: 0.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -57,6 +57,18 @@ Developers can contribute to the source code of the project on [GitHub](https://
 Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
 == Changelog ==
+
+= 0.9: April 8, 2013 =
+
+https://github.com/AppThemer/crowdfunding/issues?milestone=4&state=closed
+
+* New: Set a limit on number of times a pledge amount can be purchased.
+* New: Separate area for adding updates to a campaign during it's running.
+* New: Site administrators can choose which funding types are available.
+* New: Shipping becomes optional. Can toggle when submitting via frontend/backend.
+* New: More social fields in profile on campaign page, and author page.
+* New: Can set minimum and maximum campaign length in settings.
+* Fix: Properly set category when using the frontend submission form.
 
 = 0.8.1: April 1, 2013 =
 
