@@ -42,7 +42,7 @@ function atcf_shortcode_submit( $editing = false ) {
 		<?php do_action( 'atcf_shortcode_submit_fields', $editing, $campaign ); ?>
 
 		<p class="atcf-submit-campaign-submit">
-			<input type="submit" value="<?php printf( '%s %s', $editing ? __( 'Update', 'edit object', 'atcf' ) : __( 'Submit', 'submit object', 'atcf' ), edd_get_label_singular() ); ?>">
+			<input type="submit" value="<?php printf( '%s %s', $editing ? _x( 'Update', 'edit object', 'atcf' ) : _x( 'Submit', 'submit object', 'atcf' ), edd_get_label_singular() ); ?>">
 			<input type="hidden" name="action" value="atcf-campaign-<?php echo $editing ? 'edit' : 'submit'; ?>" />
 			<?php wp_nonce_field( 'atcf-campaign-' . ( $editing ? 'edit' : 'submit' ) ); ?>
 		</p>
