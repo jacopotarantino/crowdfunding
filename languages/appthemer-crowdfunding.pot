@@ -1,16 +1,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AppThemer Crowdfunding\n"
-"POT-Creation-Date: 2013-04-08 16:54-0500\n"
-"PO-Revision-Date: 2013-04-08 16:54-0500\n"
+"POT-Creation-Date: 2013-04-10 10:00-0500\n"
+"PO-Revision-Date: 2013-04-10 10:01-0500\n"
 "Last-Translator: Spencer Finnell <spencerfinnell@gmail.com>\n"
 "Language-Team: AppThemer <contact@appthemer.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.5\n"
-"X-Poedit-KeywordsList: _;gettext;gettext_noop;_e;__;esc_attr__;esc_attr_e;"
-"_n\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;_e;__;esc_attr__;esc_attr_e;_n;"
+"_x\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ..\n"
 
@@ -185,92 +185,92 @@ msgstr ""
 msgid "oEmbed supported video links."
 msgstr ""
 
-#: ../includes/campaign.php:603
+#: ../includes/campaign.php:589
 msgid "Notes and updates about the campaign."
 msgstr ""
 
-#: ../includes/campaign.php:643
+#: ../includes/campaign.php:629
 msgid "Featured campaign"
 msgstr ""
 
-#: ../includes/campaign.php:650
+#: ../includes/campaign.php:636
 msgid "Collect shipping information on checkout"
 msgstr ""
 
-#: ../includes/campaign.php:661
+#: ../includes/campaign.php:647
 msgid "Goal:"
 msgstr ""
 
-#: ../includes/campaign.php:670
+#: ../includes/campaign.php:656
 msgid "Location:"
 msgstr ""
 
-#: ../includes/campaign.php:675
+#: ../includes/campaign.php:661
 msgid "Author:"
 msgstr ""
 
-#: ../includes/campaign.php:680
+#: ../includes/campaign.php:666
 msgid "PayPal Email:"
 msgstr ""
 
-#: ../includes/campaign.php:685
+#: ../includes/campaign.php:671
 msgid "Contact Email:"
 msgstr ""
 
-#: ../includes/campaign.php:692
+#: ../includes/campaign.php:678
 msgid "End Date:"
 msgstr ""
 
-#: ../includes/campaign.php:1195
+#: ../includes/campaign.php:1181
 msgid "Please add a title to this campaign."
 msgstr ""
 
-#: ../includes/campaign.php:1201
+#: ../includes/campaign.php:1187
 #, php-format
 msgid "Please enter a valid goal amount. All goals are set in the %s currency."
 msgstr ""
 
-#: ../includes/campaign.php:1222 ../includes/campaign.php:1416
+#: ../includes/campaign.php:1208 ../includes/campaign.php:1402
 msgid "Please add content to this campaign."
 msgstr ""
 
-#: ../includes/campaign.php:1230
+#: ../includes/campaign.php:1216
 msgid "Please add a campaign image."
 msgstr ""
 
-#: ../includes/campaign.php:1234
+#: ../includes/campaign.php:1220
 msgid "Please add at least one reward to the campaign."
 msgstr ""
 
-#: ../includes/campaign.php:1238 ../includes/campaign.php:1424
+#: ../includes/campaign.php:1224 ../includes/campaign.php:1410
 msgid "Please make sure all email addresses are valid."
 msgstr ""
 
-#: ../includes/campaign.php:1241
+#: ../includes/campaign.php:1227
 msgid "That contact email address already exists."
 msgstr ""
 
-#: ../includes/campaign.php:1466
+#: ../includes/campaign.php:1452
 msgid "Reward Options:"
 msgstr ""
 
-#: ../includes/campaign.php:1478
+#: ../includes/campaign.php:1464
 msgid "Enable multiple reward options"
 msgstr ""
 
-#: ../includes/campaign.php:1489
+#: ../includes/campaign.php:1475
 msgid "Fixed Funding"
 msgstr ""
 
-#: ../includes/campaign.php:1490
+#: ../includes/campaign.php:1476
 msgid "Only collect funds if the goal is met."
 msgstr ""
 
-#: ../includes/campaign.php:1493
+#: ../includes/campaign.php:1479
 msgid "Flexible Funding"
 msgstr ""
 
-#: ../includes/campaign.php:1494
+#: ../includes/campaign.php:1480
 msgid "Collect funds no matter what. A higher fee may be charged."
 msgstr ""
 
