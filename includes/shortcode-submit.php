@@ -140,7 +140,7 @@ function atcf_shortcode_submit_field_type( $editing, $campaign ) {
 
 	$types = atcf_campaign_types();
 ?>
-	<h4><?php _e( 'Funding Type', 'atcf' ); ?> <?php if ( $edd_options[ 'faq_page' ] ) : ?><small> &mdash; <a href="<?php echo esc_url( get_permalink( $edd_options[ 'faq_page' ] ) ); ?>#fees"><?php echo apply_filters( 'atcf_submit_field_type_more_link', __( 'Learn More', 'atcf' ) ); ?></a></small><?php endif; ?></h4>
+	<h4><?php _e( 'Funding Type', 'atcf' ); ?> <?php if ( $edd_options[ 'faq_page' ] ) : ?><small> &mdash; <a href="<?php echo esc_url( get_permalink( $edd_options[ 'faq_page' ] ) ); ?>"><?php echo apply_filters( 'atcf_submit_field_type_more_link', __( 'Learn More', 'atcf' ) ); ?></a></small><?php endif; ?></h4>
 
 	<p class="atcf-submit-campaign-type">
 		<?php foreach ( atcf_campaign_types_active() as $key => $desc ) : ?>
@@ -202,7 +202,7 @@ function atcf_shortcode_submit_field_description( $editing, $campaign ) {
 		<label for="description"><?php _e( 'Description', 'atcf' ); ?></label>
 		<?php 
 			wp_editor( $editing ? wp_richedit_pre( $campaign->data->post_content ) : '', 'description', apply_filters( 'atcf_submit_field_description_editor_args', array( 
-				'media_buttons' => true,
+				'media_buttons' => false,
 				'teeny'         => true,
 				'quicktags'     => false,
 				'editor_css'    => '<style>body { background: white; }</style>',

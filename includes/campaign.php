@@ -650,8 +650,13 @@ function _atcf_metabox_campaign_info() {
 	</p>
 	
 	<p>
+		<strong><?php _e( 'Funding Type:', 'atcf' ); ?></strong>
+	</p>
+
+	<p>
+
 		<?php foreach ( atcf_campaign_types_active() as $key => $desc ) : ?>
-		<label for="campaign_type[<?php echo esc_attr( $key ); ?>]"><input type="radio" name="campaign_type" id="campaign_type[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $key, $campaign->type() ); ?> /> <strong><?php echo $types[ $key ][ 'title' ]; ?></strong></label><br />
+		<label for="campaign_type[<?php echo esc_attr( $key ); ?>]"><input type="radio" name="campaign_type" id="campaign_type[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $key, $campaign->type() ); ?> /> <strong><?php echo $types[ $key ][ 'title' ]; ?></strong> &mdash; <?php echo $types[ $key ][ 'description' ]; ?></label><br />
 		<?php endforeach; ?>
 	</p>
 
@@ -1243,6 +1248,9 @@ function atcf_shortcode_submit_process() {
 	if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
 		wp_die( $errors );
 
+	if ( ! $type )
+		$type = atcf_campaign_type_default();
+
 	if ( ! isset ( $current_user ) ) {
 		$password = wp_generate_password( 12, false );
 		
@@ -1484,12 +1492,12 @@ function atcf_edd_variable_pricing_toggle_text( $text ) {
 function atcf_campaign_types() {
 	$types = apply_filters( 'atcf_campaign_types', array(
 		'fixed'    => array(
-			'title'       => __( 'Fixed Funding', 'atcf' ),
-			'description' => __( 'Only collect funds if the goal is met.', 'atcf' )
+			'title'       => __( 'All-or-nothing', 'atcf' ),
+			'description' => __( 'Only collect pledged funds when the campaign ends if the set goal is met.', 'atcf' )
 		),
 		'flexible' => array(
-			'title'       => __( 'Flexible Funding', 'atcf' ),
-			'description' => __( 'Collect funds no matter what. A higher fee may be charged.', 'atcf' )
+			'title'       => __( 'Flexible', 'atcf' ),
+			'description' => __( 'Collect funds pledged at the end of the campaign no matter what.', 'atcf' )
 		)
 	) );
 
