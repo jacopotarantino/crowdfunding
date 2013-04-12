@@ -1167,6 +1167,7 @@ function atcf_shortcode_submit_process() {
 	$edd_files        = array();
 	$upload_overrides = array( 'test_form' => false );
 
+	$terms     = $_POST[ 'edd_agree_to_terms' ];
 	$title     = $_POST[ 'title' ];
 	$goal      = $_POST[ 'goal' ];
 	$length    = $_POST[ 'length' ];
@@ -1192,6 +1193,9 @@ function atcf_shortcode_submit_process() {
 		$current_user = wp_get_current_user();
 		$c_email = $current_user->user_email;
 	}
+
+	if ( isset( $edd_options[ 'show_agree_to_terms' ] ) && ! $terms )
+		$errors->add( 'terms', __( 'Please agree to the Terms and Conditions', 'atcf' ) );
 
 	/** Check Title */
 	if ( empty( $title ) )

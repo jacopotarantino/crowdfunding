@@ -68,7 +68,7 @@ var CrowdFunding = (function($) {
 				"email" : {
 					required : true,
 					email    : true
-				},
+				}
 			},
 			submitHandler: function(form) {
 				form.submit();

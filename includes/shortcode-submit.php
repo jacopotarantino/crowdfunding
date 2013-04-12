@@ -429,6 +429,12 @@ function atcf_shortcode_submit_field_location( $editing, $campaign ) {
 }
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_location', 120, 2 );
 
+function atcf_shortcode_submit_field_terms( $editing, $campaign ) {
+	edd_agree_to_terms_js();
+	edd_terms_agreement();
+}
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_terms', 200, 2 );
+
 /**
  * Success Message
  *
