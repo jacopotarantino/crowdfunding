@@ -147,13 +147,14 @@ class ATCF_Campaigns {
 	 * @return array $supports The modified post type supports
 	 */
 	function dashboard_columns( $columns ) {
-		$columns = array(
+		$columns = apply_filters( 'atcf_dashboard_columns', array(
 			'cb'                => '<input type="checkbox"/>',
 			'title'             => __( 'Name', 'atcf' ),
-			'download_category' => __( 'Categories', 'atcf' ),
+			'type'              => __( 'Type', 'atcf' ),
+			'backers'           => __( 'Backers', 'atcf' ),
 			'funded'            => __( 'Amount Funded', 'atcf' ),
-			'date'              => __( 'Expires', 'atcf' )
-		);
+			'expires'           => __( 'Days Remaining', 'atcf' )
+		) );
 
 		return $columns;
 	}
@@ -171,9 +172,20 @@ class ATCF_Campaigns {
 
 		switch ( $column ) {
 			case 'funded' :
-				$funded = $campaign->current_amount(true);
+				printf( _x( '%s of %s', 'funded of goal', 'atcf' ), $campaign->current_amount(true), $campaign->goal(true) );
 
-				echo $funded;
+				break;
+			case 'expires' : 
+				echo $campaign->days_remaining();
+
+				break;
+			case 'type' :
+				echo ucfirst( $campaign->type() );
+
+				break;
+			case 'backers' :
+				echo $campaign->backers_count();
+
 				break;
 			default : 
 				break;
@@ -814,7 +826,7 @@ class ATCF_Campaign {
 		$type = $this->__get( 'campaign_type' );
 
 		if ( ! $type )
-			atcf_campaign_type_default();
+			$type = atcf_campaign_type_default();
 
 		return $type;
 	}

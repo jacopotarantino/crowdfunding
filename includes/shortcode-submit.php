@@ -202,7 +202,7 @@ function atcf_shortcode_submit_field_description( $editing, $campaign ) {
 		<label for="description"><?php _e( 'Description', 'atcf' ); ?></label>
 		<?php 
 			wp_editor( $editing ? wp_richedit_pre( $campaign->data->post_content ) : '', 'description', apply_filters( 'atcf_submit_field_description_editor_args', array( 
-				'media_buttons' => false,
+				'media_buttons' => true,
 				'teeny'         => true,
 				'quicktags'     => false,
 				'editor_css'    => '<style>body { background: white; }</style>',
