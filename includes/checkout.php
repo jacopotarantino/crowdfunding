@@ -35,3 +35,22 @@ function atcf_log_pledge_limit( $payment, $payment_data ) {
 	}
 }
 add_action( 'edd_insert_payment', 'atcf_log_pledge_limit', 10, 2 );
+
+/**
+ * Don't allow multiple pledges to be made at once if
+ * it is not set to allow them to. When a single campaign page
+ * is loaded (they are browsing again), clear their cart.
+ *
+ * @since Appthemer CrowdFunding 1.0
+ *
+ * @return void
+ */
+function atcf_clear_cart() {
+	global $edd_options;
+
+	if ( ! isset ( $edd_options[ 'atcf_settings_multiple_checkout' ] ) )
+		edd_empty_cart();
+
+	return;
+}
+add_action( 'atcf_found_single', 'atcf_clear_cart' );
