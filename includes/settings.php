@@ -135,12 +135,12 @@ function atcf_settings_general( $settings ) {
 		'options' => $_types
 	);
 
-	$settings[ 'atcf_settings_multiple_checkout' ] = array(
+	/*$settings[ 'atcf_settings_multiple_checkout' ] = array(
 		'id'      => 'atcf_settings_multiple_checkout',
 		'name'    => __( 'Allow Multiple Pledeges', 'atcf' ),
 		'desc'    => __( 'Users can make pledges to multiple campaigns at once.', 'atcf' ),
 		'type'    => 'checkbox'
-	);
+	);*/
 
 	return $settings;
 }

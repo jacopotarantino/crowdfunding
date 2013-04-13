@@ -48,8 +48,7 @@ add_action( 'edd_insert_payment', 'atcf_log_pledge_limit', 10, 2 );
 function atcf_clear_cart() {
 	global $edd_options;
 
-	if ( ! isset ( $edd_options[ 'atcf_settings_multiple_checkout' ] ) )
-		edd_empty_cart();
+	edd_empty_cart();
 
 	return;
 }
