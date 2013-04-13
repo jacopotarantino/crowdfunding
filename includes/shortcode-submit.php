@@ -429,6 +429,13 @@ function atcf_shortcode_submit_field_location( $editing, $campaign ) {
 }
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_location', 120, 2 );
 
+/**
+ * Terms
+ *
+ * @since CrowdFunding 1.0
+ *
+ * @return void
+ */
 function atcf_shortcode_submit_field_terms( $editing, $campaign ) {
 	edd_agree_to_terms_js();
 	edd_terms_agreement();
