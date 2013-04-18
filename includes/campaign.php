@@ -231,7 +231,7 @@ class ATCF_Campaigns {
 
 		$campaign = new ATCF_Campaign( $post );
 
-		if ( ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && ! $campaign->is_collected() && class_exists( 'PayPalAdaptivePaymentsGateway' ) )
+		if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && class_exists( 'PayPalAdaptivePaymentsGateway' ) )
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
@@ -296,12 +296,6 @@ class ATCF_Campaigns {
 		/** check roles */
 		if ( ! current_user_can( 'update_core' ) ) {
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 12 ), admin_url( 'post.php' ) ) );
-			exit();
-		}
-
-		/** check funded */
-		if ( ! $campaign->is_funded() ) {
-			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 11 ), admin_url( 'post.php' ) ) );
 			exit();
 		}
 

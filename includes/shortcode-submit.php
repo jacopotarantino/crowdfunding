@@ -437,6 +437,9 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_locatio
  * @return void
  */
 function atcf_shortcode_submit_field_terms( $editing, $campaign ) {
+	if ( $editing )
+		return;
+	
 	edd_agree_to_terms_js();
 	edd_terms_agreement();
 }
