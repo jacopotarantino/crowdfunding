@@ -191,10 +191,6 @@ final class ATCF_CrowdFunding {
 			do_action( 'atcf_found_edit' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_edit', array( 'single-campaign-edit.php' ) );
-		} else if ( isset ( $wp_query->query_vars[ 'backers' ] ) && is_singular( 'download' ) ) {
-			do_action( 'atcf_found_backers' );
-
-			$files = apply_filters( 'atcf_crowdfunding_templates_backers', array( 'single-campaign-backers.php' ) );
 		} else if ( is_singular( 'download' ) ) {
 			do_action( 'atcf_found_single' );
 
