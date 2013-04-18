@@ -63,3 +63,79 @@ function atcf_contactmethods( $contactmethods ) {
 	return $contactmethods;
 }
 add_filter( 'user_contactmethods', 'atcf_contactmethods', 10, 1 );
+
+/**
+ * Handle any possible registration.
+ *
+ * @since Appthemer CrowdFunding 1.0
+ *
+ * @return void
+ */
+function atcf_registration_handle() {
+	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
+		return;
+	
+	if ( empty( $_POST['action' ] ) || ( 'atcf-register-submit' !== $_POST[ 'action' ] ) )
+		return;
+
+	if ( ! wp_verify_nonce( $_POST[ '_wpnonce' ], 'atcf-register-submit' ) )
+		return;
+
+	$errors   = new WP_Error();
+
+	$nicename = isset( $_POST[ 'displayname' ] ) ? esc_attr( $_POST[ 'displayname' ] ) : null;
+	$email    = isset( $_POST[ 'user_email' ] ) ? esc_attr( $_POST[ 'user_email' ] ) : null;
+	$username = isset( $_POST[ 'user_login' ] ) ? esc_attr( $_POST[ 'user_login' ] ) : null;
+	$password = isset( $_POST[ 'user_pass' ] ) ? esc_attr( $_POST[ 'user_pass' ] ) : null;
+
+	/** Check Email */
+	if ( empty( $email ) || ! is_email( $email ) )
+		$errors->add( 'invalid-email', __( 'Please enter a valid email address.', 'atcf' ) );
+
+	if ( email_exists( $email ) )
+		$errors->add( 'taken-email', __( 'That contact email address already exists.', 'atcf' ) );
+
+	/** Check Password */
+	if ( empty( $email ) || ! is_email( $email ) )
+		$errors->add( 'invalid-password', __( 'Please choose a secure password.', 'atcf' ) );
+
+	if ( ! empty ( $errors->errors ) )
+		wp_die( $errors );
+
+	if ( '' == $username )
+		$username = $email;
+
+	if ( '' == $nicename )
+		$nicename = $username;
+
+	$user_id = atcf_register_user( array(
+		'user_login'           => $username, 
+		'user_pass'            => $password, 
+		'user_email'           => $email,
+		'display_name'         => $nicename,
+	) );
+
+	if ( $user_id ) {
+		wp_safe_redirect( isset ( $edd_options[ 'profile_page' ] ) ? get_permalink( $edd_options[ 'profile_page' ] ) : home_url() );
+		exit();
+	}
+}
+add_action( 'template_redirect', 'atcf_registration_handle' );
+
+function atcf_register_user( $args = array() ) {
+	$defaults = array(
+		'password'             => wp_generate_password( 12, false ),
+		'show_admin_bar_front' => 'false',
+		'role'                 => 'campaign_contributor'
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+	
+	$user_id  = wp_insert_user($args);
+
+	$secure_cookie = is_ssl() ? true : false;
+	wp_set_auth_cookie( $user_id, true, $secure_cookie );
+	wp_new_user_notification( $user_id, $password );
+
+	return $user_id;
+}

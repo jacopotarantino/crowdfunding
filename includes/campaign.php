@@ -1251,21 +1251,12 @@ function atcf_shortcode_submit_process() {
 		$type = atcf_campaign_type_default();
 
 	if ( ! isset ( $current_user ) ) {
-		$password = wp_generate_password( 12, false );
-		
-		$user_id  = wp_insert_user( array(
+		$user_id = atcf_register_user( array(
 			'user_login'           => $c_email, 
 			'user_pass'            => $password, 
 			'user_email'           => $c_email,
-			'user_nicename'        => $author,
 			'display_name'         => $author,
-			'show_admin_bar_front' => 'false',
-			'role'                 => 'campaign_contributor'
 		) );
-
-		$secure_cookie = is_ssl() ? true : false;
-		wp_set_auth_cookie( $user_id, true, $secure_cookie );
-		wp_new_user_notification( $user_id, $password );
 	} else {
 		$user_id = $current_user->ID;
 	}

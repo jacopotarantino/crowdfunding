@@ -78,7 +78,7 @@ function atcf_profile_info_fields_nicename( $user, $userinfo ) {
 ?>
 	<p class="atcf-profile-info-first-name">
 		<label for="first-name"><?php _e( 'Name', 'atcf' ); ?></label>
-		<input type="text" name="nicename" id="nicename" value="<?php echo esc_attr( $user->user_nicename ); ?>" />
+		<input type="text" name="nicename" id="nicename" value="<?php echo esc_attr( $user->display_name ); ?>" />
 	</p>
 <?php
 }
