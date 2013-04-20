@@ -33,6 +33,8 @@ function atcf_settings_general_pages( $settings ) {
 	$keys[] = 'faq_page';
 	$keys[] = 'submit_page';
 	$keys[] = 'profile_page';
+	$keys[] = 'login_page';
+	$keys[] = 'register_page';
 
 	$vals[] =  array(
 		'id'      => 'faq_page',
@@ -54,6 +56,22 @@ function atcf_settings_general_pages( $settings ) {
 		'id'      => 'profile_page',
 		'name'    => __( 'Profile Page', 'atcf' ),
 		'desc'    => __( 'The page that contains the <code>[appthemer_crowdfunding_profile]</code> shortcode.', 'atcf' ),
+		'type'    => 'select',
+		'options' => $pages_options
+	);
+
+	$vals[] =  array(
+		'id'      => 'login_page',
+		'name'    => __( 'Login Page', 'atcf' ),
+		'desc'    => __( 'The page that contains a login shortcode or page template.', 'atcf' ),
+		'type'    => 'select',
+		'options' => $pages_options
+	);
+
+	$vals[] =  array(
+		'id'      => 'register_page',
+		'name'    => __( 'Register Page', 'atcf' ),
+		'desc'    => __( 'The page that contains a register shortcode or page template.', 'atcf' ),
 		'type'    => 'select',
 		'options' => $pages_options
 	);
@@ -135,12 +153,12 @@ function atcf_settings_general( $settings ) {
 		'options' => $_types
 	);
 
-	/*$settings[ 'atcf_settings_multiple_checkout' ] = array(
-		'id'      => 'atcf_settings_multiple_checkout',
-		'name'    => __( 'Allow Multiple Pledeges', 'atcf' ),
-		'desc'    => __( 'Users can make pledges to multiple campaigns at once.', 'atcf' ),
+	$settings[ 'atcf_settings_require_account' ] = array(
+		'id'      => 'atcf_settings_require_account',
+		'name'    => __( 'Require Account', 'atcf' ),
+		'desc'    => __( 'Require users to be logged in to submit a campaign.', 'atcf' ),
 		'type'    => 'checkbox'
-	);*/
+	);
 
 	return $settings;
 }
