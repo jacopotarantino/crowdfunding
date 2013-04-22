@@ -1,4 +1,4 @@
-=== AppThemer Crowdfunding ===
+=== Crowdfunding by AppThemer ===
 
 Author URI: http://appthemer.com
 Plugin URI: http://appthemer.com
