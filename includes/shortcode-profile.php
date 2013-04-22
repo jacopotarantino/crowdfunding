@@ -344,7 +344,7 @@ function atcf_shortcode_profile_request_data() {
 	$errors       = new WP_Error();
 
 	$crowdfunding = crowdfunding();
-	$campaign     = absint( $campaign );
+	$campaign     = absint( $_GET[ 'campaign' ] );
 	$campaign     = atcf_get_campaign( $campaign );
 
 	if ( $user->ID != $campaign->data->post_author )
@@ -357,7 +357,7 @@ function atcf_shortcode_profile_request_data() {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
 		require( $crowdfunding->includes_dir . 'export-campaigns.php' );
 
-		$campaign_export = new ATCF_Campaign_Export();
+		$campaign_export = new ATCF_Campaign_Export( $campaign->ID );
 
 		$campaign_export->export();
 	}

@@ -25,7 +25,7 @@ function atcf_export_campaign() {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
 		require( $crowdfunding->includes_dir . 'export-campaigns.php' );
 
-		$campaign_export = new ATCF_Campaign_Export();
+		$campaign_export = new ATCF_Campaign_Export( $campaign_id );
 
 		$campaign_export->export();
 	}
