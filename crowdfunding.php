@@ -104,6 +104,8 @@ final class ATCF_CrowdFunding {
 		require( $this->includes_dir . 'checkout.php' );
 		require( $this->includes_dir . 'shortcode-submit.php' );
 		require( $this->includes_dir . 'shortcode-profile.php' );
+		require( $this->includes_dir . 'shortcode-login.php' );
+		require( $this->includes_dir . 'shortcode-register.php' );
 
 		do_action( 'atcf_include_files' );
 
