@@ -58,12 +58,13 @@ Yes. However, it won't look much different than a standard EDD install. Template
 
 == Changelog ==
 
-= 0.1: April 22, 2013 =
+= 1.0: April 22, 2013 =
 
 https://github.com/AppThemer/crowdfunding/issues?milestone=5&state=closed
 
 * New: Ability to require authentication (registration/login) before submitting a campaign.
 * New: Login and Register shortcodes can be placed on any page.
+* New: 
 * Fix: Don't show collect funds button once they have already been collected.
 * Fix: Limit cart to one pledge per checkout to avoid errors.
 * Fix: Show all qualified campaigns on Export CSV section.
