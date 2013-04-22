@@ -1,0 +1,580 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: AppThemer Crowdfunding\n"
+"POT-Creation-Date: 2013-03-10 16:09-0500\n"
+"PO-Revision-Date: 2013-03-16 20:51+0100\n"
+"POT-Creation-Date: 2013-03-20 16:09-0500\n"
+"PO-Revision-Date: 2013-03-20 20:51+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;_e;__;esc_attr__;esc_attr_e;"
+"_n\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: French\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../crowdfunding.php:159
+#, php-format
+msgid ""
+"<strong>Notice:</strong> Crowdfunding by AppThemer requires <a href=\"%s"
+"\">Easy Digital Downloads</a> in order to function properly."
+msgstr ""
+
+#: ../includes/campaign.php:81 ../includes/campaign.php:93
+msgid "Campaigns"
+msgstr "Campagnes"
+msgITA "Campagne"
+
+#: ../includes/campaign.php:82
+msgid "Campaign"
+msgstr "Campagne"
+msgITA "Campagna"
+
+#: ../includes/campaign.php:83
+msgid "Add New"
+msgstr "Nouvelle campagne"
+msgITA "Crea nuova Campagna"
+
+#: ../includes/campaign.php:84
+msgid "Add New Campaign"
+msgstr "Nouvelle campagne"
+msgITA "Crea nuova Campagna"
+
+#: ../includes/campaign.php:85
+msgid "Edit Campaign"
+msgstr "Editer la campagne"
+msgITA "Modifica Campagna"
+
+#: ../includes/campaign.php:86
+msgid "New Campaign"
+msgstr "Nouvelle campagne"
+msgITA "Nuova Campagna"
+
+#: ../includes/campaign.php:87
+msgid "All Campaigns"
+msgstr "Toutes les campagnes"
+msgITA "Tutte le Campagna"
+
+#: ../includes/campaign.php:88
+msgid "View Campaign"
+msgstr "Voir la campagne"
+msgITA "Vedi Campagna"
+
+#: ../includes/campaign.php:89
+msgid "Search Campaigns"
+msgstr "Chercher une campagne"
+msgITA "Cerca Campagne"
+
+#: ../includes/campaign.php:90
+msgid "No Campaigns found"
+msgstr "Aucune campagne trouvée"
+msgITA "Alcune Campagne trovate"
+
+#: ../includes/campaign.php:91
+msgid "No Campaigns found in Trash"
+msgstr "Aucune campagne dans la corbeille"
+msgITA "Non ci sono Campagne nel cestino"
+
+#: ../includes/campaign.php:146
+msgid "Name"
+msgstr "Nom"
+msgITA "Nome"
+
+#: ../includes/campaign.php:147
+msgid "Categories"
+msgstr "Catégories"
+msgITA "Categorie"
+
+#: ../includes/campaign.php:148
+msgid "Amount Funded"
+msgstr "Montant financé"
+msgITA "Importo Raccolto"
+
+#: ../includes/campaign.php:149
+msgid "Expires"
+msgstr "Expire"
+msgITA "Scadenza"
+
+
+#: ../includes/campaign.php:217
+msgid "Campaign Funds"
+msgstr "Financement de la campagne"
+msgITA "Campagna fondi"
+
+#: ../includes/campaign.php:219
+msgid "Campaign Stats"
+msgstr "Stats de la campagne"
+msgITA "Statistiche campagna"
+
+
+#: ../includes/campaign.php:220
+msgid "Campaign Video"
+msgstr "Vidéo de la campagne"
+msgITA "video della campagna"
+
+#: ../includes/campaign.php:319
+msgid "This payment has already been collected."
+msgstr "Ce paiement a déjà été collecté."
+msgITA "Questo pagamento è stato già raccolto."
+
+#: ../includes/campaign.php:337
+msgid "There was an error collecting funds."
+msgstr "Il y a eu une erreur dans la collecte des fonds."
+msgITA "C'è stato un errore."
+
+#: ../includes/campaign.php:340
+msgid "There was an error."
+msgstr "Il y a eu une rreur."
+msgITA C'è stato un errore."
+
+#: ../includes/campaign.php:362
+#, php-format
+msgid "This %s has not reached its funding goal."
+msgstr "Ce %s n'a pas atteint son objectif de financement."
+msgITA "Questo %s non ha raggiunto l'obiettivo."
+
+#: ../includes/campaign.php:363
+#, php-format
+msgid "You do not have permission to collect funds for %s."
+msgstr "Vous n'avez pas la permission de recevoir les fonds pour %s."
+msgITA "Non sei autorizzato per raccoglier fondi per %s."
+
+#: ../includes/campaign.php:364
+#, php-format
+msgid "%d payments have been collected for this %s."
+msgstr "%d fonds ont été collectés pour ce %s."
+msgITA "%d fondi raccolti per %s."
+
+#: ../includes/campaign.php:406
+msgid "Whoops, the provided date is invalid."
+msgstr "Whoops, la date fournie est invalide."
+msgITA "Whoops, data non valida"
+
+#: ../includes/campaign.php:431
+msgid "Current Amount:"
+msgstr "Montant en cours:"
+msgITA "Importo corrente:"
+
+#: ../includes/campaign.php:436
+msgid "Backers:"
+msgstr "Donateurs:"
+msgITA "Donatori:"
+
+#: ../includes/campaign.php:441
+msgid "Days Remaining:"
+msgstr "Jours restants:"
+msgITA "Giorni rimanenti:"
+
+#: ../includes/campaign.php:465
+#, php-format
+msgid ""
+"This %1$s has reached its funding goal. You may now send the funds to the "
+"owner. This will end the %1$s."
+msgstr ""
+"Ce %1$s a atteint son objectif de financement. Vous pouvez envoyer les fonds "
+"au propriétaire. Ceci terminera le %1$s."
+msgITA "Questo %1$s ha raggiunto il suo obiettivo. E' ora possibile inviare fondi alla "
+"proprietà. Questo finirà la %1$s."
+
+#: ../includes/campaign.php:468
+#, php-format
+msgid "Make sure <code>%s</code> is a valid PayPal email address."
+msgstr "Soyez sûr que <code>%s</code> est une adresse mail PayPal valide."
+msgITA "Assicura <code>%s</code> sia un indirizzo email PayPal valido."
+
+#: ../includes/campaign.php:469
+msgid "Collect Funds"
+msgstr "Collecter les fonds"
+msgITA "Raccogli i fondi"
+
+#: ../includes/campaign.php:471
+#, php-format
+msgid ""
+"Please assign a valid PayPal email address to this %s to enable fund "
+"collection."
+msgstr ""
+"Veuillez attribuer une adresse mail PayPal valide pour ce %s pour activer la "
+"collecte des fonds."
+msgITA "Si prega di indicare un indirizzo email PayPal valido per %s attiva "
+"la raccolta fondi."
+
+
+#: ../includes/campaign.php:494
+msgid "oEmbed supported video links."
+msgstr "oEmbed liens vidéos supportés."
+msgITA "oEmbed video link supportati."
+
+#: ../includes/campaign.php:532
+msgid "Featured campaign"
+msgstr "Campagne à la une"
+msgITA "Piano della campagna"
+
+#: ../includes/campaign.php:537
+msgid "Goal:"
+msgstr "Objectif:"
+msgITA "Obiettivo:"
+
+#: ../includes/campaign.php:546
+msgid "Location:"
+msgstr "Localisation:"
+msgITA "Localizzazione:"
+
+
+#: ../includes/campaign.php:551
+msgid "Author:"
+msgstr "Auteur:"
+msgITA "Autore:"
+
+#: ../includes/campaign.php:556 ../includes/shortcode-submit.php:300
+msgid "PayPal Email:"
+msgstr "PayPal email:"
+msgITA "PayPal Email:"
+
+#: ../includes/campaign.php:563
+msgid "End Date:"
+msgstr "Date de fin:"
+msgITA "Fino al:"
+
+#: ../includes/campaign.php:961
+msgid "Please add a title to this campaign."
+msgstr "Veuillez ajouter un titre à cette campagne:"
+msgITA "Per cortesia aggiungi il titolo:"
+
+#: ../includes/campaign.php:965
+#, php-format
+msgid "Please enter a valid goal amount. All goals are set in the %s currency."
+msgstr "Veuiller entrer un montant valide. Tous les objectifs sont en %s."
+msgITA "Per cortesia aggiungi un obiettivo valido. Tutti gli obiettivi sono in %s:"
+
+#: ../includes/campaign.php:984
+msgid "Please add content to this campaign."
+msgstr "Veuillez ajouter un contenu à cette campagne."
+msgITA "Per cortesia aggiungi una descrizione."
+
+#: ../includes/campaign.php:992
+msgid "Please add a campaign image."
+msgstr "Veuillez ajouter une image à cette campagne."
+msgITA "Per cortesia aggiungi un'immagine"
+
+#: ../includes/campaign.php:996
+msgid "Please add at least one reward to the campaign."
+msgstr "Veuillez ajouter au moins une récompense pour cette campagne."
+msgITA "Per cortesia aggiungi almeno un riconoscimento."
+
+#: ../includes/campaign.php:1000
+msgid "Please provide a valid PayPal email address."
+msgstr "Veuillez fournir une adresse mail PayPal valide."
+msgITA "Per inserisci un'email valida con PayPal."
+
+#: ../includes/campaign.php:1105
+msgid "Reward Options:"
+msgstr "Options des récompenses."
+msgITA "Opzioni di riconoscimento."
+
+#: ../includes/campaign.php:1118
+msgid "Enable multiple reward options"
+msgstr "Activer l'option récompenses multiples."
+msgITA "Abilita più opzioni."
+
+#: ../includes/emails.php:76
+msgid "Your pledge has been received"
+msgstr "Votre engagement a été reçu."
+msgITA "Il tuo impegno è stato ricevuto."
+
+
+#: ../includes/emails.php:119
+msgid "Dear {name}"
+msgstr "Cher{name}"
+msgITA "Gentile {name}"
+
+#: ../includes/emails.php:120
+msgid ""
+"Thank you for your pledging to support %1$s. This email is just to let you "
+"know your pledge was processed without a hitch! You will only be charged "
+"your pledge amount if the %2$s receives 100% funding."
+msgstr ""
+"Merci de vous engager à soutenir %1$s. Cet email est là pour vous informer "
+"que votre engagement a réussi. Votre engagement ne sera débité que si %2$s "
+"reçois 100% de son financement."
+msgITA ""
+"Grazie per il tuo impegno a supporto di %1$s. Questa email è solo per"
+"farti sapere che abbiamo apprezzato il tuo impegno. I soldi ti saranno scalati"
+"solo se il %2$s riceverà il 100% del finanziamento."
+
+
+#: ../includes/export-campaigns.php:26
+msgid "ID"
+msgstr "ID"
+msgITA "ID"
+
+#: ../includes/export-campaigns.php:27
+msgid "Email"
+msgstr "Email"
+msgITA "Email"
+
+#: ../includes/export-campaigns.php:28
+msgid "First Name"
+msgstr "Prénom"
+msgITA "Cognome"
+
+#: ../includes/export-campaigns.php:29
+msgid "Last Name"
+msgstr "Nom"
+msgITA "Nome"
+
+#: ../includes/export-campaigns.php:30 ../includes/shipping.php:44
+#: ../includes/shipping.php:47
+msgid "Shipping Address"
+msgstr "Adresse de livraison"
+msgITA "Indirizzo"
+
+#: ../includes/export-campaigns.php:31
+msgid "Pledge"
+msgstr "Engagement"
+msgITA "Impegno"
+
+#: ../includes/export-campaigns.php:32
+msgid "Amount"
+msgstr "Montant"
+msgITA "Importo"
+
+#: ../includes/export-campaigns.php:33
+msgid "Tax"
+msgstr "Taxe"
+msgITA "Tasse"
+
+#: ../includes/export-campaigns.php:34
+msgid "Payment Method"
+msgstr "Méthode de paiement"
+msgITA "Metodo di pagamento"
+
+#: ../includes/export-campaigns.php:35
+msgid "Purchase Key"
+msgstr "Clé d'achat"
+msgITA "Chiave d'acquisto"
+
+#: ../includes/export-campaigns.php:36
+msgid "Date"
+msgstr "Date"
+msgITA "Data"
+
+#: ../includes/export-campaigns.php:37
+msgid "User"
+msgstr "Utilisateur"
+msgITA "Utente"
+
+#: ../includes/export-campaigns.php:38
+msgid "Status"
+msgstr "Statut"
+msgITA "Stato"
+
+#: ../includes/export-campaigns.php:113
+msgid "none"
+msgstr "aucun"
+msgITA "niente"
+
+#: ../includes/export-campaigns.php:117
+msgid "guest"
+msgstr "invité"
+msgITA "ospite"
+
+#: ../includes/export.php:48
+msgid "Export Campaign Data"
+msgstr "Exporter les données de la campagne"
+msgITA "Esporta i dati della campagna"
+
+#: ../includes/export.php:50
+msgid "Download a CSV of all pledges recorded."
+msgstr "Télécharger un CSV de tous les engagements enregistrés."
+msgITA "Scarica il CSV tutti i record di impegno."
+
+#: ../includes/export.php:54
+#, php-format
+msgid "Select %s"
+msgstr "Select %s"
+msgITA "Selezionare %s"
+
+#: ../includes/export.php:70
+msgid "Generate CSV"
+msgstr "Générer CSV"
+msgITA "Genera CSV"
+
+#: ../includes/shipping.php:48
+msgid "Where should we send any physical goods?"
+msgstr "Où devrions-nous envoyer les biens physiques ?"
+msgITA "Dove dovremo spedire fisicamente gli oggetti?"
+
+#: ../includes/shipping.php:49
+msgid "Address line 1"
+msgstr "Adresse ligne 1"
+msgITA "Indirizzo linea 1"
+
+#: ../includes/shipping.php:53
+msgid "Shipping Address Line 2"
+msgstr "Adresse de livraison ligne 2"
+msgITA "Indirizzo di consegna linea 2"
+
+#: ../includes/shipping.php:54
+msgid "Address line 2"
+msgstr "Adresse ligne 2"
+msgITA "Indirizzo linea 2"
+
+#: ../includes/shipping.php:58
+msgid "Shipping City"
+msgstr "Ville de livraison"
+msgITA "Città di consegna"
+
+#: ../includes/shipping.php:59
+msgid "City"
+msgstr "Ville"
+msgITA "Città"
+
+#: ../includes/shipping.php:63
+msgid "Shipping Country"
+msgstr "Pays de livraison"
+msgITA "Nazione di consegna"
+
+#: ../includes/shipping.php:75
+msgid "Shipping State / Province"
+msgstr "Etat/Province de livraison "
+msgITA "Stato / Provincia di consegna"
+
+#: ../includes/shipping.php:76
+msgid "State / Province"
+msgstr "Etat / Province"
+msgITA "Stato / Provincia"
+
+#: ../includes/shipping.php:95
+msgid "Shipping Zip / Postal Code"
+msgstr "Code postal de livraison"
+msgITA "Codice postale di consegna"
+
+#: ../includes/shipping.php:96
+msgid "Zip / Postal code"
+msgstr "Code postal"
+msgITA "CAP"
+
+#: ../includes/shipping.php:135
+msgid "Please fill out all required shipping fields."
+msgstr "Veuillez remplir tous les champs de livraison requis."
+msgITA "Compila tutti i campi richiesti"
+
+#: ../includes/shipping.php:139
+msgid "The zip code you entered for your shipping address is invalid."
+msgstr "Le code postal que vous avez entré est invalide."
+msgITA "Il CAP per l'indirizzo di consegna non è valido"
+
+#: ../includes/shortcode-submit.php:27
+msgid "At least one reward is required."
+msgstr "Au moins une récompense est requise"
+msgITA "E' richiesto almeno una ricompensa"
+
+#: ../includes/shortcode-submit.php:37
+#, php-format
+msgid "Submit %s"
+msgstr "Soumettre %s"
+msgITA "Invia %s"
+
+#: ../includes/shortcode-submit.php:59
+msgid "Campaign Information"
+msgstr "Information sur le projet"
+msgITA "Informazioni sul progetto"
+
+#: ../includes/shortcode-submit.php:62 ../includes/shortcode-submit.php:63
+msgid "Title"
+msgstr "Titre"
+msgITA "Titolo"
+
+#: ../includes/shortcode-submit.php:82
+#, php-format
+msgid "Goal (%s)"
+msgstr "Objectif (%s)"
+msgITA "Obiettivo (%s)"
+
+#: ../includes/shortcode-submit.php:99
+msgid "Length (Days)"
+msgstr "Durée (en jours)"
+msgITA "Durata (in giorni)"
+
+#: ../includes/shortcode-submit.php:116
+msgid "Category"
+msgstr "Catégorie"
+msgITA "Categorie"
+
+#: ../includes/shortcode-submit.php:139
+msgid "Name/Organization Name"
+msgstr "Nom/Nom de l'organisation"
+msgITA "Nome dell'organizzazione"
+
+#: ../includes/shortcode-submit.php:156
+msgid "Location"
+msgstr "Localisation"
+msgITA "Città"
+
+#: ../includes/shortcode-submit.php:173 ../includes/shortcode-submit.php:263
+msgid "Description"
+msgstr "Description"
+msgITA "Descrizione"
+
+#: ../includes/shortcode-submit.php:201
+msgid "Excerpt"
+msgstr "Extrait"
+msgITA "In breve"
+
+#: ../includes/shortcode-submit.php:218
+msgid "Preview Image"
+msgstr "Voir l'image"
+msgITA "Preview dell'immagine"
+
+
+#: ../includes/shortcode-submit.php:235
+msgid "Video URL"
+msgstr "Vidéo URL"
+msgITA "URL video"
+
+#: ../includes/shortcode-submit.php:251
+msgid "Backer Rewards"
+msgstr "Récompense des donateurs"
+msgITA "Ricopensa per il donatore"
+
+#: ../includes/shortcode-submit.php:258
+#, php-format
+msgid "Contribution Amount (%s)"
+msgstr "Montant de la contribution (%s)"
+msgITA "Ammontare della donazione (%s)"
+
+#: ../includes/shortcode-submit.php:264
+msgid "Description of reward for this level of contribution."
+msgstr "Description de la récompense pour ce niveau de contribution."
+msgITA "Descrizione dei reward per questo contributo"
+
+#: ../includes/shortcode-submit.php:268
+msgid "File (optional)"
+msgstr "Fichier (optionnel)"
+msgITA "File (opzionale)"
+
+#: ../includes/shortcode-submit.php:281
+msgid "+ <em>Add Reward</em>"
+msgstr "+ <em>Ajouter une récompense</em>"
+msgITA "<em>Aggiungi Reward</em>"
+
+#: ../includes/shortcode-submit.php:297
+msgid "Payment Information"
+msgstr "Information de paiement"
+msgITA "Informazioni di pagamento"
+
+#: ../includes/shortcode-submit.php:301
+msgid "PayPal Email"
+msgstr "Email PayPal"
+msgITA "Email di PayPal"
+
+#: ../includes/shortcode-submit.php:318
+msgid "Success! Your campaign has been received. It will be reviewed shortly."
+msgstr "Bravo ! Votre campagne a été reçue. Elle sera étudiée rapidement."
+msgITA "Complimenti! Abbiamo ricevuto la vostra campagna. Sarà approvata rapidamente."

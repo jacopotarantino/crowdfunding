@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: download, downloads, e-store, eshop, digital downloads, crowd funding, crowdfunding, crowdsource, 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 0.9
+Stable Tag: 1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -57,6 +57,22 @@ Developers can contribute to the source code of the project on [GitHub](https://
 Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
 == Changelog ==
+
+= 0.1: April 22, 2013 =
+
+https://github.com/AppThemer/crowdfunding/issues?milestone=5&state=closed
+
+* New: Ability to require authentication (registration/login) before submitting a campaign.
+* New: Login and Register shortcodes can be placed on any page.
+* Fix: Don't show collect funds button once they have already been collected.
+* Fix: Limit cart to one pledge per checkout to avoid errors.
+* Fix: Show all qualified campaigns on Export CSV section.
+* Fix: Don't limit the number of backers to 20 (in terms of count, output, etc).
+* Fix: Extra hooks in profile shortcode for better themeability.
+* Fix: Update language of "Fixed vs Flexible" to "All-or-nothing vs Flexible" as well as better descriptors.
+* Fix: Add Terms & Conditions to submission shortcode if they exist on EDD.
+* Fix: Use display name on profile instead of nicename to avoid breaking author archive permalinks.
+* Fix: Logged in users can now upload media when adding a campaign via the frontend.
 
 = 0.9: April 8, 2013 =
 
