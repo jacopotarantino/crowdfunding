@@ -165,7 +165,7 @@ function atcf_register_user( $args = array() ) {
 
 	$secure_cookie = is_ssl() ? true : false;
 	wp_set_auth_cookie( $user_id, true, $secure_cookie );
-	wp_new_user_notification( $user_id, $password );
+	wp_new_user_notification( $user_id, $args[ 'password' ] );
 
 	return $user_id;
 }
