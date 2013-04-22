@@ -63,9 +63,13 @@ function atcf_shortcode_login_form_bottom() {
 	global $edd_options;
 
 	$add = '<p>
-		<a href="' . esc_url( add_query_arg( 'action', 'lostpassword', site_url( 'wp-login.php' ) ) ) . '">' . __( 'Forgot Password', 'fundify' ) . '</a> ' . _x( 'or', 'login form action divider', 'fundify' ) . '
-		 <a href="' . esc_url( get_permalink( $edd_options[ 'register_page' ] ) ) . '">' . __( 'Register', 'fundify' ) . '</a>
-	</p>';
+		<a href="' . esc_url( add_query_arg( 'action', 'lostpassword', site_url( 'wp-login.php' ) ) ) . '">' . __( 'Forgot Password', 'fundify' ) . '</a> ' . _x( 'or', 'login form action divider', 'fundify' );
+
+	if ( isset( $edd_options[ 'register_page' ] ) ) {
+		$add .= '<a href="' . esc_url( get_permalink( $edd_options[ 'register_page' ] ) ) . '">' . __( 'Register', 'fundify' ) . '</a>';
+	}
+
+	$add .= '</p>';
 
 	return $add;
 }
