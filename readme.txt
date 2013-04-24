@@ -1,10 +1,10 @@
-=== AppThemer Crowdfunding ===
+=== Crowdfunding by AppThemer ===
 
 Author URI: http://appthemer.com
 Plugin URI: http://appthemer.com
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=contact@appthemer.com&item_name=Donation+for+Crowdfunding
 Contributors: SpencerFinnell, adampickering
-Tags: download, downloads, e-store, eshop, digital downloads, crowd funding, crowdfunding, crowdsource, 
+Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource 
 Requires at least: 3.5
 Tested up to: 3.5
 Stable Tag: 1.0
@@ -15,7 +15,7 @@ A crowdfunding platform in the likes of Kickstarter and Indigogo
 
 == Description ==
 
-Crowdfunding by [AppThemer](http://appthemer.com/fundify.html) is a funding platform for WordPress. An extension that seamlessly integrates with Easy Digital Downloads, the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
+Crowdfunding by [AppThemer](http://appthemer.com/fundify.html) is a funding platform for WordPress. An extension that seamlessly integrates with [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/), the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
 
 "Backers" can pledge specified amounts of money towards a project and receive rewards for their contributions. Pledge amounts are only collected if a campaign reaches its goal in the time specified.
 
@@ -46,7 +46,7 @@ Developers can contribute to the source code of the project on [GitHub](https://
 
 1. Install the Easy Digital Downloads plugin and activate it, if you haven't already.
 2. Install the AppThemer Crowdfunding plugin and activate it.
-3. (Optional) Install the PayPal Adaptive Payments plugin. (https://easydigitaldownloads.com/extension/paypal-adaptive-payments/)
+3. (Optional) Install the PayPal Adaptive Payments plugin. (https://easydigitaldownloads.com/extension/paypal-adaptive-payments?ref=7)
 4. Create a new page for your frontend submission form add this shortcode to the page: [appthemer_crowdfunding_submit] - (this is optional).
 5. Go to Campaigns > Add New to create a new campaign.
 
@@ -64,7 +64,6 @@ https://github.com/AppThemer/crowdfunding/issues?milestone=5&state=closed
 
 * New: Ability to require authentication (registration/login) before submitting a campaign.
 * New: Login and Register shortcodes can be placed on any page.
-* New: 
 * Fix: Don't show collect funds button once they have already been collected.
 * Fix: Limit cart to one pledge per checkout to avoid errors.
 * Fix: Show all qualified campaigns on Export CSV section.
