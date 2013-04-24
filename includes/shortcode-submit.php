@@ -125,7 +125,7 @@ function atcf_shortcode_submit_field_length( $editing, $campaign ) {
 	$min = isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14;
 	$max = isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 48;
 
-	$start = round( ( $min + $max ) / 2 );
+	$start = apply_filters( 'atcf_shortcode_submit_field_length_start', round( ( $min + $max ) / 2 ) );
 ?>
 	<p class="atcf-submit-campaign-length">
 		<label for="length"><?php _e( 'Length (Days)', 'atcf' ); ?></label>

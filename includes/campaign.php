@@ -231,7 +231,7 @@ class ATCF_Campaigns {
 
 		$campaign = new ATCF_Campaign( $post );
 
-		if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && class_exists( 'PayPalAdaptivePaymentsGateway' ) )
+		if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && class_exists( 'PayPalAdaptivePaymentsGateway' ) && $campaign->backers_count() > 0 )
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
@@ -373,8 +373,8 @@ class ATCF_Campaigns {
 		if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
 			wp_die( $errors );
 		else {
-			update_post_meta( $this->ID, '_campaign_expired', 1 );
-			update_post_meta( $this->ID, '_campaign_bulk_collected', 1 );
+			update_post_meta( $campaign->ID, '_campaign_expired', 1 );
+			update_post_meta( $campaign->ID, '_campaign_bulk_collected', 1 );
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 13, 'collected' => $num_collected ), admin_url( 'post.php' ) ) );
 			exit();
 		}
@@ -465,10 +465,10 @@ function atcf_pledge_limit_head() {
 function atcf_pledge_limit_column( $post_id, $key, $args ) {
 ?>
 	<td>
-		<input type="text" class="edd_repeatable_name_field" name="edd_variable_prices[<?php echo $key; ?>][limit]" id="edd_variable_prices[<?php echo $key; ?>][limit]" value="<?php echo $args[ 'limit' ]; ?>" style="width:100%" />
+		<input type="text" class="edd_repeatable_name_field" name="edd_variable_prices[<?php echo $key; ?>][limit]" id="edd_variable_prices[<?php echo $key; ?>][limit]" value="<?php echo isset ( $args[ 'limit' ] ) ? $args[ 'limit' ] : null; ?>" style="width:100%" />
 	</td>
 	<td>
-		<input type="text" class="edd_repeatable_name_field" name="edd_variable_prices[<?php echo $key; ?>][bought]" id="edd_variable_prices[<?php echo $key; ?>][bought]" value="<?php echo $args[ 'bought' ]; ?>" readonly style="width:100%" />
+		<input type="text" class="edd_repeatable_name_field" name="edd_variable_prices[<?php echo $key; ?>][bought]" id="edd_variable_prices[<?php echo $key; ?>][bought]" value="<?php echo isset ( $args[ 'bought' ] ) ? $args[ 'bought' ] : null; ?>" readonly style="width:100%" />
 	</td>
 <?php
 }
