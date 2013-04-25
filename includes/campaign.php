@@ -229,7 +229,7 @@ class ATCF_Campaigns {
 	function add_meta_boxes() {
 		global $post;
 
-		$campaign = new ATCF_Campaign( $post );
+		$campaign = atcf_get_campaign( $post );
 
 		if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && atcf_has_preapproval_gateway() )
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
@@ -278,7 +278,7 @@ class ATCF_Campaigns {
 		global $edd_options;
 
 		$campaign = absint( $_GET[ 'campaign' ] );
-		$campaign = new ATCF_Campaign( $campaign );
+		$campaign = atcf_get_campaign( $campaign );
 
 		/** check nonce */
 		if ( ! check_admin_referer( 'atcf-collect-funds' ) ) {
@@ -437,7 +437,7 @@ add_filter( 'edd_price_row_args', 'atcf_price_row_args', 10, 2 );
 function _atcf_metabox_campaign_stats() {
 	global $post;
 
-	$campaign = new ATCF_Campaign( $post );
+	$campaign = atcf_get_campaign( $post );
 
 	do_action( 'atcf_metabox_campaign_stats_before', $campaign );
 ?>
@@ -472,7 +472,7 @@ function _atcf_metabox_campaign_stats() {
 function _atcf_metabox_campaign_funds() {
 	global $post;
 
-	$campaign = new ATCF_Campaign( $post );
+	$campaign = atcf_get_campaign( $post );
 
 	do_action( 'atcf_metabox_campaign_funds_before', $campaign );
 ?>
@@ -499,7 +499,7 @@ function _atcf_metabox_campaign_funds() {
 function _atcf_metabox_campaign_video() {
 	global $post;
 
-	$campaign = new ATCF_Campaign( $post );
+	$campaign = atcf_get_campaign( $post );
 
 	do_action( 'atcf_metabox_campaign_video_before', $campaign );
 ?>
@@ -546,7 +546,7 @@ function _atcf_metabox_campaign_info() {
 	/** Verification Field */
 	wp_nonce_field( 'cf', 'cf-save' );
 	
-	$campaign = new ATCF_Campaign( $post );
+	$campaign = atcf_get_campaign( $post );
 
 	$end_date = $campaign->end_date();
 
@@ -1043,7 +1043,7 @@ class ATCF_Campaign {
 }
 
 function atcf_get_campaign( $campaign ) {
-	$campaign = new ATCF_Campaign( $campaign );
+	$campaign = atcf_get_campaign( $campaign );
 
 	return $campaign;
 }
