@@ -63,7 +63,7 @@ function atcf_settings_general_pages( $settings ) {
 	$vals[] =  array(
 		'id'      => 'login_page',
 		'name'    => __( 'Login Page', 'atcf' ),
-		'desc'    => __( 'The page that contains a login shortcode or page template.', 'atcf' ),
+		'desc'    => __( 'The page that contains the <code>[appthemer_crowdfunding_login]</code> shortcode.', 'atcf' ),
 		'type'    => 'select',
 		'options' => $pages_options
 	);
@@ -71,7 +71,7 @@ function atcf_settings_general_pages( $settings ) {
 	$vals[] =  array(
 		'id'      => 'register_page',
 		'name'    => __( 'Register Page', 'atcf' ),
-		'desc'    => __( 'The page that contains a register shortcode or page template.', 'atcf' ),
+		'desc'    => __( 'The page that contains the <code>[appthemer_crowdfunding_register]</code> shortcode.', 'atcf' ),
 		'type'    => 'select',
 		'options' => $pages_options
 	);
