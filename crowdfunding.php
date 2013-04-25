@@ -95,6 +95,7 @@ final class ATCF_CrowdFunding {
 	private function includes() {
 		require( $this->includes_dir . 'settings.php' );
 		require( $this->includes_dir . 'campaign.php' );
+		require( $this->includes_dir . 'gateways.php' );
 		require( $this->includes_dir . 'theme-stuff.php' );
 		require( $this->includes_dir . 'shipping.php' );
 		require( $this->includes_dir . 'logs.php' );
@@ -124,7 +125,6 @@ final class ATCF_CrowdFunding {
 	 */
 	private function setup_actions() {
 		add_action( 'init', array( $this, 'is_edd_activated' ), 1 );
-
 		add_filter( 'template_include', array( $this, 'template_loader' ) );
 		
 		do_action( 'atcf_setup_actions' );
@@ -261,4 +261,5 @@ final class ATCF_CrowdFunding {
 function crowdfunding() {
 	return ATCF_CrowdFunding::instance();
 }
+
 crowdfunding();

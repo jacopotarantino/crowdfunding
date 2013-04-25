@@ -183,7 +183,7 @@ function atcf_shortcode_profile_campaigns( $user ) {
 				</ul>
 
 				<ul class="actions">
-					<?php if ( ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && ! $campaign->is_collected() && class_exists( 'PayPalAdaptivePaymentsGateway' ) ) : ?>
+					<?php if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && atcf_has_preapproval_gateway() ) : ?>
 					<li><a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'atcf-request-payout', 'campaign' => $campaign->ID ) ), 'atcf-request-payout' ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Request Payout for %s', 'fundify' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Request Payout', 'atcf' ); ?></a></li>
 					<?php endif; ?>
 
