@@ -231,7 +231,7 @@ class ATCF_Campaigns {
 
 		$campaign = new ATCF_Campaign( $post );
 
-		if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) )
+		if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && atcf_has_preapproval_gateway() )
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
@@ -481,6 +481,8 @@ function _atcf_metabox_campaign_funds() {
 	<?php else : ?>
 	<p><?php printf( __( 'This %1$s is flexible. You may collect the funds at any time. This will end the %1$s.', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?></p>
 	<?php endif; ?>
+
+	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button button-primary"><?php _e( 'Collect Funds', 'atcf' ); ?></a></p>
 <?php
 	do_action( 'atcf_metabox_campaign_funds_after', $campaign );
 }
@@ -1102,10 +1104,6 @@ function atcf_campaign_edit() {
 	/** Check Excerpt */
 	if ( empty( $excerpt ) )
 		$excerpt = null;
-
-	/** Check Email */
-	if ( ! is_email( $email ) || ! is_email( $c_email ) )
-		$errors->add( 'invalid-email', __( 'Please make sure all email addresses are valid.', 'atcf' ) );
 
 	do_action( 'atcf_edit_campaign_validate', $_POST, $errors );
 
