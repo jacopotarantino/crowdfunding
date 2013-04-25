@@ -256,7 +256,6 @@ class ATCF_Campaigns {
 		$fields[] = '_campaign_featured';
 		$fields[] = '_campaign_physical';
 		$fields[] = 'campaign_goal';
-		$fields[] = 'campaign_email';
 		$fields[] = 'campaign_contact_email';
 		$fields[] = 'campaign_end_date';
 		$fields[] = 'campaign_video';
@@ -482,13 +481,6 @@ function _atcf_metabox_campaign_funds() {
 	<?php else : ?>
 	<p><?php printf( __( 'This %1$s is flexible. You may collect the funds at any time. This will end the %1$s.', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?></p>
 	<?php endif; ?>
-
-	<?php if ( '' != $campaign->paypal_email() ) : ?>
-	<p><?php printf( __( 'Make sure <code>%s</code> is a valid PayPal email address.', 'atcf' ), $campaign->paypal_email() ); ?></p>
-	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button button-primary"><?php _e( 'Collect Funds', 'atcf' ); ?></a></p>
-	<?php else : ?>
-	<p><?php printf( __( 'Please assign a valid PayPal email address to this %s to enable fund collection.', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?>
-	<?php endif; ?>
 <?php
 	do_action( 'atcf_metabox_campaign_funds_after', $campaign );
 }
@@ -612,11 +604,6 @@ function _atcf_metabox_campaign_info() {
 	</p>
 
 	<p>
-		<label for="campaign_email"><strong><?php _e( 'PayPal Email:', 'atcf' ); ?></strong></label><br />
-		<input type="text" name="campaign_email" id="campaign_email" value="<?php echo esc_attr( $campaign->paypal_email() ); ?>" class="regular-text" />
-	</p>
-
-	<p>
 		<label for="campaign_email"><strong><?php _e( 'Contact Email:', 'atcf' ); ?></strong></label><br />
 		<input type="text" name="campaign_contact_email" id="campaign_contact_email" value="<?php echo esc_attr( $campaign->contact_email() ); ?>" class="regular-text" />
 	</p>
@@ -642,7 +629,7 @@ function _atcf_metabox_campaign_info() {
 		<input type="hidden" id="campaign_end_date" name="campaign_end_date" />
 	</p>
 <?php
-	do_action( 'atcf_metabox_campaign_video_after', $campaign );
+	do_action( 'atcf_metabox_campaign_info_after', $campaign );
 }
 
 /**
@@ -788,17 +775,6 @@ class ATCF_Campaign {
 	 */
 	public function author() {
 		return $this->__get( 'campaign_author' );
-	}
-
-	/**
-	 * Campaign PayPal Email
-	 *
-	 * @since Appthemer CrowdFunding 0.1-alpha
-	 *
-	 * @return sting Campaign PayPal Email
-	 */
-	public function paypal_email() {
-		return $this->__get( 'campaign_email' );
 	}
 
 	/**

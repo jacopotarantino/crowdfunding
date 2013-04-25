@@ -374,13 +374,13 @@ function atcf_shortcode_submit_field_rewards( $editing, $campaign ) {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_rewards', 90, 2 );
 
 /**
- * Campaign PayPal Email
+ * Campaign Contact Email
  *
  * @since CrowdFunding 0.1-alpha
  *
  * @return void
  */
-function atcf_shortcode_submit_field_paypal_email( $editing, $campaign ) {
+function atcf_shortcode_submit_field_contact_email( $editing, $campaign ) {
 ?>
 	<h3 class="atcf-submit-section payment-information"><?php _e( 'Your Information', 'atcf' ); ?></h3>
 
@@ -396,14 +396,9 @@ function atcf_shortcode_submit_field_paypal_email( $editing, $campaign ) {
 	<?php endif; ?>
 	</p>
 	<?php endif; ?>
-
-	<p class="atcf-submit-campaign-paypal-email">
-		<label for="email"><?php _e( 'PayPal Email', 'atcf' ); ?></label>
-		<input type="text" name="email" id="email" value="<?php echo $editing ? $campaign->paypal_email() : null; ?>" />
-	</p>
 <?php
 }
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_email', 100, 2 );
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_contact_email', 100, 2 );
 
 /**
  * Campaign Author
@@ -518,8 +513,6 @@ function atcf_shortcode_submit_process() {
 
 	$rewards   = $_POST[ 'rewards' ];
 	$files     = $_FILES[ 'files' ];
-
-	$email     = $_POST[ 'email' ];
 	
 	if ( isset ( $_POST[ 'contact-email' ] ) )
 		$c_email = $_POST[ 'contact-email' ];
@@ -574,10 +567,6 @@ function atcf_shortcode_submit_process() {
 	if ( empty( $rewards ) )
 		$errors->add( 'invalid-rewards', __( 'Please add at least one reward to the campaign.', 'atcf' ) );
 
-	/** Check Email */
-	if ( ! is_email( $email ) || ! is_email( $c_email ) )
-		$errors->add( 'invalid-email', __( 'Please make sure all email addresses are valid.', 'atcf' ) );
-
 	if ( email_exists( $c_email ) && ! isset ( $current_user ) )
 		$errors->add( 'invalid-c-email', __( 'That contact email address already exists.', 'atcf' ) );		
 
@@ -616,7 +605,6 @@ function atcf_shortcode_submit_process() {
 	/** Extra Campaign Information */
 	add_post_meta( $campaign, 'campaign_goal', apply_filters( 'edd_metabox_save_edd_price', $goal ) );
 	add_post_meta( $campaign, 'campaign_type', sanitize_text_field( $type ) );
-	add_post_meta( $campaign, 'campaign_email', sanitize_text_field( $email ) );
 	add_post_meta( $campaign, 'campaign_contact_email', sanitize_text_field( $c_email ) );
 	add_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
 	add_post_meta( $campaign, 'campaign_location', sanitize_text_field( $location ) );

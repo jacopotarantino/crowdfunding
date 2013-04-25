@@ -125,7 +125,6 @@ final class ATCF_CrowdFunding {
 	 */
 	private function setup_actions() {
 		add_action( 'init', array( $this, 'is_edd_activated' ), 1 );
-
 		add_filter( 'template_include', array( $this, 'template_loader' ) );
 		
 		do_action( 'atcf_setup_actions' );
@@ -262,4 +261,5 @@ final class ATCF_CrowdFunding {
 function crowdfunding() {
 	return ATCF_CrowdFunding::instance();
 }
+
 crowdfunding();
