@@ -197,7 +197,7 @@ final class ATCF_CrowdFunding {
 			do_action( 'atcf_found_single' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_campaign', array( 'single-campaign.php', 'single-download.php', 'single.php' ) );
-		} else if ( is_post_type_archive( 'download' ) ) {
+		} else if ( is_post_type_archive( 'download' ) || is_tax( 'download_category' ) ) {
 			do_action( 'atcf_found_archive' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_archive', array( 'archive-campaigns.php', 'archive-download.php', 'archive.php' ) );
