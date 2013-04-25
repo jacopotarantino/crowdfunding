@@ -1,7 +1,15 @@
 <?php
+/**
+ * PayPal Adaptive Payments gateway functionality.
+ *
+ * @since Appthemer CrowdFunding 1.1
+ */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Campaign PayPal Email
+ * PayPal Adaptive Payments field on frontend submit and edit.
  *
  * @since CrowdFunding 1.1
  *
@@ -20,8 +28,11 @@ function atcf_shortcode_submit_field_paypal_adaptive_payments_email( $editing, $
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_adaptive_payments_email', 105, 2 );
 
 /**
+ * PayPal Adaptive Payments field on backend.
  *
- * @since Appthemer Crowdfunding 1.1
+ * @since CrowdFunding 1.1
+ *
+ * @return void
  */
 function atcf_metabox_campaign_info_after_paypal_adaptive_payments( $campaign ) {
 	$paypal_email = $campaign->__get( 'campaign_email' );
@@ -36,8 +47,11 @@ function atcf_metabox_campaign_info_after_paypal_adaptive_payments( $campaign ) 
 add_action( 'atcf_metabox_campaign_info_after', 'atcf_metabox_campaign_info_after_paypal_adaptive_payments' );
 
 /**
+ * Validate PayPal Adaptive Payments on the frontend submission (or edit).
  *
- * @since Appthemer Crowdfunding 1.1
+ * @since CrowdFunding 1.1
+ *
+ * @return void
  */
 function atcf_campaign_submit_validate_paypal_adaptive_payments( $postdata, $errors ) {
 	$email = $postdata[ 'email' ];
@@ -49,8 +63,11 @@ add_action( 'atcf_campaign_submit_validate', 'atcf_campaign_submit_validate_payp
 add_action( 'atcf_edit_campaign_validate', 'atcf_campaign_submit_validate_paypal_adaptive_payments', 10, 2 );
 
 /**
+ * Save PayPal Adaptive Payments on the frontend submission (or edit).
  *
- * @since Appthemer Crowdfunding 1.1
+ * @since CrowdFunding 1.1
+ *
+ * @return void
  */
 function atcf_submit_process_after_paypal_adaptive_payments_save( $campaign, $postdata ) {
 	$email = $postdata[ 'email' ];
@@ -61,8 +78,11 @@ add_action( 'atcf_submit_process_after', 'atcf_submit_process_after_paypal_adapt
 add_action( 'atcf_edit_campaign_after', 'atcf_submit_process_after_paypal_adaptive_payments_save', 10, 2 );
 
 /**
+ * Save PayPal Adaptive Payments on the backend.
  *
- * @since Appthemer Crowdfunding 1.1
+ * @since CrowdFunding 1.1
+ *
+ * @return void
  */
 function atcf_metabox_save_paypal_adaptive_payments( $fields ) {
 	$fields[] = 'campaign_email';
@@ -72,8 +92,11 @@ function atcf_metabox_save_paypal_adaptive_payments( $fields ) {
 add_filter( 'edd_metabox_fields_save', 'atcf_metabox_save_paypal_adaptive_payments' );
 
 /**
+ * Process preapproved payments
  *
  * @since Appthemer Crowdfunding 1.1
+ *
+ * @return void
  */
 function atcf_collect_funds_paypal_pre_approval( $gateway, $gateway_args, $campaign, $errors ) {
 	$paypal_adaptive = new PayPalAdaptivePaymentsGateway();
