@@ -40,7 +40,6 @@ function atcf_metabox_campaign_info_after_paypal_adaptive_payments( $campaign ) 
 	<p>
 		<label for="campaign_email"><strong><?php _e( 'PayPal Adaptive Payments Email:', 'atcf' ); ?></strong></label><br />
 		<input type="text" name="campaign_email" id="campaign_email" value="<?php echo esc_attr( $paypal_email ); ?>" class="regular-text" />
-		<span class="description"><?php _e( 'The secondary receiver for PayPal Adaptive Payments', 'atcf' ); ?></span>
 	</p>
 <?php
 }

@@ -29,7 +29,7 @@ class ATCF_Campaigns {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'setup' ) );
+		add_action( 'init', array( $this, 'setup' ), 1 );
 	}
 
 	/**
@@ -896,7 +896,10 @@ class ATCF_Campaign {
 			$cart_items = edd_get_payment_meta_cart_details( $payment_id );
 			
 			foreach ( $cart_items as $item ) {
-				$price_id = $item[ 'price' ];
+				if ( isset ( $item[ 'item_number' ][ 'options' ][ 'atcf_extra_price' ] ) ) {
+					$price_id = $item[ 'price' ] - $item[ 'item_number' ][ 'options' ][ 'atcf_extra_price' ];
+				} else
+					$price_id = $item[ 'price' ];
 
 				$totals[$price_id] = $totals[$price_id] + 1;
 			}

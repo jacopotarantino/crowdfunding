@@ -154,7 +154,7 @@ add_action( 'template_redirect', 'atcf_registration_handle' );
  */
 function atcf_register_user( $args = array() ) {
 	$defaults = array(
-		'password'             => wp_generate_password( 12, false ),
+		'user_pass'            => wp_generate_password( 12, false ),
 		'show_admin_bar_front' => 'false',
 		'role'                 => 'campaign_contributor'
 	);
@@ -165,7 +165,7 @@ function atcf_register_user( $args = array() ) {
 
 	$secure_cookie = is_ssl() ? true : false;
 	wp_set_auth_cookie( $user_id, true, $secure_cookie );
-	wp_new_user_notification( $user_id, $args[ 'password' ] );
+	wp_new_user_notification( $user_id, $args[ 'user_pass' ] );
 
 	return $user_id;
 }
