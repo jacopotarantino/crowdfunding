@@ -26,14 +26,6 @@ function atcf_shortcode_submit( $editing = false ) {
 
 	ob_start();
 
-	if ( ! is_user_logged_in() && $edd_options[ 'atcf_settings_require_account' ] ) {
-		wp_login_form( apply_filters( 'atcf_shortcode_profile_login_args', array() ) );
-
-		$form = ob_get_clean();
-
-		return $form;
-	}
-
 	if ( $editing ) {
 		global $post;
 
@@ -686,3 +678,22 @@ function atcf_shortcode_submit_process() {
 	exit();
 }
 add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
+
+/**
+ * Redirect submit page if needed.
+ *
+ * @since Appthemer CrowdFunding 1.1
+ *
+ * @return void
+ */
+function atcf_shortcode_submit_redirect() {
+	global $edd_options, $post;
+
+	if ( ! is_user_logged_in() && ( $post->ID == $edd_options[ 'submit_page' ] ) && $edd_options[ 'atcf_settings_require_account' ] ) {
+		$redirect = apply_filters( 'atcf_require_account_redirect', isset ( $edd_options[ 'login_page' ] ) ? get_permalink( $edd_options[ 'login_page' ] ) : home_url() );
+
+		wp_safe_redirect( $redirect );
+		exit();
+	}
+}
+add_action( 'template_redirect', 'atcf_shortcode_submit_redirect', 1 );
