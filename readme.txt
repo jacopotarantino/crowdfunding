@@ -1,7 +1,7 @@
-=== Crowdfunding by AppThemer ===
+=== Crowdfunding by Astoundify ===
 
-Author URI: http://appthemer.com
-Plugin URI: http://appthemer.com
+Author URI: http://astoundify.com
+Plugin URI: http://astoundify.com
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=contact@appthemer.com&item_name=Donation+for+Crowdfunding
 Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource 
@@ -15,13 +15,13 @@ A crowdfunding platform in the likes of Kickstarter and Indigogo
 
 == Description ==
 
-Crowdfunding by [AppThemer](http://appthemer.com/fundify.html) is a funding platform for WordPress. An extension that seamlessly integrates with [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/), the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
+Crowdfunding by [Astoundify](http://appthemer.com/fundify.html) is a funding platform for WordPress. An extension that seamlessly integrates with [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/), the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
 
 "Backers" can pledge specified amounts of money towards a project and receive rewards for their contributions. Pledge amounts are only collected if a campaign reaches its goal in the time specified.
 
 Run your own crowdfunding website for anything you can imagine.
 
-Note: The AppThemer Crowdfunding plugin is designed to work alongside the PayPal Adaptive Payments gateway so that pledges are collected but no funds are taken until the campaign reaches its goal. The plugin will also work along side any other gateway that Easy Digital Downloads supports but funds will be taken immediately.
+Note: The Astoundify Crowdfunding plugin is designed to work alongside the PayPal Adaptive Payments gateway so that pledges are collected but no funds are taken until the campaign reaches its goal. The plugin will also work along side any other gateway that Easy Digital Downloads supports but funds will be taken immediately.
 
 = Features =
 
