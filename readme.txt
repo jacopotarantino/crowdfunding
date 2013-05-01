@@ -64,14 +64,14 @@ Yes. However, it won't look much different than a standard EDD install. Template
 
 https://github.com/Astoundify/crowdfunding/issues?milestone=6&state=closed
 
-New: Gateway agnostic. Now supports collection via multiple preapproval gateways (like Stripe!)
-Fix: Export not always working.
-Fix: Don't show the Collect Funds button once funds have been collected.
-Fix: Browse by category now works again.
-Fix: Add shortcode descriptions to settings page.
-Fix: Use atcf_get_campaign() instead of accessing class directly.
-Fix: Send correct password on user registration.
-Fix: Don't output login form on submit page, but redirect to set login page instead.
+* New: Gateway agnostic. Now supports collection via multiple preapproval gateways (like Stripe!)
+* Fix: Export not always working.
+* Fix: Don't show the Collect Funds button once funds have been collected.
+* Fix: Browse by category now works again.
+* Fix: Add shortcode descriptions to settings page.
+* Fix: Use atcf_get_campaign() instead of accessing class directly.
+* Fix: Send correct password on user registration.
+* Fix: Don't output login form on submit page, but redirect to set login page instead.
 
 = 1.0: April 22, 2013 =
 
