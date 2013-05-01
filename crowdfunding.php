@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: Crowd Funding by AppThemer
- * Plugin URI:  https://github.com/AppThemer/crowdfunding/
+ * Plugin Name: Crowd Funding by Astoundify
+ * Plugin URI:  https://github.com/Astoundify/crowdfunding/
  * Description: A crowd funding platform in the likes of Kickstarter and Indigogo
- * Author:      AppThemer
- * Author URI:  http://appthemer.com
+ * Author:      Astoundify
+ * Author URI:  http://astoundify.com
  * Version:     1.1
  * Text Domain: atcf
  */
