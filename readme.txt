@@ -29,7 +29,7 @@ Features of the plugin include:
 
 * Crowd fund anything you want!
 * Frontend form submission to easily collect campaign information.
-* Compatible with PayPal Adaptive Payments API for pre-approved purchases. When a person commits to funding your project they are only charged if your campaign reaches its pre-defined goal.
+* Compatible with Stripe & PayPal Adaptive Payments API for pre-approved purchases. When a person commits to funding your project they are only charged if your campaign reaches its pre-defined goal.
 * Compatible with all standard payment gateways that Easy Digital Downloads supports, i.e Stripe, PayPal Pro/Express (payments will be charged immediately).
 * Works both as a donation plugin and a Crowdfunding plugin.
 * Easy to theme and integrate into your own site which uses Easy Digital Downloads.
@@ -37,8 +37,6 @@ Features of the plugin include:
 = Premium Themes =
 
 The first compatible theme that has been released is called "Fundify" from [Astoundify](http://Astoundify.com/fundify.html).
-
-[vimeo http://vimeo.com/61504818]
 
 = Get Involved =
 
