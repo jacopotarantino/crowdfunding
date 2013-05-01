@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 1.0
+Stable Tag: 1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -57,6 +57,19 @@ Developers can contribute to the source code of the project on [GitHub](https://
 Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
 == Changelog ==
+
+= 1.1: May 1, 2013 =
+
+https://github.com/AppThemer/crowdfunding/issues?milestone=6&state=closed
+
+New: Gateway agnostic. Now supports collection via multiple preapproval gateways (like Stripe!)
+Fix: Export not always working.
+Fix: Don't show the Collect Funds button once funds have been collected.
+Fix: Browse by category now works again.
+Fix: Add shortcode descriptions to settings page.
+Fix: Use atcf_get_campaign() instead of accessing class directly.
+Fix: Send correct password on user registration.
+Fix: Don't output login form on submit page, but redirect to set login page instead.
 
 = 1.0: April 22, 2013 =
 
