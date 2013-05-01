@@ -15,7 +15,7 @@ A crowdfunding platform in the likes of Kickstarter and Indigogo
 
 == Description ==
 
-Crowdfunding by [Astoundify](http://appthemer.com/fundify.html) is a funding platform for WordPress. An extension that seamlessly integrates with [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/), the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
+Crowdfunding by [Astoundify](http://Astoundify.com/fundify.html) is a funding platform for WordPress. An extension that seamlessly integrates with [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/), the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
 
 "Backers" can pledge specified amounts of money towards a project and receive rewards for their contributions. Pledge amounts are only collected if a campaign reaches its goal in the time specified.
 
@@ -36,16 +36,16 @@ Features of the plugin include:
 
 = Premium Themes =
 
-The first compatible theme that has been released is called "Fundify" from [AppThemer](http://appthemer.com/fundify.html).
+The first compatible theme that has been released is called "Fundify" from [Astoundify](http://Astoundify.com/fundify.html).
 
 = Get Involved =
 
-Developers can contribute to the source code of the project on [GitHub](https://github.com/appthemer/crowdfunding)
+Developers can contribute to the source code of the project on [GitHub](https://github.com/Astoundify/crowdfunding)
 
 == Installation ==
 
 1. Install the Easy Digital Downloads plugin and activate it, if you haven't already.
-2. Install the AppThemer Crowdfunding plugin and activate it.
+2. Install the Astoundify Crowdfunding plugin and activate it.
 3. (Optional) Install the PayPal Adaptive Payments plugin. (https://easydigitaldownloads.com/extension/paypal-adaptive-payments?ref=7)
 4. Create a new page for your frontend submission form add this shortcode to the page: [appthemer_crowdfunding_submit] - (this is optional).
 5. Go to Campaigns > Add New to create a new campaign.
@@ -60,7 +60,7 @@ Yes. However, it won't look much different than a standard EDD install. Template
 
 = 1.1: May 1, 2013 =
 
-https://github.com/AppThemer/crowdfunding/issues?milestone=6&state=closed
+https://github.com/Astoundify/crowdfunding/issues?milestone=6&state=closed
 
 New: Gateway agnostic. Now supports collection via multiple preapproval gateways (like Stripe!)
 Fix: Export not always working.
@@ -73,7 +73,7 @@ Fix: Don't output login form on submit page, but redirect to set login page inst
 
 = 1.0: April 22, 2013 =
 
-https://github.com/AppThemer/crowdfunding/issues?milestone=5&state=closed
+https://github.com/Astoundify/crowdfunding/issues?milestone=5&state=closed
 
 * New: Ability to require authentication (registration/login) before submitting a campaign.
 * New: Login and Register shortcodes can be placed on any page.
@@ -89,7 +89,7 @@ https://github.com/AppThemer/crowdfunding/issues?milestone=5&state=closed
 
 = 0.9: April 8, 2013 =
 
-https://github.com/AppThemer/crowdfunding/issues?milestone=4&state=closed
+https://github.com/Astoundify/crowdfunding/issues?milestone=4&state=closed
 
 * New: Set a limit on number of times a pledge amount can be purchased.
 * New: Separate area for adding updates to a campaign during it's running.
