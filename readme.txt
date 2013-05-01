@@ -38,6 +38,8 @@ Features of the plugin include:
 
 The first compatible theme that has been released is called "Fundify" from [Astoundify](http://Astoundify.com/fundify.html).
 
+[vimeo http://vimeo.com/61504818]
+
 = Get Involved =
 
 Developers can contribute to the source code of the project on [GitHub](https://github.com/Astoundify/crowdfunding)
