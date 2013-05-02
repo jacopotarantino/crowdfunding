@@ -17,6 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function atcf_load_gateway_support() {
+	if ( ! class_exists( 'Easy_Digital_Downloads' ) )
+		return;
+
 	$crowdfunding    = crowdfunding();
 	$active_gateways = edd_get_enabled_payment_gateways();
 
@@ -26,7 +29,7 @@ function atcf_load_gateway_support() {
 		}
 	}
 }
-add_action( 'init', 'atcf_load_gateway_support' );
+add_action( 'init', 'atcf_load_gateway_support', 200 );
 
 /**
  * Determine if any of the currently active gateways have preapproval
