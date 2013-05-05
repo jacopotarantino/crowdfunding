@@ -41,6 +41,8 @@ add_action( 'init', 'atcf_load_gateway_support', 200 );
  * @return boolean $has_support If any of the currently active gateways support preapproval
  */
 function atcf_has_preapproval_gateway() {
+	global $edd_options;
+
 	$has_support = false;
 	$supports_preapproval = apply_filters( 'atcf_gateways_support_preapproval', array(
 		'stripe',
@@ -50,11 +52,31 @@ function atcf_has_preapproval_gateway() {
 	$active_gateways = edd_get_enabled_payment_gateways();
 
 	foreach ( $active_gateways as $gateway => $gateway_args ) {
-		if ( in_array( $gateway, $supports_preapproval ) ) {
-			$has_support = true;
-			break;
+		switch ( $gateway ) {
+			case 'stripe' :
+
+				if ( $edd_options[ 'stripe_preapprove_only' ] )
+					$has_support = true;
+
+				break;
+
+			case 'paypal_adaptive_payments' : 
+
+				if ( $edd_options[ 'epap_preapproval' ] )
+					$has_support = true;
+
+				break;
+
+			default :
+				$has_support = apply_filters( 'atcf_has_preapproval_gateway', $has_support );
+
 		}
 	}
 
 	return $has_support;
+}
+
+add_action( 'init', 'this', 100 );
+function this() {
+	atcf_has_preapproval_gateway();
 }

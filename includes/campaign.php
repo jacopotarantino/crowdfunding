@@ -905,7 +905,7 @@ class ATCF_Campaign {
 				} else
 					$price_id = $item[ 'price' ];
 
-				$totals[$price_id] = $totals[$price_id] + 1;
+				$totals[$price_id] = isset ( $totals[$price_id] ) ? $totals[$price_id] + 1 : 0;
 			}
 		}
 
