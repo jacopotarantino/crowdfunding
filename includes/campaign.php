@@ -300,9 +300,6 @@ class ATCF_Campaigns {
 			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
 			$gateway    = get_post_meta( $payment_id, '_edd_payment_gateway', true );
 
-			if ( ! in_array( $gateway, $gateways ) )
-				continue;
-			
 			$gateways[ $gateway ][ 'payments' ][] = $payment_id;
 		}
 
