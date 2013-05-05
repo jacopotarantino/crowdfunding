@@ -3,7 +3,7 @@
 ## Installation ##
 
 1. You can clone the GitHub repository: `https://github.com/Astoundify/crowdfunding.git`
-2. Or download it directly as a ZIP file: `[https://github.com/Astoundify/crowdfunding/zipball/master](https://github.com/Astoundify/crowdfunding/zipball/master)`
+2. Or download it directly as a ZIP file: [https://github.com/Astoundify/crowdfunding/zipball/master](https://github.com/Astoundify/crowdfunding/zipball/master)`
 
 This will download the latest developer copy of Easy Digital Downloads.
 
