@@ -52,7 +52,7 @@ class ATCF_Campaigns {
 		
 		if ( ! is_admin() )
 			return;
-
+		
 		add_filter( 'edd_price_options_heading', 'atcf_edd_price_options_heading' );
 		add_filter( 'edd_variable_pricing_toggle_text', 'atcf_edd_variable_pricing_toggle_text' );
 
@@ -228,6 +228,9 @@ class ATCF_Campaigns {
 	 */
 	function add_meta_boxes() {
 		global $post;
+
+		if ( ! is_object( $post ) )
+			return;
 
 		$campaign = atcf_get_campaign( $post );
 
@@ -905,7 +908,7 @@ class ATCF_Campaign {
 				} else
 					$price_id = $item[ 'price' ];
 
-				$totals[$price_id] = isset ( $totals[$price_id] ) ? $totals[$price_id] + 1 : 0;
+				$totals[$price_id] = isset ( $totals[$price_id] ) ? $totals[$price_id] + 1 : 1;
 			}
 		}
 
