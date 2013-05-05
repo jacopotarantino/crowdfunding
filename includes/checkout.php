@@ -53,3 +53,36 @@ function atcf_clear_cart() {
 	return;
 }
 add_action( 'atcf_found_single', 'atcf_clear_cart' );
+
+function atcf_edd_purchase_form_user_info() {
+	$support = get_theme_support( 'appthemer-crowdfunding' );
+
+	if ( ! $support[0][ 'anonymous-backers' ] )
+		return;
+?>
+	<p id="edd-anon-wrap">
+		<label class="edd-label" for="edd-anon">
+			<input class="edd-input" type="checkbox" name="edd_anon" id="edd-anon" style="margin-top: -4px; vertical-align: middle;" />
+			<?php _e( 'Hide name on backers list?', 'atcf' ); ?>
+		</label>
+	</p>
+<?php
+}
+add_action( 'edd_purchase_form_user_info', 'atcf_edd_purchase_form_user_info' );
+
+/**
+ * Save if the user wants to remain anonymous.
+ *
+ * This is up to the theme to actually honor.
+ *
+ * @since Appthemer CrowdFunding 1.2
+ *
+ * @param arrray $payment_meta Array of payment meta about to be saved
+ * @return array $payment_meta An updated array of payment meta
+ */
+function atcf_anon_save_meta( $payment_meta ) {
+	$payment_meta[ 'anonymous' ] = isset ( $_POST[ 'edd_anon' ] ) ? 1 : 0;
+
+	return $payment_meta;
+}
+add_filter( 'edd_payment_meta', 'atcf_anon_save_meta' );

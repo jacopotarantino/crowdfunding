@@ -165,7 +165,7 @@ function atcf_shipping_validate_meta( $valid_data, $data ) {
 	if ( ! edd_purchase_form_validate_cc_zip( $shipping_info[ 'shipping_zip' ], $shipping_info[ 'shipping_country' ] ) )
 		edd_set_error( 'invalid_shipping_zip', __( 'The zip code you entered for your shipping address is invalid.', 'atcf' ) );
 }
-add_action( 'edd_checkout_error_checks', 'atcf_shipping_validate_meta', 10, 2);
+add_action( 'edd_checkout_error_checks', 'atcf_shipping_validate_meta', 10, 2 );
 
 /**
  * Save payment meta.
