@@ -296,6 +296,11 @@ class ATCF_Campaigns {
 		$gateways = edd_get_enabled_payment_gateways(); 
 		$errors   = new WP_Error();
 
+		if ( empty( $backers ) ) {
+			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 14 ), admin_url( 'post.php' ) ) );
+			exit();
+		}
+
 		foreach ( $backers as $backer ) {
 			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
 			$gateway    = get_post_meta( $payment_id, '_edd_payment_gateway', true );
@@ -306,8 +311,6 @@ class ATCF_Campaigns {
 		foreach ( $gateways as $gateway => $gateway_args ) {
 			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $errors );
 		}
-
-		die( print_r( $errors ) );
 
 		if ( ! empty ( $errors->errors ) )
 			wp_die( $errors );
@@ -331,6 +334,7 @@ class ATCF_Campaigns {
 		$messages[ 'download' ][11] = sprintf( __( 'This %s has not reached its funding goal.', 'atcf' ), strtolower( edd_get_label_singular() ) );
 		$messages[ 'download' ][12] = sprintf( __( 'You do not have permission to collect funds for %s.', 'atcf' ), strtolower( edd_get_label_plural() ) );
 		$messages[ 'download' ][13] = sprintf( __( '%d payments have been collected for this %s.', 'atcf' ), isset ( $_GET[ 'collected' ] ) ? $_GET[ 'collected' ] : 0, strtolower( edd_get_label_singular() ) );
+		$messages[ 'download' ][14] = sprintf( __( 'There are no payments for this %s.', 'atcf' ), strtolower( edd_get_label_singular() ) );
 
 		return $messages;
 	}
