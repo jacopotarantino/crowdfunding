@@ -100,6 +100,8 @@ add_filter( 'edd_metabox_fields_save', 'atcf_metabox_save_paypal_adaptive_paymen
 function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $campaign, $errors ) {
 	global $edd_options, $errors;
 
+	die( print_r( $gateway_args ) );
+
 	if ( ! isset ( $gateway_args[ 'payments' ] ) )
 		return;
 

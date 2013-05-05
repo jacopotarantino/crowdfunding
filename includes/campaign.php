@@ -231,7 +231,7 @@ class ATCF_Campaigns {
 
 		$campaign = atcf_get_campaign( $post );
 
-		if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && atcf_has_preapproval_gateway() )
+		//if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && atcf_has_preapproval_gateway() )
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
@@ -305,6 +305,8 @@ class ATCF_Campaigns {
 			
 			$gateways[ $gateway ][ 'payments' ][] = $payment_id;
 		}
+
+		print_r( $gateways );
 
 		foreach ( $gateways as $gateway => $gateway_args ) {
 			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $errors );
