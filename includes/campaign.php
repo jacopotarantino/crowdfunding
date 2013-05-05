@@ -231,7 +231,7 @@ class ATCF_Campaigns {
 
 		$campaign = atcf_get_campaign( $post );
 
-		if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && atcf_has_preapproval_gateway() )
+		//if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && atcf_has_preapproval_gateway() )
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
@@ -295,10 +295,13 @@ class ATCF_Campaigns {
 		$backers  = $campaign->backers();
 		$gateways = edd_get_enabled_payment_gateways(); 
 		$errors   = new WP_Error();
-		
+
 		foreach ( $backers as $backer ) {
 			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
 			$gateway    = get_post_meta( $payment_id, '_edd_payment_gateway', true );
+
+			if ( ! in_array( $gateway, $gateways ) )
+				continue;
 			
 			$gateways[ $gateway ][ 'payments' ][] = $payment_id;
 		}
