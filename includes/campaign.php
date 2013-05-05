@@ -275,7 +275,7 @@ class ATCF_Campaigns {
 	 * @return void
 	 */
 	function collect_funds() {
-		global $edd_options;
+		global $edd_options, $errors;
 
 		$campaign = absint( $_GET[ 'campaign' ] );
 		$campaign = atcf_get_campaign( $campaign );
@@ -307,7 +307,7 @@ class ATCF_Campaigns {
 			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $errors );
 		}
 
-		if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
+		if ( ! empty ( $errors->errors ) )
 			wp_die( $errors );
 		else {
 			update_post_meta( $campaign->ID, '_campaign_expired', 1 );

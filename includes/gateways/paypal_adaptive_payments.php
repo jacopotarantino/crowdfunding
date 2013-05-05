@@ -97,7 +97,9 @@ add_filter( 'edd_metabox_fields_save', 'atcf_metabox_save_paypal_adaptive_paymen
  *
  * @return void
  */
-function atcf_collect_funds_paypal_pre_approval( $gateway, $gateway_args, $campaign, $errors ) {
+function atcf_collect_funds_paypal_adaptive_payment( $gateway, $gateway_args, $campaign, $errors ) {
+	global $errors;
+	
 	$paypal_adaptive = new PayPalAdaptivePaymentsGateway();
 	
 	$owner           = $edd_options[ 'epap_receivers' ];
@@ -166,4 +168,4 @@ function atcf_collect_funds_paypal_pre_approval( $gateway, $gateway_args, $campa
 
 	return $errors;
 }
-add_action( 'atcf_collect_funds_paypal_pre_approval', 'atcf_collect_funds_paypal_pre_approval', 10, 4 );
+add_action( 'atcf_collect_funds_paypal_adaptive_payment', 'atcf_collect_funds_paypal_adaptive_payment', 10, 4 );
