@@ -13,6 +13,9 @@ If you find an issue, let us know [here](https://github.com/Astoundify/crowdfund
 ## Support ##
 This is a developer's portal for Crowdfunding and should _not_ be used for support.
 
+## Compatible Themes ##
+The first compatible theme that has been released is called ["Fundify"](http://themeforest.net/item/fundify-crowd-funding-wordpress-theme/4257622?ref=AppThemer) from Astoundify.
+
 ## Contributions ##
 
 There are various ways you can contribute:
