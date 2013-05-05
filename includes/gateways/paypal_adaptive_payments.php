@@ -169,8 +169,6 @@ function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $
 		}
 	}
 
-	die( print_r( $errors ) );
-
 	return $errors;
 }
 add_action( 'atcf_collect_funds_paypal_adaptive_payments', 'atcf_collect_funds_paypal_adaptive_payments', 10, 4 );

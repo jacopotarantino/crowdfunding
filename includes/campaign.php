@@ -307,6 +307,8 @@ class ATCF_Campaigns {
 			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $errors );
 		}
 
+		print_r( $errors );
+
 		if ( ! empty ( $errors->errors ) )
 			wp_die( $errors );
 		else {
