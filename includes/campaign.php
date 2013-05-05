@@ -303,8 +303,6 @@ class ATCF_Campaigns {
 			$gateways[ $gateway ][ 'payments' ][] = $payment_id;
 		}
 
-		print_r( $gateways );
-
 		foreach ( $gateways as $gateway => $gateway_args ) {
 			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $errors );
 		}
