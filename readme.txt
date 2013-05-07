@@ -21,7 +21,7 @@ Crowdfunding by [Astoundify](http://Astoundify.com/fundify.html) is a funding pl
 
 Run your own crowdfunding website for anything you can imagine.
 
-Note: The Astoundify Crowdfunding plugin is designed to work alongside the PayPal Adaptive Payments gateway so that pledges are collected but no funds are taken until the campaign reaches its goal. The plugin will also work along side any other gateway that Easy Digital Downloads supports but funds will be taken immediately.
+Note: The Astoundify Crowdfunding plugin is designed to work alongside the PayPal Adaptive Payments or Stripe gateway so that pledges are collected but no funds are taken until the campaign reaches its goal. The plugin will also work along side any other gateway that Easy Digital Downloads supports but funds will be taken immediately.
 
 = Features =
 
