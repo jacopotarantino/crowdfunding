@@ -20,3 +20,6 @@ There are various ways you can contribute:
 1. Raise an [Issue](https://github.com/Astoundify/crowdfunding/issues?state=open) on GitHub
 2. Send us a Pull Request with your bug fixes and/or new features
 3. Translate Crowdfunding into different languages
+
+## Compatible Themes ##
+The first compatible theme that has been released is called ["Fundify"](http://themeforest.net/item/fundify-crowd-funding-wordpress-theme/4257622?ref=AppThemer) from Astoundify.
