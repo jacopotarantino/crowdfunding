@@ -17,24 +17,38 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param array $payment_data The payment data for the cart
  * @return void
  */
-function atcf_log_pledge_limit( $payment, $payment_data ) {
-	$payment_meta     = edd_get_payment_meta( $payment );
+function atcf_log_pledge_limit( $payment_id, $new_status, $old_status ) {
+	global $edd_logs;
 
-	foreach ( $payment_data[ 'cart_details' ] as $key => $item ) {
-		$variable_pricing = edd_get_variable_prices( $item[ 'id' ] );
+	// Make sure that payments are only completed once
+	if ( $old_status != 'pending' )
+		return;
+
+	// Make sure the payment completion is only processed when new status is complete
+	if ( in_array( $new_status, array( 'refunded', 'failed', 'revoked' ) ) )
+		return;
+
+	$payment_data = edd_get_payment_meta( $payment_id );
+	$downloads    = maybe_unserialize( $payment_data['downloads'] );
+	
+	if ( ! is_array( $downloads ) )
+		return;
+
+	foreach ( $downloads as $download ) {
+		$variable_pricing = edd_get_variable_prices( $download[ 'id' ] );
 
 		foreach ( $variable_pricing as $key => $value ) {
-			$what = $item[ 'item_number' ][ 'options' ][ 'price_id' ];
+			$what = $download[ 'options' ][ 'price_id' ];
 
 			if ( $key == $what ) {
 				$variable_pricing[ $what ][ 'bought' ] = ( isset ( $variable_pricing[ $what ][ 'bought' ] ) ? $variable_pricing[ $what ][ 'bought' ] : 0 ) + 1;
 			}
 		}
 
-		update_post_meta( $item[ 'id' ], 'edd_variable_prices', $variable_pricing );	
+		update_post_meta( $download[ 'id' ], 'edd_variable_prices', $variable_pricing );
 	}
 }
-add_action( 'edd_insert_payment', 'atcf_log_pledge_limit', 10, 2 );
+add_action( 'edd_update_payment_status', 'atcf_log_pledge_limit', 100, 3 );
 
 /**
  * Don't allow multiple pledges to be made at once if
