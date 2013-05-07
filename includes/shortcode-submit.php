@@ -95,7 +95,7 @@ function atcf_shortcode_submit_field_goal( $editing, $campaign ) {
 ?>
 	<p class="atcf-submit-campaign-goal">
 		<label for="goal"><?php printf( __( 'Goal (%s)', 'atcf' ), edd_currency_filter( '' ) ); ?></label>
-		<input type="text" name="goal" id="goal" placeholder="800">
+		<input type="text" name="goal" id="goal" placeholder="<?php echo edd_format_amount( 800 ); ?>">
 	</p>
 <?php
 }
@@ -488,13 +488,13 @@ function atcf_shortcode_submit_process() {
 	$edd_files        = array();
 	$upload_overrides = array( 'test_form' => false );
 
-	$terms     = $_POST[ 'edd_agree_to_terms' ];
+	$terms     = isset ( $_POST[ 'edd_agree_to_terms' ] ) ? $_POST[ 'edd_agree_to_terms' ] : 0;
 	$title     = $_POST[ 'title' ];
 	$goal      = $_POST[ 'goal' ];
 	$length    = $_POST[ 'length' ];
 	$type      = $_POST[ 'campaign_type' ];
 	$location  = $_POST[ 'location' ];
-	$category  = $_POST[ 'cat' ];
+	$category  = isset ( $_POST[ 'cat' ] ) ? $_POST[ 'cat' ] : 0;
 	$content   = $_POST[ 'description' ];
 	$excerpt   = $_POST[ 'excerpt' ];
 	$author    = $_POST[ 'name' ];
@@ -521,7 +521,7 @@ function atcf_shortcode_submit_process() {
 		$errors->add( 'invalid-title', __( 'Please add a title to this campaign.', 'atcf' ) );
 
 	/** Check Goal */
-	$goal = atcf_sanitize_goal_save( $goal );
+	$goal = edd_sanitize_amount( $goal );
 
 	if ( ! is_numeric( $goal ) )
 		$errors->add( 'invalid-goal', sprintf( __( 'Please enter a valid goal amount. All goals are set in the %s currency.', 'atcf' ), $edd_options[ 'currency' ] ) );

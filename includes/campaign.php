@@ -653,19 +653,7 @@ function _atcf_metabox_campaign_info() {
  *
  * @return string $price The formatted price
  */
-function atcf_sanitize_goal_save( $price ) {
-	global $edd_options;
-
-	$thousands_sep = isset( $edd_options[ 'thousands_separator' ] ) ? $edd_options[ 'thousands_separator' ] : ',';
-	$decimal_sep   = isset( $edd_options[ 'decimal_separator'   ] ) ? $edd_options[ 'decimal_separator' ]   : '.';
-
-	if ( $thousands_sep == ',' ) {
-		$price = str_replace( ',', '', $price );
-	}
-
-	return $price;
-}
-add_filter( 'edd_metabox_save_campaign_goal', 'atcf_sanitize_goal_save' );
+add_filter( 'edd_metabox_save_campaign_goal', 'edd_sanitize_price_save' );
 
 /**
  * Updates Save
