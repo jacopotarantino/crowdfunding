@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 1.1.1
+Stable Tag: 1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -58,7 +58,20 @@ Yes. However, it won't look much different than a standard EDD install. Template
 
 == Changelog ==
 
-= 1.1.1: May 2, 2013
+= 1.2: May 8, 2013 =
+
+https://github.com/Astoundify/crowdfunding/issues?milestone=7&page=1&state=closed
+
+* New: Allow for anonymous backers. Theme's need to add this functionality, as all information is still collected.
+* Fix: Don't check day count for expired campaigns, use seconds instead (and correct timezone)
+* Fix: Only track a "bought" pledge level when payment is moved from pending.
+* Fix: Properly collect PayPal funds.
+* Fix: More granular checking if a preapproval-supported gateway is being used.
+* Fix: Remove error when viewing comments in WordPress admin.
+* Fix: Better goal sanitization to prevent being reset to 0.
+* Fix: Track when the project has manually been closed (theme still needs to display this value).
+
+= 1.1.1: May 2, 2013 =
 
 * Fix: Don't try to load things before we have a chance to check if EDD is active to avoid errors.
 
