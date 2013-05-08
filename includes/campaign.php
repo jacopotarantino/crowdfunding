@@ -917,7 +917,7 @@ class ATCF_Campaign {
 	 */
 	public function days_remaining() {
 		$expires = strtotime( $this->end_date() );
-		$now     = time();
+		$now     = current_time( 'timestamp' );
 
 		if ( $now > $expires )
 			return 0;
@@ -1002,7 +1002,10 @@ class ATCF_Campaign {
 	public function is_active() {
 		$active  = true;
 
-		if ( $this->days_remaining() == 0 )
+		$expires = strtotime( $this->end_date() );
+		$now     = current_time( 'timestamp' );
+
+		if ( $now > $expires )
 			$active = false;
 
 		if ( $this->__get( '_campaign_expired' ) )
