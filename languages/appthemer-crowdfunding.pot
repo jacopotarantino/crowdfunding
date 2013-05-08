@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AppThemer Crowdfunding\n"
-"POT-Creation-Date: 2013-05-05 17:23-0500\n"
-"PO-Revision-Date: 2013-05-05 17:23-0500\n"
+"POT-Creation-Date: 2013-05-08 08:30-0500\n"
+"PO-Revision-Date: 2013-05-08 08:30-0500\n"
 "Last-Translator: Spencer Finnell <spencerfinnell@gmail.com>\n"
 "Language-Team: AppThemer <contact@appthemer.com>\n"
 "MIME-Version: 1.0\n"
@@ -75,7 +75,7 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: ../includes/campaign.php:154 ../includes/shortcode-profile.php:181
+#: ../includes/campaign.php:154
 msgid "Backers"
 msgstr ""
 
@@ -211,36 +211,36 @@ msgstr ""
 msgid "End Date:"
 msgstr ""
 
-#: ../includes/campaign.php:1115 ../includes/shortcode-submit.php:548
+#: ../includes/campaign.php:1103 ../includes/shortcode-submit.php:548
 msgid "Please add content to this campaign."
 msgstr ""
 
-#: ../includes/campaign.php:1161
+#: ../includes/campaign.php:1149
 msgid "Reward Options:"
 msgstr ""
 
-#: ../includes/campaign.php:1173
+#: ../includes/campaign.php:1161
 msgid "Enable multiple reward options"
 msgstr ""
 
-#: ../includes/campaign.php:1184
+#: ../includes/campaign.php:1172
 msgid "All-or-nothing"
 msgstr ""
 
-#: ../includes/campaign.php:1185
+#: ../includes/campaign.php:1173
 msgid ""
 "Only collect pledged funds when the campaign ends if the set goal is met."
 msgstr ""
 
-#: ../includes/campaign.php:1188
+#: ../includes/campaign.php:1176
 msgid "Flexible"
 msgstr ""
 
-#: ../includes/campaign.php:1189
+#: ../includes/campaign.php:1177
 msgid "Collect funds pledged at the end of the campaign no matter what."
 msgstr ""
 
-#: ../includes/checkout.php:66
+#: ../includes/checkout.php:80
 msgid "Hide name on backers list?"
 msgstr ""
 
@@ -547,65 +547,51 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: ../includes/shortcode-profile.php:180
-#, php-format
-msgid "Comments for %s"
-msgstr ""
-
-#: ../includes/shortcode-profile.php:180
-msgid "Comments"
-msgstr ""
-
-#: ../includes/shortcode-profile.php:181
-#, php-format
-msgid "Backers for %s"
-msgstr ""
-
-#: ../includes/shortcode-profile.php:187
+#: ../includes/shortcode-profile.php:185
 #, php-format
 msgid "Request Payout for %s"
 msgstr ""
 
-#: ../includes/shortcode-profile.php:187
+#: ../includes/shortcode-profile.php:185
 msgid "Request Payout"
 msgstr ""
 
-#: ../includes/shortcode-profile.php:191
+#: ../includes/shortcode-profile.php:189
 #, php-format
 msgid "Export data for %s"
 msgstr ""
 
-#: ../includes/shortcode-profile.php:191
+#: ../includes/shortcode-profile.php:189
 msgid "Export Data"
 msgstr ""
 
-#: ../includes/shortcode-profile.php:287
+#: ../includes/shortcode-profile.php:285
 msgid "This is not a valid campaign."
 msgstr ""
 
-#: ../includes/shortcode-profile.php:290
+#: ../includes/shortcode-profile.php:288
 msgid "You are not the author of this campaign, and cannot request a payout."
 msgstr ""
 
-#: ../includes/shortcode-profile.php:296
+#: ../includes/shortcode-profile.php:294
 #, php-format
 msgid "A request for payout has been made for <a href=\"%s\">%s</a>."
 msgstr ""
 
-#: ../includes/shortcode-profile.php:302
+#: ../includes/shortcode-profile.php:300
 #, php-format
 msgid "Payout Request for %s"
 msgstr ""
 
-#: ../includes/shortcode-profile.php:351
+#: ../includes/shortcode-profile.php:349
 msgid "You are not the author of this campaign, and cannot request the data."
 msgstr ""
 
-#: ../includes/shortcode-profile.php:387
+#: ../includes/shortcode-profile.php:385
 msgid "Success! We have been notified of your request."
 msgstr ""
 
-#: ../includes/shortcode-profile.php:389
+#: ../includes/shortcode-profile.php:387
 msgid "Success! Your download should begin shortly."
 msgstr ""
 
@@ -642,13 +628,15 @@ msgid "At least one reward is required."
 msgstr ""
 
 #: ../includes/shortcode-submit.php:47
-msgctxt "edit object"
-msgid "Update"
+#, php-format
+msgctxt "edit \"campaign\""
+msgid "Update %s"
 msgstr ""
 
 #: ../includes/shortcode-submit.php:47
-msgctxt "submit object"
-msgid "Submit"
+#, php-format
+msgctxt "submit \"campaign\""
+msgid "Submit %s"
 msgstr ""
 
 #: ../includes/shortcode-submit.php:71

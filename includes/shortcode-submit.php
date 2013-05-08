@@ -44,7 +44,7 @@ function atcf_shortcode_submit( $editing = false ) {
 		<?php do_action( 'atcf_shortcode_submit_fields', $editing, $campaign ); ?>
 
 		<p class="atcf-submit-campaign-submit">
-			<input type="submit" value="<?php printf( '%s %s', $editing ? _x( 'Update', 'edit object', 'atcf' ) : _x( 'Submit', 'submit object', 'atcf' ), edd_get_label_singular() ); ?>">
+			<input type="submit" value="<?php echo $editing ? sprintf( _x( 'Update %s', 'edit "campaign"', 'atcf' ), edd_get_label_singular() ) : sprintf( _x( 'Submit %s', 'submit "campaign"', 'atcf' ), edd_get_label_singular() ); ?>">
 			<input type="hidden" name="action" value="atcf-campaign-<?php echo $editing ? 'edit' : 'submit'; ?>" />
 			<?php wp_nonce_field( 'atcf-campaign-' . ( $editing ? 'edit' : 'submit' ) ); ?>
 		</p>
@@ -689,7 +689,7 @@ add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
 function atcf_shortcode_submit_redirect() {
 	global $edd_options, $post;
 
-	if ( ! is_user_logged_in() && ( $post->ID == $edd_options[ 'submit_page' ] ) && $edd_options[ 'atcf_settings_require_account' ] ) {
+	if ( ! is_user_logged_in() && ( $post->ID == $edd_options[ 'submit_page' ] ) && isset ( $edd_options[ 'atcf_settings_require_account' ] ) ) {
 		$redirect = apply_filters( 'atcf_require_account_redirect', isset ( $edd_options[ 'login_page' ] ) ? get_permalink( $edd_options[ 'login_page' ] ) : home_url() );
 
 		wp_safe_redirect( $redirect );
