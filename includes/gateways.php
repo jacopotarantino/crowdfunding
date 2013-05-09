@@ -75,8 +75,3 @@ function atcf_has_preapproval_gateway() {
 
 	return $has_support;
 }
-
-add_action( 'init', 'this', 100 );
-function this() {
-	atcf_has_preapproval_gateway();
-}
