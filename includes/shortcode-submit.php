@@ -689,6 +689,9 @@ add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
 function atcf_shortcode_submit_redirect() {
 	global $edd_options, $post;
 
+	if ( ! is_a( $post, 'WP_Post' ) )
+		return;
+
 	if ( ! is_user_logged_in() && ( $post->ID == $edd_options[ 'submit_page' ] ) && isset ( $edd_options[ 'atcf_settings_require_account' ] ) ) {
 		$redirect = apply_filters( 'atcf_require_account_redirect', isset ( $edd_options[ 'login_page' ] ) ? get_permalink( $edd_options[ 'login_page' ] ) : home_url() );
 

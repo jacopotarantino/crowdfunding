@@ -99,3 +99,39 @@ function atcf_theme_custom_variable_pricing() {
 	add_action( 'init', 'atcf_theme_variable_pricing' );
 }
 add_action( 'after_setup_theme', 'atcf_theme_custom_variable_pricing', 100 );
+
+/**
+ * When a campaign is over, show a message.
+ *
+ * @since AppThemer Crowdfunding 1.3
+ *
+ * @return void
+ */
+function atcf_campaign_notes( $campaign ) {
+	$end_date = date( get_option( 'date_format' ), strtotime( $campaign->end_date() ) );
+
+	if ( 'fixed' == $campaign->type() ) {
+?>
+	<?php if ( ! $campaign->is_active() && ! $campaign->is_funded() ) : ?>
+		<div class="edd_errors">
+			<p class="edd_error"><?php printf( __( '<strong>Funding Unsuccessful</strong>. This project reached the deadline without achieving its funding goal on %s.', 'atcf' ), $end_date ); ?></p>
+		</div>
+	<?php elseif ( $campaign->is_funded() && ! $campaign->is_active() ) : ?>
+		<div class="edd_errors">
+			<p class="edd_error"><?php printf( __( '<strong>Funding Successful</strong>. This project reached its goal before %s.', 'atcf' ), $end_date ); ?></p>
+		</div>
+	<?php endif; ?>
+<?php
+	} elseif ( 'flexible' == $campaign->type() ) {
+?>
+	<?php if ( ! $campaign->is_active() ) : ?>
+		<div class="edd_errors">
+			<p class="edd_error"><?php printf( __( '<strong>Campaign Complete</strong>. This project has ended on %s. No more contributions can be made.', 'atcf' ), $end_date ); ?></p>
+		</div>
+	<?php endif; ?>
+<?php
+	} else {
+		do_action( 'atcf_campaign_notes_before_' . $campaign->type(), $campaign );
+	}
+}
+add_action( 'atcf_campaign_before', 'atcf_campaign_notes' );
