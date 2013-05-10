@@ -15,14 +15,18 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @return void
  */
-function atcf_collect_funds_stripe( $gateway, $gateway_args, $campaign, $errors ) {
+function atcf_collect_funds_stripe( $gateway, $gateway_args, $campaign, $failed_payments ) {
+	global $failed_payments;
+	
 	foreach ( $gateway_args[ 'payments' ] as $payment ) {
 		$charge = edds_charge_preapproved( $payment );
 
 		if ( ! $charge )
-			$errors->add( 'payment-error-' . $payment, sprintf( __( 'There was an error collecting funds for payment #%d.', 'atcf' ) ), $payment );
+			$failed_payments[ $gateway ] = $payment;
+
+		do_action( 'atcf_process_payment_' . $gateway, $payment, $charge );
 	}
 
-	return $errors;
+	return $failed_payments;
 }
 add_action( 'atcf_collect_funds_stripe', 'atcf_collect_funds_stripe', 10, 4 );
