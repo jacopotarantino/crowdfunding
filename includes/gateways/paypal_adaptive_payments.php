@@ -97,8 +97,8 @@ add_filter( 'edd_metabox_fields_save', 'atcf_metabox_save_paypal_adaptive_paymen
  *
  * @return void
  */
-function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $campaign, $errors ) {
-	global $edd_options, $errors;
+function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $campaign, $failed_payments; ) {
+	global $edd_options, $failed_payments;;
 
 	if ( ! isset ( $gateway_args[ 'payments' ] ) )
 		return;
@@ -138,7 +138,7 @@ function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $
 
 		/** Already paid or other error */
 		if ( $paid > $amount ) {
-			$errors->add( 'already-paid-' . $payment_id, __( 'This payment has already been collected.', 'atcf' ) );
+			$failed_payments[ $gateway ] = $payment_id;
 			
 			continue;
 		}
@@ -154,21 +154,13 @@ function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $
 				
 				edd_update_payment_status( $payment_id, 'publish' );
 			} else {
-				$errors->add( 
-					'invalid-response-' . $payment_id, 
-					sprintf( 
-						__( 'There was an error collecting funds for payment <a href="%1$s">#%2$d</a>. PayPal responded with %3$s', 'atcf' ), 
-						admin_url( 'edit.php?post_type=download&page=edd-payment-history&edd-action=edit-payment&purchase_id=' . $payment_id ), 
-						$payment_id, 
-						'<pre style="max-width: 100%; overflow: scroll; height: 200px;">' . print_r( array_merge( $payment,  compact( 'payment_id', 'preapproval_key', 'sender_email', 'amount', 'receivers' ) ), true ) . '</pre>'
-					)
-				);
+				$failed_payments[ $gateway ] = $payment_id;
 			}
 		} else {
-			$errors->add( 'payment-error-' . $payment_id, __( 'There was an error.', 'atcf' ) );
+			$failed_payments[ $gateway ] = $payment_id;
 		}
 	}
 
-	return $errors;
+	return $failed_payments;
 }
 add_action( 'atcf_collect_funds_paypal_adaptive_payments', 'atcf_collect_funds_paypal_adaptive_payments', 10, 4 );

@@ -17,7 +17,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function atcf_collect_funds_stripe( $gateway, $gateway_args, $campaign, $failed_payments ) {
 	global $failed_payments;
-	
+
+	if ( ! isset ( $gateway_args[ 'payments' ] ) )
+		return;
+
 	foreach ( $gateway_args[ 'payments' ] as $payment ) {
 		$charge = edds_charge_preapproved( $payment );
 

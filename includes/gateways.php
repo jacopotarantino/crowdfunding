@@ -31,21 +31,6 @@ function atcf_load_gateway_support() {
 }
 add_action( 'init', 'atcf_load_gateway_support', 200 );
 
-function atcf_collect_funds_remove_failed( $gateways, $campaign ) {
-	$failed_payments = get_post_meta( $campaign->ID, '_campaign_failed_payments', true );
-
-	foreach ( $gateways as $gateway ) {
-		foreach ( $gateway[ 'payments' ] as $payment ) {
-			if ( ($key = array_search( $payment, $failed_payments ) ) !== false ) {
-				unset( $failed_payments );
-			}
-		}
-	}
-
-	update_post_meta( $campaign->ID, '_campaign_failed_payments', $failed_payments );
-}
-add_action( 'atcf_collect_funds', 'atcf_collect_funds_remove_failed', 10, 2 );
-
 /**
  * Determine if any of the currently active gateways have preapproval
  * functionality. There really isn't a standard way of doing this, so
