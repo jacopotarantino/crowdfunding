@@ -159,7 +159,7 @@ final class ATCF_CrowdFunding {
 ?>
 		<div class="updated">
 			<p><?php printf( 
-						__( '<strong>Notice:</strong> Crowdfunding by AppThemer requires <a href="%s">Easy Digital Downloads</a> in order to function properly.', 'atcf' ), 
+						__( '<strong>Notice:</strong> Crowdfunding by Astoundify requires <a href="%s">Easy Digital Downloads</a> in order to function properly.', 'atcf' ), 
 						wp_nonce_url( network_admin_url( 'update.php?action=install-plugin&plugin=easy-digital-downloads' ), 'install-plugin_easy-digital-downloads' )
 				); ?></p>
 		</div>
