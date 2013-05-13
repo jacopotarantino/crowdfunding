@@ -18,8 +18,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @return $form
  */
-function atcf_shortcode_submit( $editing = false ) {
+function atcf_shortcode_submit( $atts ) {
 	global $edd_options;
+
+	extract( shortcode_atts( array(
+		'editing' => false
+    ), $atts ) );
 
 	$crowdfunding = crowdfunding();
 	$campaign     = null;
@@ -28,7 +32,7 @@ function atcf_shortcode_submit( $editing = false ) {
 
 	if ( $editing ) {
 		global $post;
-
+		
 		$campaign = atcf_get_campaign( $post );
 	} else {
 		wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'assets/js/jquery.validate.min.js');

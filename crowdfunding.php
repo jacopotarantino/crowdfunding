@@ -183,26 +183,47 @@ final class ATCF_CrowdFunding {
 	public function template_loader( $template ) {
 		global $wp_query;
 		
-		$find  = array();
-		$files = array();
+		$find    = array();
+		$files   = array();
 
-		if ( isset ( $wp_query->query_vars[ 'edit' ] ) && is_singular( 'download' ) && ( $wp_query->queried_object->post_author == get_current_user_id() || current_user_can( 'manage_options' ) ) ) {
+		$support = get_theme_support( 'appthemer-crowdfunding' );
+
+		/** Check if we are editing */
+		if ( isset ( $wp_query->query_vars[ 'edit' ] ) && 
+			 is_singular( 'download' ) && 
+			 ( $wp_query->queried_object->post_author == get_current_user_id() || current_user_can( 'manage_options' ) ) &&
+			 isset ( $support[0][ 'campaign-edit' ] )
+		) {
 			do_action( 'atcf_found_edit' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_edit', array( 'single-campaign-edit.php' ) );
-		} else if ( isset ( $wp_query->query_vars[ 'widget' ] ) && is_singular( 'download' ) ) {
+		} 
+
+		/** Check if viewing a widget */
+		else if ( isset ( $wp_query->query_vars[ 'widget' ] ) && 
+			 is_singular( 'download' ) &&
+			 isset ( $support[0][ 'campaign-widget' ] )
+		) {
 			do_action( 'atcf_found_widget' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_widget', array( 'campaign-widget.php' ) );
-		} else if ( is_singular( 'download' ) ) {
+		}
+
+		/** Check if viewing standard campaign */
+		else if ( is_singular( 'download' ) ) {
 			do_action( 'atcf_found_single' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_campaign', array( 'single-campaign.php', 'single-download.php', 'single.php' ) );
-		} else if ( is_post_type_archive( 'download' ) || is_tax( 'download_category' ) ) {
+		} 
+
+		/** Check if viewing archives */
+		else if ( is_post_type_archive( 'download' ) || is_tax( 'download_category' ) ) {
 			do_action( 'atcf_found_archive' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_archive', array( 'archive-campaigns.php', 'archive-download.php', 'archive.php' ) );
 		}
+
+		$files = apply_filters( 'atcf_template_loader', $files );
 
 		foreach ( $files as $file ) {
 			$find[] = $file;
