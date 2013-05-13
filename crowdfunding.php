@@ -12,9 +12,6 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-/** Check if Easy Digital Downloads is active */
-include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-
 /**
  * Main Crowd Funding Class
  *
@@ -193,6 +190,10 @@ final class ATCF_CrowdFunding {
 			do_action( 'atcf_found_edit' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_edit', array( 'single-campaign-edit.php' ) );
+		} else if ( isset ( $wp_query->query_vars[ 'widget' ] ) && is_singular( 'download' ) ) {
+			do_action( 'atcf_found_widget' );
+
+			$files = apply_filters( 'atcf_crowdfunding_templates_widget', array( 'campaign-widget.php' ) );
 		} else if ( is_singular( 'download' ) ) {
 			do_action( 'atcf_found_single' );
 
@@ -212,7 +213,7 @@ final class ATCF_CrowdFunding {
 			$template = locate_template( $find );
 
 			if ( ! $template ) 
-				$template = $this->plugin_dir . '/templates/' . $file;
+				$template = $this->plugin_dir . 'templates/' . $file;
 		}
 
 		return $template;

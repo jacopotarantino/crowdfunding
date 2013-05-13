@@ -17,8 +17,8 @@
  * @return void
  */
 function atcf_endpoints() {
-	add_rewrite_endpoint( 'backers', EP_ALL );
 	add_rewrite_endpoint( 'edit', EP_ALL );
+	add_rewrite_endpoint( 'widget', EP_ALL );
 }
 add_action( 'init', 'atcf_endpoints' );
 
