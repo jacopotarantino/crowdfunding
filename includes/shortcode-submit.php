@@ -268,7 +268,7 @@ function atcf_shortcode_submit_field_excerpt( $editing, $campaign ) {
 ?>
 	<p class="atcf-submit-campaign-excerpt">
 		<label for="excerpt"><?php _e( 'Excerpt', 'atcf' ); ?></label>
-		<textarea name="excerpt" id="excerpt" value="<?php echo $editing ? apply_filters( 'get_the_excerpt', $campaign->data->post_excerpt ) : null; ?>"></textarea>
+		<textarea name="excerpt" id="excerpt"><?php echo $editing ? apply_filters( 'get_the_excerpt', $campaign->data->post_excerpt ) : null; ?></textarea>
 	</p>
 <?php
 }
