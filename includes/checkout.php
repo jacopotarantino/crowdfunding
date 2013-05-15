@@ -69,9 +69,7 @@ function atcf_clear_cart() {
 add_action( 'atcf_found_single', 'atcf_clear_cart' );
 
 function atcf_edd_purchase_form_user_info() {
-	$support = get_theme_support( 'appthemer-crowdfunding' );
-
-	if ( ! $support[0][ 'anonymous-backers' ] )
+	if ( ! atcf_theme_supports( 'anonymous-backers' ) )
 		return;
 ?>
 	<p id="edd-anon-wrap">

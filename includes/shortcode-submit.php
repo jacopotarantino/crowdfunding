@@ -282,11 +282,11 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_excerpt
  * @return void
  */
 function atcf_shortcode_submit_field_images( $editing, $campaign ) {
-	if ( $editing )
+	if ( $editing || ! atcf_theme_supports( 'campaign-featured-image' ) )
 		return;
 ?>
 	<p class="atcf-submit-campaign-images">
-		<label for="excerpt"><?php _e( 'Preview Image', 'atcf' ); ?></label>
+		<label for="excerpt"><?php _e( 'Featuerd Image', 'atcf' ); ?></label>
 		<input type="file" name="image" id="image" />
 	</p>
 <?php
@@ -301,11 +301,11 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_images'
  * @return void
  */
 function atcf_shortcode_submit_field_video( $editing, $campaign ) {
-	if ( $editing )
+	if ( $editing || ! atcf_theme_supports( 'campaign-video' ) )
 		return;
 ?>
 	<p class="atcf-submit-campaign-video">
-		<label for="length"><?php _e( 'Video URL', 'atcf' ); ?></label>
+		<label for="length"><?php _e( 'Featued Video URL', 'atcf' ); ?></label>
 		<input type="text" name="video" id="video">
 	</p>
 <?php

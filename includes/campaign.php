@@ -133,6 +133,12 @@ class ATCF_Campaigns {
 		$supports[] = 'excerpt';
 		$supports[] = 'comments';
 
+		if ( ! atcf_theme_supports( 'campaign-featured-image' ) ) {
+			if ( ( $key = array_search( 'thumbnail', $supports ) ) !== false ) {
+				unset( $supports[$key]);
+			}
+		}
+
 		return $supports;
 	}
 
@@ -239,7 +245,9 @@ class ATCF_Campaigns {
 
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
 		add_meta_box( 'atcf_campaign_updates', __( 'Campaign Updates', 'atcf' ), '_atcf_metabox_campaign_updates', 'download', 'normal', 'high' );
-		add_meta_box( 'atcf_campaign_video', __( 'Campaign Video', 'atcf' ), '_atcf_metabox_campaign_video', 'download', 'normal', 'high' );
+
+		if ( atcf_theme_supports( 'campaign-video' ) )
+			add_meta_box( 'atcf_campaign_video', __( 'Campaign Video', 'atcf' ), '_atcf_metabox_campaign_video', 'download', 'normal', 'high' );
 
 		add_action( 'edd_meta_box_fields', '_atcf_metabox_campaign_info', 5 );
 	}

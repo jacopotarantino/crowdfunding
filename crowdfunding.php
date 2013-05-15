@@ -186,13 +186,11 @@ final class ATCF_CrowdFunding {
 		$find    = array();
 		$files   = array();
 
-		$support = get_theme_support( 'appthemer-crowdfunding' );
-
 		/** Check if we are editing */
 		if ( isset ( $wp_query->query_vars[ 'edit' ] ) && 
 			 is_singular( 'download' ) && 
 			 ( $wp_query->queried_object->post_author == get_current_user_id() || current_user_can( 'manage_options' ) ) &&
-			 isset ( $support[0][ 'campaign-edit' ] )
+			 atcf_theme_supports( 'campaign-edit' )
 		) {
 			do_action( 'atcf_found_edit' );
 
@@ -202,7 +200,7 @@ final class ATCF_CrowdFunding {
 		/** Check if viewing a widget */
 		else if ( isset ( $wp_query->query_vars[ 'widget' ] ) && 
 			 is_singular( 'download' ) &&
-			 isset ( $support[0][ 'campaign-widget' ] )
+			 atcf_theme_supports( 'campagin-widget' )
 		) {
 			do_action( 'atcf_found_widget' );
 
@@ -265,6 +263,21 @@ final class ATCF_CrowdFunding {
 
 		return false;
 	}
+}
+
+/**
+ * Does the current theme support certain functionality?
+ *
+ * @since AppThemer Crowdfunding 1.3
+ *
+ * @param string $feature The name of the feature to check.
+ * @return boolean If the feature is supported or not.
+ */
+function atcf_theme_supports( $feature ) {
+	$supports = get_theme_support( 'appthemer-crowdfunding' );
+	$supports = $supports[0];
+
+	return isset ( $supports[ $feature ] );
 }
 
 /**
