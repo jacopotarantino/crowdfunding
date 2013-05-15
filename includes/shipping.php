@@ -22,11 +22,13 @@ function atcf_shipping_cart_shipping() {
 	$cart_items = edd_get_cart_contents();
 	$needs      = false;
 
-	foreach ( $cart_items as $key => $item ) {
-		$campaign = atcf_get_campaign( $item['id'] );
+	if( ! empty( $cart_items ) ) {
+		foreach ( $cart_items as $key => $item ) {
+			$campaign = atcf_get_campaign( $item['id'] );
 
-		if ( $campaign->needs_shipping() )
-			$needs = true;
+			if ( $campaign->needs_shipping() )
+				$needs = true;
+		}
 	}
 
 	return apply_filters( 'atcf_shipping_cart_shipping', $needs );
