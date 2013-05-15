@@ -560,6 +560,15 @@ function _atcf_metabox_campaign_info() {
 
 	$end_date = $campaign->end_date();
 
+	if ( ! $end_date ) {
+		$min = isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14;
+		$max = isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 48;
+
+		$start = apply_filters( 'atcf_shortcode_submit_field_length_start', round( ( $min + $max ) / 2 ) );
+
+		$end_date = date( 'Y-m-d h:i:s', time() + ( $start * 86400 ) );
+	}
+
 	$jj = mysql2date( 'd', $end_date, false );
 	$mm = mysql2date( 'm', $end_date, false );
 	$aa = mysql2date( 'Y', $end_date, false );
