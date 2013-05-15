@@ -679,6 +679,28 @@ function atcf_sanitize_campaign_updates( $updates ) {
 }
 add_filter( 'edd_metabox_save_campaign_updates', 'atcf_sanitize_campaign_updates' );
 
+/**
+ * Load Admin Scripts
+ *
+ * @since AppThemer Crowdfunding 1.3
+ *
+ * @return void
+ */
+function atcf_load_admin_scripts( $hook ) {
+	global $pagenow, $typenow;
+ 
+ 	if ( ! in_array( $pagenow, array( 'post.php', 'post-new.php' ) ) )
+ 		return;
+
+ 	if ( 'download' != $typenow )
+ 		return;
+
+ 	$crowdfunding = crowdfunding();
+
+	wp_enqueue_script( 'atcf-admin-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding-admin.js', array( 'jquery', 'edd-admin-scripts' ) );
+}
+add_action( 'admin_enqueue_scripts', 'atcf_load_admin_scripts' );
+
 /** Single Campaign *******************************************************/
 
 class ATCF_Campaign {
