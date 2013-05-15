@@ -55,14 +55,14 @@ function atcf_has_preapproval_gateway() {
 		switch ( $gateway ) {
 			case 'stripe' :
 
-				if ( $edd_options[ 'stripe_preapprove_only' ] )
+				if ( isset ( $edd_options[ 'stripe_preapprove_only' ] ) )
 					$has_support = true;
 
 				break;
 
 			case 'paypal_adaptive_payments' : 
 
-				if ( $edd_options[ 'epap_preapproval' ] )
+				if ( isset( $edd_options[ 'epap_preapproval' ] ) )
 					$has_support = true;
 
 				break;

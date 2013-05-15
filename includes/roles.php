@@ -14,11 +14,12 @@
  */
 function atcf_roles() {
 	global $wp_roles;
-
+	
 	$campaign_contributor = add_role( 'campaign_contributor', 'Campaign Contributor', array(
 		'read' 						=> true,
 		'edit_posts' 				=> false,
-		'delete_posts' 				=> false
+		'delete_posts' 				=> false,
+		'upload_files'              => true
 	) );
 
 	if ( class_exists('WP_Roles') )
