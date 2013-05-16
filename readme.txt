@@ -15,7 +15,7 @@ A crowdfunding platform in the likes of Kickstarter and Indigogo
 
 == Description ==
 
-Crowdfunding by [Astoundify](http://Astoundify.com/fundify.html) is a funding platform for WordPress. An extension that seamlessly integrates with [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/), the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
+Crowdfunding by [Astoundify](http://Astoundify.com/) is a funding platform for WordPress. An extension that seamlessly integrates with [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/), the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
 
 "Backers" can pledge specified amounts of money towards a project and receive rewards for their contributions. Pledge amounts are only collected if a campaign reaches its goal in the time specified.
 
@@ -36,7 +36,11 @@ Features of the plugin include:
 
 = Premium Themes =
 
-The first compatible theme that has been released is called "Fundify" from [Astoundify](http://Astoundify.com/fundify.html).
+We currently have two compatible themes that have been released:
+
+The first theme released is called "Fundify" from [Astoundify](http://Astoundify.com/fundify.html) A Large community crowdfunding theme, like Kickstarter or Indiegogo.
+
+The second theme released is called "Campaignify" from [Astoundify](http://Astoundify.com/) A multi-purpose crowdfunding theme, great for single product crowdfunding.
 
 = Get Involved =
 
