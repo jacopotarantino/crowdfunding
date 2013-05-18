@@ -17,9 +17,10 @@ function atcf_roles() {
 	
 	$campaign_contributor = add_role( 'campaign_contributor', 'Campaign Contributor', array(
 		'read' 						=> true,
-		'edit_posts' 				=> false,
+		'edit_posts' 				=> true,
+		'publish_posts'             => true,
 		'delete_posts' 				=> false,
-		'upload_files'              => true
+		'upload_files'              => true,
 	) );
 
 	if ( class_exists('WP_Roles') )
@@ -27,7 +28,8 @@ function atcf_roles() {
 			$wp_roles = new WP_Roles();
 
 	$wp_roles->add_cap( 'campaign_contributor', 'submit_campaigns' );
-	$wp_roles->add_cap( 'campaign_contributor', 'read' );
+	$wp_roles->add_cap( 'campaign_contributor', 'edit_product' );
+	$wp_roles->add_cap( 'campaign_contributor', 'edit_products' );
 }
 add_action( 'init', 'atcf_roles' );
 

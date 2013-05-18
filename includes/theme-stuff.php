@@ -135,3 +135,16 @@ function atcf_campaign_notes( $campaign ) {
 	}
 }
 add_action( 'atcf_campaign_before', 'atcf_campaign_notes' );
+
+function atcf_campaign_preview_note() {
+	global $post;
+
+	if ( ! is_preview() )
+		return;
+?>
+	<div class="edd_errors">
+		<p class="edd_error"><?php printf( __( 'This is a preview of your %1$s. <a href="%2$s">Edit</a>', 'atcf' ), strtolower( edd_get_label_singular() ), add_query_arg( array( 'edit' => true ), get_permalink( $post->ID ) ) ); ?></p>
+	</div>
+<?php
+}
+add_action( 'atcf_campaign_before', 'atcf_campaign_preview_note' );
