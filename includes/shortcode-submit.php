@@ -349,8 +349,6 @@ function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
 
 	$rewards  = $atts[ 'previewing' ] ? edd_get_variable_prices( $campaign->ID ) : array();
 	$shipping = $atts[ 'previewing' ] ? $campaign->needs_shipping() : 0;
-
-	print_r( $rewards );
 ?>
 	<h3 class="atcf-submit-section backer-rewards"><?php _e( 'Backer Rewards', 'atcf' ); ?></h3>
 
@@ -359,7 +357,7 @@ function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
 	</p>
 
 	<div class="atcf-submit-campaign-rewards">
-		<?php foreach ( $rewards as $key => $reward ) : $key = $key + 1; ?>
+		<?php foreach ( $rewards as $key => $reward ) : ?>
 		<div class="atcf-submit-campaign-reward">
 			<?php do_action( 'atcf_shortcode_submit_field_rewards_before' ); ?>
 
@@ -392,7 +390,8 @@ function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
 		</div>
 		<?php endforeach; ?>
 
-		<div class="atcf-submit-campaign-reward static">
+		<?php if ( ! $atts[ 'previewing' ] && ! $atts[ 'editing' ] ) : ?>
+		<div class="atcf-submit-campaign-reward">
 			<?php do_action( 'atcf_shortcode_submit_field_rewards_before' ); ?>
 
 			<p class="atcf-submit-campaign-reward-price">
@@ -422,6 +421,7 @@ function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
 				<a href="#">&times;</a>
 			</p>
 		</div>
+		<?php endif; ?>
 
 		<p class="atcf-submit-campaign-add-reward">
 			<a href="#" class="atcf-submit-campaign-add-reward-button"><?php _e( '+ <em>Add Reward</em>', 'atcf' ); ?></a>
@@ -486,7 +486,7 @@ function atcf_shortcode_submit_field_location( $atts, $campaign ) {
 ?>
 	<p class="atcf-submit-campaign-location">
 		<label for="length"><?php _e( 'Location', 'atcf' ); ?></label>
-		<input type="text" name="location" id="location" value="<?php $campaign->location() ?>" />
+		<input type="text" name="location" id="location" value="<?php echo $campaign->location(); ?>" />
 	</p>
 <?php
 }
@@ -680,6 +680,9 @@ function atcf_shortcode_submit_process() {
 			'name'      => $reward[ 'price' ],
 			'condition' => $key
 		);
+
+		if ( '' == $reward[ 'price' ] )
+			continue;
 
 		$prices[] = array(
 			'name'   => sanitize_text_field( $reward[ 'description' ] ),

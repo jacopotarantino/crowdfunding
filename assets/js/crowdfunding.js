@@ -3,7 +3,7 @@ var CrowdFunding = (function($) {
 
 	function addReward() {
 		var rewardContainer = $( '.atcf-submit-campaign-rewards' );
-		var reward          = rewardContainer.find( '.atcf-submit-campaign-reward.static' );
+		var reward          = rewardContainer.find( 'div:last-of-type' );
 
 		$( '.atcf-submit-campaign-add-reward-button' ).click(function(e) {
 			e.preventDefault();
@@ -27,7 +27,7 @@ var CrowdFunding = (function($) {
 				$( this ).prev()
 					.attr( 'for', label );
 
-				newReward.insertBefore( $( '.atcf-submit-campaign-add-reward' ) );
+				newReward.insertBefore( $( '.atcf-submit-campaign-add-reward' ) ).show();
 			});
 		});
 	}
@@ -58,16 +58,12 @@ var CrowdFunding = (function($) {
 					required : true,
 					number   : true
 				},
-				"rewards[0][price]" : {
-					required : true
-				},
 				"contact-email" : {
 					required : true,
 					email    : true
 				},
-				"email" : {
-					required : true,
-					email    : true
+				"rewards[0][price]" : {
+					required : true
 				}
 			},
 			submitHandler: function(form) {
