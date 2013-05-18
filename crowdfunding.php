@@ -200,7 +200,7 @@ final class ATCF_CrowdFunding {
 		/** Check if viewing a widget */
 		else if ( isset ( $wp_query->query_vars[ 'widget' ] ) && 
 			 is_singular( 'download' ) &&
-			 atcf_theme_supports( 'campagin-widget' )
+			 atcf_theme_supports( 'campaign-widget' )
 		) {
 			do_action( 'atcf_found_widget' );
 

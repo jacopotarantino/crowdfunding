@@ -39,7 +39,7 @@ add_action( 'init', 'atcf_roles' );
  * @return void
  */
 function atcf_prevent_admin_access() {
-	if ( current_user_can( 'submit_campaigns' ) && ! current_user_can( 'edit_posts' ) ) {
+	if ( current_user_can( 'submit_campaigns' ) && ! current_user_can( 'edit_posts' ) && ! ( defined( 'DOING_AJAX') && DOING_AJAX ) ) {
 		wp_safe_redirect( home_url() );
 		exit;
 	}

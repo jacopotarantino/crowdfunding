@@ -60,11 +60,7 @@ add_action( 'edd_update_payment_status', 'atcf_log_pledge_limit', 100, 3 );
  * @return void
  */
 function atcf_clear_cart() {
-	global $edd_options;
-
 	edd_empty_cart();
-
-	return;
 }
 add_action( 'atcf_found_single', 'atcf_clear_cart' );
 
