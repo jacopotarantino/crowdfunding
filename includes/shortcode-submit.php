@@ -376,11 +376,6 @@ function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
 				<input class="description" type="text" name="rewards[<?php echo esc_attr( $key ); ?>][limit]" id="rewards[<?php echo esc_attr( $key ); ?>][limit]" value="<?php echo esc_attr( $reward[ 'limit' ] ); ?>" />
 			</p>
 
-			<p class="atcf-submit-campaign-reward-file">
-				<label for="files[<?php echo esc_attr( $key ); ?>]"><?php _e( 'File (optional)', 'atcf' ); ?></label>
-				<input type="file" class="file" name="files[<?php echo esc_attr( $key ); ?>]" id="files[<?php echo esc_attr( $key ); ?>]" />
-			</p>
-
 			<?php do_action( 'atcf_shortcode_submit_field_rewards_after' ); ?>
 
 			<p class="atcf-submit-campaign-reward-remove">
@@ -407,11 +402,6 @@ function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
 			<p class="atcf-submit-campaign-reward-limit">
 				<label for="rewards[0][limit]"><?php _e( 'Limit', 'atcf' ); ?></label>
 				<input class="description" type="text" name="rewards[0][limit]" id="rewards[0][limit]" />
-			</p>
-
-			<p class="atcf-submit-campaign-reward-file">
-				<label for="files[0]"><?php _e( 'File (optional)', 'atcf' ); ?></label>
-				<input type="file" class="file" name="files[0]" id="files[0]" />
 			</p>
 
 			<?php do_action( 'atcf_shortcode_submit_field_rewards_after' ); ?>
@@ -553,7 +543,6 @@ function atcf_shortcode_submit_process() {
 
 	$errors           = new WP_Error();
 	$prices           = array();
-	$edd_files        = array();
 	$upload_overrides = array( 'test_form' => false );
 
 	$terms     = isset ( $_POST[ 'edd_agree_to_terms' ] ) ? $_POST[ 'edd_agree_to_terms' ] : 0;
@@ -676,11 +665,6 @@ function atcf_shortcode_submit_process() {
 	add_post_meta( $campaign, '_campaign_physical', sanitize_text_field( $shipping ) );
 	
 	foreach ( $rewards as $key => $reward ) {
-		$edd_files[] = array(
-			'name'      => $reward[ 'price' ],
-			'condition' => $key
-		);
-
 		if ( '' == $reward[ 'price' ] )
 			continue;
 
@@ -689,27 +673,6 @@ function atcf_shortcode_submit_process() {
 			'amount' => apply_filters( 'edd_metabox_save_edd_price', $reward[ 'price' ] ),
 			'limit'  => sanitize_text_field( $reward[ 'limit' ] )
 		);
-	}
-
-	if ( ! empty( $files ) ) {
-		foreach ( $files[ 'name' ] as $key => $value ) {
-			if ( $files[ 'name' ][$key] ) {
-				$file = array(
-					'name'     => $files[ 'name' ][$key],
-					'type'     => $files[ 'type' ][$key],
-					'tmp_name' => $files[ 'tmp_name' ][$key],
-					'error'    => $files[ 'error' ][$key],
-					'size'     => $files[ 'size' ][$key]
-				);
-
-				$upload = wp_handle_upload( $file, $upload_overrides );
-
-				if ( isset( $upload[ 'url' ] ) )
-					$edd_files[$key]['file'] = $upload[ 'url' ];
-				else
-					unset($files[$key]);
-			}
-		}
 	}
 
 	if ( '' != $image[ 'name' ] ) {
@@ -738,10 +701,6 @@ function atcf_shortcode_submit_process() {
 	add_post_meta( $campaign, '_edd_hide_purchase_link', 'on' );
 	
 	add_post_meta( $campaign, 'edd_variable_prices', $prices );
-
-	if ( ! empty( $files ) ) {
-		add_post_meta( $campaign, 'edd_download_files', $edd_files );
-	}
 
 	do_action( 'atcf_submit_process_after', $campaign, $_POST );
 
