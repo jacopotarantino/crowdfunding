@@ -61,6 +61,10 @@ function atcf_shortcode_submit( $atts ) {
 
 			<input type="hidden" name="action" value="atcf-campaign-<?php echo $atts[ 'editing' ] ? 'edit' : 'submit'; ?>" />
 			<?php wp_nonce_field( 'atcf-campaign-' . ( $atts[ 'editing' ] ? 'edit' : 'submit' ) ); ?>
+
+			<?php if ( $atts[ 'previewing' ] ) : ?>
+				<input type="hidden" name="campaign_id" value="<?php echo $campaign->ID; ?>" />
+			<?php endif; ?>
 		</p>
 	</form>
 	<?php do_action( 'atcf_shortcode_submit_after', $atts, $campaign ); ?>
@@ -308,7 +312,7 @@ function atcf_shortcode_submit_field_images( $atts, $campaign ) {
 		<input type="file" name="image" id="image" />
 
 		<?php if ( $atts[ 'editing' ] || $atts[ 'previewing' ] ) : ?>
-			<?php the_post_thumbnail(); ?>
+			<br /><?php the_post_thumbnail( array( 50, 50 ) ); ?>
 		<?php endif; ?>
 	</p>
 <?php
@@ -459,7 +463,7 @@ function atcf_shortcode_submit_field_author( $atts, $campaign ) {
 ?>
 	<p class="atcf-submit-campaign-author">
 		<label for="name"><?php _e( 'Name/Organization Name', 'atcf' ); ?></label>
-		<input type="text" name="name" id="name" value="<?php echo $campaign->author(); ?>" />
+		<input type="text" name="name" id="name" value="<?php echo $atts[ 'editing' ] || $atts[ 'previewing' ] ? $campaign->author() : null; ?>" />
 	</p>
 <?php
 }
@@ -476,7 +480,7 @@ function atcf_shortcode_submit_field_location( $atts, $campaign ) {
 ?>
 	<p class="atcf-submit-campaign-location">
 		<label for="length"><?php _e( 'Location', 'atcf' ); ?></label>
-		<input type="text" name="location" id="location" value="<?php echo $campaign->location(); ?>" />
+		<input type="text" name="location" id="location" value="<?php echo $atts[ 'editing' ] || $atts[ 'previewing' ] ? $campaign->location() : null; ?>" />
 	</p>
 <?php
 }
@@ -539,7 +543,8 @@ function atcf_shortcode_submit_process() {
 		require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 	}
 
-	$action    = esc_attr( $_POST[ 'submit' ] );
+	$action            = esc_attr( $_POST[ 'submit' ] );
+	$existing_campaign = isset ( $_POST[ 'campaign_id' ] ) ? esc_attr( $_POST[ 'campaign_id' ] ) : null;
 
 	$errors           = new WP_Error();
 	$prices           = array();
@@ -555,14 +560,13 @@ function atcf_shortcode_submit_process() {
 	$content   = $_POST[ 'description' ];
 	$excerpt   = $_POST[ 'excerpt' ];
 	$author    = $_POST[ 'name' ];
-	$shipping  = $_POST[ 'shipping' ];
+	$shipping  = isset ( $_POST[ 'shipping' ] ) ? $_POST[ 'shipping' ] : null;
 
 	$image     = isset ( $_FILES[ 'image' ] ) ? $_FILES[ 'image' ] : null;
 	$video     = isset ( $_POST[ 'video' ] ) ? $_POST[ 'video' ] : null;
 
 	$rewards   = $_POST[ 'rewards' ];
-	$files     = $_FILES[ 'files' ];
-	
+
 	if ( isset ( $_POST[ 'contact-email' ] ) )
 		$c_email = $_POST[ 'contact-email' ];
 	else {
@@ -647,22 +651,28 @@ function atcf_shortcode_submit_process() {
 		'post_author'  => $user_id
 	), $_POST );
 
-	$campaign = wp_insert_post( $args, true );
+	if ( ! $existing_campaign ) {
+		$campaign = wp_insert_post( $args, true );
+	} else {
+		$args[ 'ID' ] = $existing_campaign;
+
+		$campaign = wp_update_post( $args );
+	}
 
 	wp_set_object_terms( $campaign, array( $category ), 'download_category' );
 
 	/** Extra Campaign Information */
-	add_post_meta( $campaign, 'campaign_goal', apply_filters( 'edd_metabox_save_edd_price', $goal ) );
-	add_post_meta( $campaign, 'campaign_type', sanitize_text_field( $type ) );
-	add_post_meta( $campaign, 'campaign_contact_email', sanitize_text_field( $c_email ) );
-	add_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
-	add_post_meta( $campaign, 'campaign_location', sanitize_text_field( $location ) );
-	add_post_meta( $campaign, 'campaign_author', sanitize_text_field( $author ) );
+	update_post_meta( $campaign, 'campaign_goal', apply_filters( 'edd_metabox_save_edd_price', $goal ) );
+	update_post_meta( $campaign, 'campaign_type', sanitize_text_field( $type ) );
+	update_post_meta( $campaign, 'campaign_contact_email', sanitize_text_field( $c_email ) );
+	update_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
+	update_post_meta( $campaign, 'campaign_location', sanitize_text_field( $location ) );
+	update_post_meta( $campaign, 'campaign_author', sanitize_text_field( $author ) );
 
 	if ( atcf_theme_supports( 'campaign-video' ) )
-		add_post_meta( $campaign, 'campaign_video', esc_url( $video ) );
+		update_post_meta( $campaign, 'campaign_video', esc_url( $video ) );
 	
-	add_post_meta( $campaign, '_campaign_physical', sanitize_text_field( $shipping ) );
+	update_post_meta( $campaign, '_campaign_physical', sanitize_text_field( $shipping ) );
 	
 	foreach ( $rewards as $key => $reward ) {
 		if ( '' == $reward[ 'price' ] )
@@ -681,8 +691,9 @@ function atcf_shortcode_submit_process() {
 			'guid'           => $upload[ 'url' ], 
 			'post_mime_type' => $upload[ 'type' ],
 			'post_title'     => $upload[ 'file' ],
-			'post_content' => '',
-			'post_status' => 'inherit'
+			'post_content'   => '',
+			'post_status'    => 'inherit',
+			'post_parent'    => $campaign
 		);
 
 		$attach_id = wp_insert_attachment( $attachment, $upload[ 'file' ], $campaign );		
@@ -692,15 +703,15 @@ function atcf_shortcode_submit_process() {
 			wp_generate_attachment_metadata( $attach_id, $upload[ 'file' ] ) 
 		);
 
-		add_post_meta( $campaign, '_thumbnail_id', absint( $attach_id ) );
+		update_post_meta( $campaign, '_thumbnail_id', absint( $attach_id ) );
 	}
 
 	/** EDD Stuff */
-	add_post_meta( $campaign, '_variable_pricing', 1 );
-	add_post_meta( $campaign, '_edd_price_options_mode', 1 );
-	add_post_meta( $campaign, '_edd_hide_purchase_link', 'on' );
+	update_post_meta( $campaign, '_variable_pricing', 1 );
+	update_post_meta( $campaign, '_edd_price_options_mode', 1 );
+	update_post_meta( $campaign, '_edd_hide_purchase_link', 'on' );
 	
-	add_post_meta( $campaign, 'edd_variable_prices', $prices );
+	update_post_meta( $campaign, 'edd_variable_prices', $prices );
 
 	do_action( 'atcf_submit_process_after', $campaign, $_POST );
 
