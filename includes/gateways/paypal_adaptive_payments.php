@@ -104,7 +104,7 @@ function atcf_settings_gateway_paypal_adaptive_payments( $settings ) {
 
 	$settings[ 'epap_max_donation' ] = array(
 		'id'   => 'epap_max_donation',
-		'name' => __( 'Maximum Donation Amount', 'atcf' ),
+		'name' => __( 'Maximum Pledge Amount', 'atcf' ),
 		'desc' => '(' . edd_currency_filter( '' ) . ') <span class="description">' . __( 'The maximum amount of money PayPal can accept on your account.', 'atcf' ) . '</span>',
 		'type' => 'text',
 		'size' => 'small'
@@ -181,6 +181,17 @@ function atcf_gateway_pap_log_payments_per_user( $payment_id, $new_status, $old_
 }
 add_action( 'edd_update_payment_status', 'atcf_gateway_pap_log_payments_per_user', 110, 3 );
 
+/**
+ * Try to add an item to the cart.
+ *
+ * If using PAP, and a limit is set, don't let them if the limit is reached.
+ *
+ * @since Appthemer CrowdFunding 1.3
+ *
+ * @param int $download_id
+ * @param array $options
+ * @return boolean
+ */
 function atcf_gateway_pap_edd_item_in_cart( $download_id, $options ) {
 	global $edd_options;
 
@@ -191,7 +202,7 @@ function atcf_gateway_pap_edd_item_in_cart( $download_id, $options ) {
 		return $can_add;
 
 	$user           = wp_get_current_user();
-	$contributed_to = $user->get( 'atcf_contributed_to' );
+	$contributed_to = (array) $user->get( 'atcf_contributed_to' );
 
 	if ( ! array_key_exists( $download_id, $contributed_to ) )
 		return $can_add;
@@ -207,12 +218,24 @@ function atcf_gateway_pap_edd_item_in_cart( $download_id, $options ) {
 }
 add_action( 'edd_pre_add_to_cart', 'atcf_gateway_pap_edd_item_in_cart', 10, 2 );
 
+/**
+ * Track campaign submission count per year.
+ *
+ * If using PAP and they are registered, track their submission.
+ *
+ * @since Appthemer CrowdFunding 1.3
+ *
+ * @param int $campaign The ID of hte campaign
+ * @param array $postdata
+ * @param string $status
+ * @return void
+ */
 function atcf_gateway_pap_submit_process_after( $campaign, $postdata, $status ) {
 	if ( 'pending' != $status )
 		return;
 
 	$user      = wp_get_current_user();
-	$submitted = $user->get( 'atcf_campaigns_created' );
+	$submitted = (array) $user->get( 'atcf_campaigns_created' );
 	$year      = date( 'Y' );
 
 	foreach ( $submitted as $years ) {
@@ -227,6 +250,14 @@ function atcf_gateway_pap_submit_process_after( $campaign, $postdata, $status ) 
 }
 add_action( 'atcf_submit_process_after', 'atcf_gateway_pap_submit_process_after', 10, 3 );
 
+/**
+ * Hide the submission form if needed.
+ *
+ * @since Appthemer CrowdFunding 1.3
+ *
+ * @param boolean $show
+ * @return void
+ */
 function atcf_gateway_pap_shortcode_submit_hide( $show ) {
 	global $edd_options;
 
@@ -251,6 +282,23 @@ function atcf_gateway_pap_shortcode_submit_hide( $show ) {
 	return $show;
 }
 add_filter( 'atcf_shortcode_submit_hide', 'atcf_gateway_pap_shortcode_submit_hide' );
+
+/**
+ * If there is a limit, show it on the form.
+ *
+ * @since Appthemer Crowdfunding 1.3
+ *
+ * @return void
+ */
+function atcf_gateway_pap_shortcode_submit_field_rewards_list_before() {
+	global $edd_options;
+
+	if ( '' == $edd_options[ 'epap_max_donation' ] )
+		return;
+
+	printf( '<p class="atcf-submit-max-pledge-limit">%s</p>', sprintf( __( '<strong>Note:</strong> There is a %s maximum allowed per reward level.', 'atcf' ), edd_currency_filter( edd_format_amount( $edd_options[ 'epap_max_donation' ] ) ) ) );
+}
+add_action( 'atcf_shortcode_submit_field_rewards_list_before', 'atcf_gateway_pap_shortcode_submit_field_rewards_list_before' );
 
 /**
  * Process preapproved payments

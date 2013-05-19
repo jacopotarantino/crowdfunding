@@ -360,6 +360,8 @@ function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
 		<label for="shipping"><input type="checkbox" id="shipping" name="shipping" value="1" <?php checked(1, $shipping); ?> /> <?php _e( 'Collect shipping information on checkout.', 'atcf' ); ?></label>
 	</p>
 
+	<?php do_action( 'atcf_shortcode_submit_field_rewards_list_before' ); ?>
+
 	<div class="atcf-submit-campaign-rewards">
 		<?php foreach ( $rewards as $key => $reward ) : $disabled = isset ( $reward[ 'bought' ] ) && $reward[ 'bought' ] > 0 ? true : false; ?>
 		<div class="atcf-submit-campaign-reward">
@@ -651,7 +653,7 @@ function atcf_shortcode_submit_process() {
 	$status = 'submit' == $action ? 'pending' : 'draft';
 
 	/** If we are submitting, but this is a live campaign, keep published */
-	if ( 'pending' == $status && get_post( $existing_campaign )->post_status == 'publish' )
+	if ( $existing_campaign && ( 'pending' == $status && get_post( $existing_campaign )->post_status == 'publish' ) )
 		$status = 'publish';
 
 	$args = apply_filters( 'atcf_campaign_submit_data', array(
