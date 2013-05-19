@@ -26,7 +26,7 @@ function atcf_shortcode_submit( $atts ) {
 		'previewing' => false
     ), $atts );
 
-   $crowdfunding = crowdfunding();
+	$crowdfunding = crowdfunding();
 	$campaign     = null;
 
 	ob_start();
@@ -43,6 +43,9 @@ function atcf_shortcode_submit( $atts ) {
 	wp_localize_script( 'atcf-scripts', 'CrowdFundingL10n', array(
 		'oneReward' => __( 'At least one reward is required.', 'atcf' )
 	) );
+
+	if ( apply_filters( 'atcf_shortcode_submit_hide', false ) )
+		return do_action( 'atcf_shortcode_submit_hidden' );
 ?>
 	<?php do_action( 'atcf_shortcode_submit_before', $atts, $campaign ); ?>
 	<form action="" method="post" class="atcf-submit-campaign" enctype="multipart/form-data">
@@ -357,6 +360,8 @@ function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
 		<label for="shipping"><input type="checkbox" id="shipping" name="shipping" value="1" <?php checked(1, $shipping); ?> /> <?php _e( 'Collect shipping information on checkout.', 'atcf' ); ?></label>
 	</p>
 
+	<?php do_action( 'atcf_shortcode_submit_field_rewards_list_before' ); ?>
+
 	<div class="atcf-submit-campaign-rewards">
 		<?php foreach ( $rewards as $key => $reward ) : $disabled = isset ( $reward[ 'bought' ] ) && $reward[ 'bought' ] > 0 ? true : false; ?>
 		<div class="atcf-submit-campaign-reward">
@@ -648,7 +653,7 @@ function atcf_shortcode_submit_process() {
 	$status = 'submit' == $action ? 'pending' : 'draft';
 
 	/** If we are submitting, but this is a live campaign, keep published */
-	if ( 'pending' == $status && get_post( $existing_campaign )->post_status == 'publish' )
+	if ( $existing_campaign && ( 'pending' == $status && get_post( $existing_campaign )->post_status == 'publish' ) )
 		$status = 'publish';
 
 	$args = apply_filters( 'atcf_campaign_submit_data', array(
@@ -740,7 +745,7 @@ function atcf_shortcode_submit_process() {
 	
 	update_post_meta( $campaign, 'edd_variable_prices', $prices );
 
-	do_action( 'atcf_submit_process_after', $campaign, $_POST );
+	do_action( 'atcf_submit_process_after', $campaign, $_POST, $status );
 
 	if ( 'publish' == $status ) {
 		wp_safe_redirect( add_query_arg( 'updated', 'true', get_permalink( $campaign ) ) );
