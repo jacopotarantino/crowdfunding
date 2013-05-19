@@ -29,7 +29,7 @@ function atcf_load_gateway_support() {
 		}
 	}
 }
-add_action( 'init', 'atcf_load_gateway_support', 200 );
+add_action( 'init', 'atcf_load_gateway_support', 1 );
 
 /**
  * Determine if any of the currently active gateways have preapproval
@@ -74,4 +74,10 @@ function atcf_has_preapproval_gateway() {
 	}
 
 	return $has_support;
+}
+
+function atcf_is_gatweay_active( $gateway ) {
+	$active_gateways = edd_get_enabled_payment_gateways();
+
+	return array_key_exists( $gateway, $active_gateways );
 }

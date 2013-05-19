@@ -12,6 +12,9 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/** Check if Easy Digital Downloads is active */
+include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+
 /**
  * Main Crowd Funding Class
  *

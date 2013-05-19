@@ -91,6 +91,97 @@ function atcf_metabox_save_paypal_adaptive_payments( $fields ) {
 add_filter( 'edd_metabox_fields_save', 'atcf_metabox_save_paypal_adaptive_payments' );
 
 /**
+ * Add settings to set limits
+ *
+ * @since AppThemer Crowdfunding 1.3
+ * 
+ * @param $settings
+ * @return $settings
+ */
+function atcf_settings_gateway_paypal_adaptive_payments( $settings ) {
+	if ( ! atcf_is_gatweay_active( 'paypal_adaptive_payments' ) )
+		return $settings;
+
+	$settings[ 'epap_max_donation' ] = array(
+		'id'   => 'epap_max_donation',
+		'name' => __( 'Maximum Donation Amount', 'atcf' ),
+		'desc' => '(' . edd_currency_filter( '' ) . ') <span class="description">' . __( 'The maximum amount of money PayPal can accept on your account.', 'atcf' ) . '</span>',
+		'type' => 'text',
+		'size' => 'small'
+	);
+
+	$settings[ 'epap_campaigns_per_year' ] = array(
+		'id'   => 'epap_campaigns_per_year',
+		'name' => __( 'Maximum Campaigns Per Year', 'atcf' ),
+		'desc' => '<span class="description">' . __( 'The maximum amount of campaigns that each user may create per year.', 'atcf' ) . '</span>',
+		'type' => 'text',
+		'size' => 'small'
+	);
+
+	$settings[ 'epap_payments_per_user' ] = array(
+		'id'   => 'epap_payments_per_user',
+		'name' => __( 'Maximum Payments Per User', 'atcf' ),
+		'desc' => '<span class="description">' . __( 'The maximum times a user can contribtue to a single campaign.', 'atcf' ) . '</span>',
+		'type' => 'text',
+		'size' => 'small'
+	);
+
+	return $settings;
+}
+add_filter( 'edd_settings_gateways', 'atcf_settings_gateway_paypal_adaptive_payments', 200 );
+
+/**
+ * Track number or purchases by a registered user.
+ *
+ * @since Appthemer CrowdFunding 1.3
+ *
+ * @param int $payment the ID number of the payment
+ * @param string $new_status
+ * @param string $old_status
+ * @return void
+ */
+function atcf_gateway_pap_log_payments_per_user( $payment_id, $new_status, $old_status ) {
+	global $edd_options;
+
+	if ( ! atcf_is_gatweay_active( 'paypal_adaptive_payments' ) )
+		return;
+
+	if ( '' == $edd_options[ 'epap_payments_per_user' ] )
+		return;
+
+	if ( $old_status != 'pending' )
+		return;
+
+	if ( in_array( $new_status, array( 'refunded', 'failed', 'revoked' ) ) )
+		return;
+
+	$gateway   = get_post_meta( $payment_id, '_edd_payment_gateway', true );
+
+	if ( 'paypal_adaptive_payments' != $gateway )
+		return;
+
+	$user_id   = get_post_meta( $payment_id, '_edd_payment_user_id', true );
+	$user      = get_userdata( $user_id );
+	$downloads = edd_get_payment_meta_downloads( $payment_id );
+
+	if ( ! is_array( $downloads ) )
+		return;
+
+	$contributed_to = $user->get( 'atcf_contributed_to' );
+	
+	foreach ( $downloads as $download ) {
+		if ( isset ( $contributed_to[ $download[ 'id' ] ] ) ) {
+			$contributed_to[ $download[ 'id' ] ] = $contributed_to[ $download[ 'id' ] ] + 1;
+		} else {
+			$contributed_to[ $download[ 'id' ] ] = 1;
+		}
+	}
+
+	update_user_meta( $user->ID, 'atcf_contributed_to', $contributed_to );
+}
+add_action( 'edd_update_payment_status', 'atcf_gateway_pap_log_payments_per_user', 110, 3 );
+
+/**
  * Process preapproved payments
  *
  * @since Appthemer Crowdfunding 1.1
