@@ -53,16 +53,16 @@ function atcf_shortcode_submit( $atts ) {
 				<?php echo $atts[ 'editing' ] && ! $atts[ 'previewing' ] ? sprintf( _x( 'Update %s', 'edit "campaign"', 'atcf' ), edd_get_label_singular() ) : sprintf( _x( 'Submit %s', 'submit "campaign"', 'atcf' ), edd_get_label_singular() ); ?>
 			</button>
 
-			<?php if ( is_user_logged_in() ) : ?>
+			<?php if ( is_user_logged_in() && ! $atts[ 'editing' ] ) : ?>
 			<button type="submit" name="submit" value="preview" class="button button-secondary">
 				<?php _e( 'Save and Preview', 'atcf' ); ?>
 			</button>
 			<?php endif; ?>
 
-			<input type="hidden" name="action" value="atcf-campaign-<?php echo $atts[ 'editing' ] ? 'edit' : 'submit'; ?>" />
-			<?php wp_nonce_field( 'atcf-campaign-' . ( $atts[ 'editing' ] ? 'edit' : 'submit' ) ); ?>
+			<input type="hidden" name="action" value="atcf-campaign-submit" />
+			<?php wp_nonce_field( 'atcf-campaign-submit' ); ?>
 
-			<?php if ( $atts[ 'previewing' ] ) : ?>
+			<?php if ( $atts[ 'previewing' ] || $atts[ 'editing' ] ) : ?>
 				<input type="hidden" name="campaign_id" value="<?php echo $campaign->ID; ?>" />
 			<?php endif; ?>
 		</p>
@@ -348,11 +348,8 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_video',
  * @return void
  */
 function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
-	if ( $atts[ 'editing' ] )
-		return;
-
-	$rewards  = $atts[ 'previewing' ] ? edd_get_variable_prices( $campaign->ID ) : array();
-	$shipping = $atts[ 'previewing' ] ? $campaign->needs_shipping() : 0;
+	$rewards  = $atts[ 'previewing' ] || $atts[ 'editing' ] ? edd_get_variable_prices( $campaign->ID ) : array();
+	$shipping = $atts[ 'previewing' ] || $atts[ 'editing' ] ? $campaign->needs_shipping() : 0;
 ?>
 	<h3 class="atcf-submit-section backer-rewards"><?php _e( 'Backer Rewards', 'atcf' ); ?></h3>
 
@@ -361,23 +358,23 @@ function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
 	</p>
 
 	<div class="atcf-submit-campaign-rewards">
-		<?php foreach ( $rewards as $key => $reward ) : ?>
+		<?php foreach ( $rewards as $key => $reward ) : $disabled = isset ( $reward[ 'bought' ] ) && $reward[ 'bought' ] > 0 ? true : false; ?>
 		<div class="atcf-submit-campaign-reward">
 			<?php do_action( 'atcf_shortcode_submit_field_rewards_before' ); ?>
 
 			<p class="atcf-submit-campaign-reward-price">
 				<label for="rewards[<?php echo esc_attr( $key ); ?>][price]"><?php printf( __( 'Amount (%s)', 'atcf' ), edd_currency_filter( '' ) ); ?></label>
-				<input class="name" type="text" name="rewards[<?php echo esc_attr( $key ); ?>][price]" id="rewards[<?php echo esc_attr( $key ); ?>][price]" value="<?php echo esc_attr( $reward[ 'amount' ] ); ?>">
+				<input class="name" type="text" name="rewards[<?php echo esc_attr( $key ); ?>][price]" id="rewards[<?php echo esc_attr( $key ); ?>][price]" value="<?php echo esc_attr( $reward[ 'amount' ] ); ?>" <?php disabled(true, $disabled); ?> />
 			</p>
 
 			<p class="atcf-submit-campaign-reward-description">
 				<label for="rewards[<?php echo esc_attr( $key ); ?>][description]"><?php _e( 'Reward', 'atcf' ); ?></label>
-				<input class="description" type="text" name="rewards[<?php echo esc_attr( $key ); ?>][description]" id="rewards[<?php echo esc_attr( $key ); ?>][description]" rows="3" value="<?php echo esc_attr( $reward[ 'name' ] ); ?>" />
+				<input class="description" type="text" name="rewards[<?php echo esc_attr( $key ); ?>][description]" id="rewards[<?php echo esc_attr( $key ); ?>][description]" rows="3" value="<?php echo esc_attr( $reward[ 'name' ] ); ?>" <?php disabled(true, $disabled); ?> />
 			</p>
 
 			<p class="atcf-submit-campaign-reward-limit">
 				<label for="rewards[<?php echo esc_attr( $key ); ?>][limit]"><?php _e( 'Limit', 'atcf' ); ?></label>
-				<input class="description" type="text" name="rewards[<?php echo esc_attr( $key ); ?>][limit]" id="rewards[<?php echo esc_attr( $key ); ?>][limit]" value="<?php echo esc_attr( $reward[ 'limit' ] ); ?>" />
+				<input class="description" type="text" name="rewards[<?php echo esc_attr( $key ); ?>][limit]" id="rewards[<?php echo esc_attr( $key ); ?>][limit]" value="<?php echo isset ( $reward[ 'limit' ] ) ? esc_attr( $reward[ 'limit' ] ) : null; ?>" <?php disabled(true, $disabled); ?> />
 			</p>
 
 			<?php do_action( 'atcf_shortcode_submit_field_rewards_after' ); ?>
@@ -551,21 +548,23 @@ function atcf_shortcode_submit_process() {
 	$upload_overrides = array( 'test_form' => false );
 
 	$terms     = isset ( $_POST[ 'edd_agree_to_terms' ] ) ? $_POST[ 'edd_agree_to_terms' ] : 0;
-	$title     = $_POST[ 'title' ];
-	$goal      = $_POST[ 'goal' ];
-	$length    = $_POST[ 'length' ];
-	$type      = $_POST[ 'campaign_type' ];
-	$location  = $_POST[ 'location' ];
+	
+	$title     = isset ( $_POST[ 'title' ] ) ? $_POST[ 'title' ] : null;
+	$goal      = isset ( $_POST[ 'goal' ] ) ? $_POST[ 'goal' ] : null;
+	$length    = isset ( $_POST[ 'length' ] ) ? $_POST[ 'length' ] : null;
+	$type      = isset ( $_POST[ 'campaign_type' ] ) ? $_POST[ 'campaign_type' ] : null;
+	$location  = isset ( $_POST[ 'location' ] ) ? $_POST[ 'location' ] : null;
 	$category  = isset ( $_POST[ 'cat' ] ) ? $_POST[ 'cat' ] : 0;
-	$content   = $_POST[ 'description' ];
-	$excerpt   = $_POST[ 'excerpt' ];
-	$author    = $_POST[ 'name' ];
+	$content   = isset ( $_POST[ 'description' ] ) ? $_POST[ 'description' ] : null;
+	$updates   = isset ( $_POST[ 'updates' ] ) ? $_POST[ 'updates' ] : null;
+	$excerpt   = isset ( $_POST[ 'excerpt' ] ) ? $_POST[ 'excerpt' ] : null;
+	$author    = isset ( $_POST[ 'name' ] ) ? $_POST[ 'name' ] : null;
 	$shipping  = isset ( $_POST[ 'shipping' ] ) ? $_POST[ 'shipping' ] : null;
 
 	$image     = isset ( $_FILES[ 'image' ] ) ? $_FILES[ 'image' ] : null;
 	$video     = isset ( $_POST[ 'video' ] ) ? $_POST[ 'video' ] : null;
 
-	$rewards   = $_POST[ 'rewards' ];
+	$rewards   = isset ( $_POST[ 'rewards' ] ) ? $_POST[ 'rewards' ] : null;
 
 	if ( isset ( $_POST[ 'contact-email' ] ) )
 		$c_email = $_POST[ 'contact-email' ];
@@ -578,46 +577,48 @@ function atcf_shortcode_submit_process() {
 		$errors->add( 'terms', __( 'Please agree to the Terms and Conditions', 'atcf' ) );
 
 	/** Check Title */
-	if ( empty( $title ) )
+	if ( $title && '' == $title )
 		$errors->add( 'invalid-title', __( 'Please add a title to this campaign.', 'atcf' ) );
 
 	/** Check Goal */
 	$goal = edd_sanitize_amount( $goal );
 
-	if ( ! is_numeric( $goal ) )
+	if ( $goal && ! is_numeric( $goal ) )
 		$errors->add( 'invalid-goal', sprintf( __( 'Please enter a valid goal amount. All goals are set in the %s currency.', 'atcf' ), $edd_options[ 'currency' ] ) );
 
 	/** Check Length */
-	$length = absint( $length );
+	if ( $length ) {
+		$length = absint( $length );
 
-	$min = isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14;
-	$max = isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 42;
+		$min = isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14;
+		$max = isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 42;
 
-	if ( $length < $min )
-		$length = $min;
-	else if ( $length > $max )
-		$length = $max;
-
-	$end_date = strtotime( sprintf( '+%d day', $length ) );
-	$end_date = get_gmt_from_date( date( 'Y-m-d H:i:s', $end_date ) );
+		if ( $length < $min )
+			$length = $min;
+		else if ( $length > $max )
+			$length = $max;
+	
+		$end_date = strtotime( sprintf( '+%d day', $length ) );
+		$end_date = get_gmt_from_date( date( 'Y-m-d H:i:s', $end_date ) );
+	}
 
 	/** Check Category */
 	$category = absint( $category );
 
 	/** Check Content */
-	if ( empty( $content ) )
+	if ( $content && '' == $content )
 		$errors->add( 'invalid-content', __( 'Please add content to this campaign.', 'atcf' ) );
 
 	/** Check Excerpt */
-	if ( empty( $excerpt ) )
+	if ( $excerpt && '' == $excerpt )
 		$excerpt = null;
 
 	/** Check Image */
-	if ( empty( $image ) && atcf_theme_supports( 'campaign-featured-image' ) )
+	if ( $image && empty( $image ) && atcf_theme_supports( 'campaign-featured-image' ) )
 		$errors->add( 'invalid-previews', __( 'Please add a campaign image.', 'atcf' ) );
 
 	/** Check Rewards */
-	if ( empty( $rewards ) )
+	if ( $rewards && empty( $rewards ) )
 		$errors->add( 'invalid-rewards', __( 'Please add at least one reward to the campaign.', 'atcf' ) );
 
 	if ( email_exists( $c_email ) && ! isset ( $current_user ) )
@@ -627,6 +628,8 @@ function atcf_shortcode_submit_process() {
 
 	if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
 		wp_die( $errors );
+
+	//die( print_r( $_POST ) );
 
 	if ( ! $type )
 		$type = atcf_campaign_type_default();
@@ -642,14 +645,24 @@ function atcf_shortcode_submit_process() {
 		$user_id = $current_user->ID;
 	}
 
+	$status = 'submit' == $action ? 'pending' : 'draft';
+
+	/** If we are submitting, but this is a live campaign, keep published */
+	if ( 'pending' == $status && get_post( $existing_campaign )->post_status == 'publish' )
+		$status = 'publish';
+
 	$args = apply_filters( 'atcf_campaign_submit_data', array(
 		'post_type'    => 'download',
-		'post_status'  => 'submit' == $action ? 'pending' : 'draft',
-		'post_title'   => $title,
+		'post_status'  => $status,
 		'post_content' => $content,
-		'post_excerpt' => $excerpt,
 		'post_author'  => $user_id
 	), $_POST );
+
+	if ( $title )
+		$args[ 'post_title' ] = $title;
+
+	if ( $excerpt )
+		$args[ 'post_excerpt' ] = $excerpt;
 
 	if ( ! $existing_campaign ) {
 		$campaign = wp_insert_post( $args, true );
@@ -662,15 +675,29 @@ function atcf_shortcode_submit_process() {
 	wp_set_object_terms( $campaign, array( $category ), 'download_category' );
 
 	/** Extra Campaign Information */
-	update_post_meta( $campaign, 'campaign_goal', apply_filters( 'edd_metabox_save_edd_price', $goal ) );
-	update_post_meta( $campaign, 'campaign_type', sanitize_text_field( $type ) );
-	update_post_meta( $campaign, 'campaign_contact_email', sanitize_text_field( $c_email ) );
-	update_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
-	update_post_meta( $campaign, 'campaign_location', sanitize_text_field( $location ) );
-	update_post_meta( $campaign, 'campaign_author', sanitize_text_field( $author ) );
+	if ( $goal )
+		update_post_meta( $campaign, 'campaign_goal', apply_filters( 'edd_metabox_save_edd_price', $goal ) );
+	
+	if ( $type )
+		update_post_meta( $campaign, 'campaign_type', sanitize_text_field( $type ) );
+	
+	if ( $c_email )
+		update_post_meta( $campaign, 'campaign_contact_email', sanitize_text_field( $c_email ) );
+	
+	if ( $length )
+		update_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
+	
+	if ( $location )
+		update_post_meta( $campaign, 'campaign_location', sanitize_text_field( $location ) );
+	
+	if ( $author )
+		update_post_meta( $campaign, 'campaign_author', sanitize_text_field( $author ) );
 
-	if ( atcf_theme_supports( 'campaign-video' ) )
+	if ( $video && atcf_theme_supports( 'campaign-video' ) )
 		update_post_meta( $campaign, 'campaign_video', esc_url( $video ) );
+
+	if ( $updates )
+		update_post_meta( $campaign, 'campaign_updates', wp_kses_post( $updates ) );
 	
 	update_post_meta( $campaign, '_campaign_physical', sanitize_text_field( $shipping ) );
 	
@@ -715,7 +742,10 @@ function atcf_shortcode_submit_process() {
 
 	do_action( 'atcf_submit_process_after', $campaign, $_POST );
 
-	if ( 'submit' == $action ) {
+	if ( 'publish' == $status ) {
+		wp_safe_redirect( add_query_arg( 'updated', 'true', get_permalink( $campaign ) ) );
+		exit();
+	} elseif ( 'submit' == $action ) {
 		$url = isset ( $edd_options[ 'submit_page' ] ) ? get_permalink( $edd_options[ 'submit_page' ] ) : get_permalink();
 
 		$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', add_query_arg( array( 'success' => 'true' ), $url ) );
