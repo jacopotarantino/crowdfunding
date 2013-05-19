@@ -26,7 +26,7 @@ function atcf_shortcode_submit( $atts ) {
 		'previewing' => false
     ), $atts );
 
-   $crowdfunding = crowdfunding();
+	$crowdfunding = crowdfunding();
 	$campaign     = null;
 
 	ob_start();
@@ -43,6 +43,9 @@ function atcf_shortcode_submit( $atts ) {
 	wp_localize_script( 'atcf-scripts', 'CrowdFundingL10n', array(
 		'oneReward' => __( 'At least one reward is required.', 'atcf' )
 	) );
+
+	if ( apply_filters( 'atcf_shortcode_submit_hide', false ) )
+		return do_action( 'atcf_shortcode_submit_hidden' );
 ?>
 	<?php do_action( 'atcf_shortcode_submit_before', $atts, $campaign ); ?>
 	<form action="" method="post" class="atcf-submit-campaign" enctype="multipart/form-data">
@@ -740,7 +743,7 @@ function atcf_shortcode_submit_process() {
 	
 	update_post_meta( $campaign, 'edd_variable_prices', $prices );
 
-	do_action( 'atcf_submit_process_after', $campaign, $_POST );
+	do_action( 'atcf_submit_process_after', $campaign, $_POST, $status );
 
 	if ( 'publish' == $status ) {
 		wp_safe_redirect( add_query_arg( 'updated', 'true', get_permalink( $campaign ) ) );

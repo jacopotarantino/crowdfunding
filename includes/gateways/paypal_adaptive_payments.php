@@ -15,13 +15,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @return void
  */
-function atcf_shortcode_submit_field_paypal_adaptive_payments_email( $editing, $campaign ) {
-	if ( $editing )
+function atcf_shortcode_submit_field_paypal_adaptive_payments_email( $atts, $campaign ) {
+	if ( $atts[ 'editing' ] )
 		$paypal_email = $campaign->__get( 'campaign_email' );
 ?>
 	<p class="atcf-submit-campaign-paypal-email">
 		<label for="email"><?php _e( 'PayPal Email', 'atcf' ); ?></label>
-		<input type="text" name="email" id="email" value="<?php echo $editing ? $paypal_email : null; ?>" />
+		<input type="text" name="email" id="email" value="<?php echo $atts[ 'editing' ] ? $paypal_email : null; ?>" />
 	</p>
 <?php
 }
@@ -206,6 +206,51 @@ function atcf_gateway_pap_edd_item_in_cart( $download_id, $options ) {
 	return $can_add;
 }
 add_action( 'edd_pre_add_to_cart', 'atcf_gateway_pap_edd_item_in_cart', 10, 2 );
+
+function atcf_gateway_pap_submit_process_after( $campaign, $postdata, $status ) {
+	if ( 'pending' != $status )
+		return;
+
+	$user      = wp_get_current_user();
+	$submitted = $user->get( 'atcf_campaigns_created' );
+	$year      = date( 'Y' );
+
+	foreach ( $submitted as $years ) {
+		if ( isset ( $submitted[ $year ] ) ) {
+			$submitted[ $year ] = $submitted[ $year ] + 1;
+		} else {
+			$submitted[ $year ] = 1;
+		}
+	}
+
+	update_user_meta( $user->ID, 'atcf_campaigns_created', $submitted );
+}
+add_action( 'atcf_submit_process_after', 'atcf_gateway_pap_submit_process_after', 10, 3 );
+
+function atcf_gateway_pap_shortcode_submit_hide( $show ) {
+	global $edd_options;
+
+	if ( ! is_user_logged_in() )
+		return $show;
+
+	if ( '' == $edd_options[ 'epap_campaigns_per_year' ] )
+		return $show;
+
+	$user      = wp_get_current_user();
+	$submitted = $user->get( 'atcf_campaigns_created' );
+	$year      = date( 'Y' );
+
+	$this_year = isset ( $submitted[ $year ] ) ? $submitted[ $year ] : 0;
+
+	if ( $this_year == $edd_options[ 'epap_campaigns_per_year' ] ) {
+		edd_set_error( 'campaign-limit-reached', __( 'You have submitted the maximum number of campaigns allowed for this year.', 'atcf' ) );
+
+		return true;
+	}
+
+	return $show;
+}
+add_filter( 'atcf_shortcode_submit_hide', 'atcf_gateway_pap_shortcode_submit_hide' );
 
 /**
  * Process preapproved payments
