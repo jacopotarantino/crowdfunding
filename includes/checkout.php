@@ -28,6 +28,9 @@ function atcf_log_pledge_limit( $payment_id, $new_status, $old_status ) {
 	if ( in_array( $new_status, array( 'refunded', 'failed', 'revoked' ) ) )
 		return;
 
+	if ( edd_is_test_mode() && ! apply_filters( 'edd_log_test_payment_stats', false ) )
+		return;
+
 	$payment_data = edd_get_payment_meta( $payment_id );
 	$downloads    = maybe_unserialize( $payment_data['downloads'] );
 	
