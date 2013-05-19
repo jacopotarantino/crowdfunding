@@ -148,3 +148,5 @@ function atcf_campaign_preview_note() {
 <?php
 }
 add_action( 'atcf_campaign_before', 'atcf_campaign_preview_note' );
+
+add_action( 'atcf_campaign_before', 'edd_print_errors' );

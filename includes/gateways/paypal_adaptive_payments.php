@@ -181,6 +181,32 @@ function atcf_gateway_pap_log_payments_per_user( $payment_id, $new_status, $old_
 }
 add_action( 'edd_update_payment_status', 'atcf_gateway_pap_log_payments_per_user', 110, 3 );
 
+function atcf_gateway_pap_edd_item_in_cart( $download_id, $options ) {
+	global $edd_options;
+
+	if ( ! is_user_logged_in() )
+		return $can_add;
+
+	if ( '' == $edd_options[ 'epap_payments_per_user' ] )
+		return $can_add;
+
+	$user           = wp_get_current_user();
+	$contributed_to = $user->get( 'atcf_contributed_to' );
+
+	if ( ! array_key_exists( $download_id, $contributed_to ) )
+		return $can_add;
+
+	if ( $contributed_to[ $download_id ] == $edd_options[ 'epap_payments_per_user' ] ) {
+		edd_set_error( 'pledge-limit-reached', __( 'You have reached the maximum number of pledges-per-campaign allowed.', 'atcf' ) );
+
+		wp_safe_redirect( get_permalink( $download_id ) );
+		exit();
+	}
+
+	return $can_add;
+}
+add_action( 'edd_pre_add_to_cart', 'atcf_gateway_pap_edd_item_in_cart', 10, 2 );
+
 /**
  * Process preapproved payments
  *
