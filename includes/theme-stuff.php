@@ -57,7 +57,7 @@ function atcf_purchase_variable_pricing( $download_id ) {
 
 	do_action( 'atcf_campaign_contribute_options', $prices, $type, $download_id );
 
-	add_action( 'edd_after_price_options', $download_id );
+	do_action( 'edd_after_price_options', $download_id );
 }
 
 /**

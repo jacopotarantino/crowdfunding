@@ -61,6 +61,22 @@ Yes. However, it won't look much different than a standard EDD install. Template
 
 == Changelog ==
 
+= 1.3: May X, 2013 =
+
+https://github.com/Astoundify/crowdfunding/issues?milestone=8&page=1&state=closed
+
+* New: Themes must declare support for certain features: campaign-edit, campaign-featured-image, campaign-video, campaign-widget.
+* New: Preview and update campaigns before submitting for review.
+* New: Edit reward levels that haven't been pledged once a campaign has started.
+* New: Set limits and track pledges/campaigns when using PayPal Adaptive Payments to avoid breaking TOS.
+* New: Support for embeddable campaign widgets (provided by theme via campaign-widget.php).
+* Fix: Better tracking of failed payment collection.
+* Fix: Improve media permissions when uploading/browsing images via frontend submission form.
+* Fix: Remove single price option from WordPress admin panel to avoid confusion.
+* Fix: Automatically set an end date when creating a campaign via the admin panel to avoid confusion.
+* Fix: Don't increase backer count when in test mode and test mode logging isn't enabled.
+* Fix: Other various bug fixes and improvements.
+
 = 1.2: May 8, 2013 =
 
 https://github.com/Astoundify/crowdfunding/issues?milestone=7&page=1&state=closed
