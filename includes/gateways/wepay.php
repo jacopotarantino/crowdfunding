@@ -18,10 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function atcf_gateway_wepay_is_specific() {
 	global $edd_options;
 
-	if ( isset ( $edd_options[ 'wepay_access_token' ] ) && '' != $edd_options[ 'wepay_access_token' ] )
-		return false;
-
-	return true;
+	return ! empty ( $edd_options[ 'wepay_access_token' ] )
 }
 
 /**
