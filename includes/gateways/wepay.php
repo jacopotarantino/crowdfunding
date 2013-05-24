@@ -2,7 +2,7 @@
 /**
  * WePay gateway functionality.
  *
- * @since Appthemer CrowdFunding 1.1
+ * @since Appthemer CrowdFunding 1.3
  */
 
 // Exit if accessed directly
