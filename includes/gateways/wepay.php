@@ -8,6 +8,15 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+function atcf_gateway_wepay_is_specific() {
+	global $edd_options;
+
+	if ( isset ( $edd_options[ 'wepay_access_token' ] ) && '' != $edd_options[ 'wepay_access_token' ] )
+		return false;
+
+	return true;
+}
+
 /**
  * WePay fields on frontend submit and edit.
  *
@@ -32,7 +41,8 @@ function atcf_shortcode_submit_field_wepay_creds( $atts, $campaign ) {
 	</p>
 <?php
 }
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_wepay_creds', 105, 2 );
+if ( atcf_gateway_wepay_is_specific() )
+	add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_wepay_creds', 105, 2 );
 
 /**
  * Validate WePay on frontend submission.
@@ -48,7 +58,8 @@ function atcf_campaign_submit_validate_wepay( $postdata, $errors ) {
 	if ( ! isset ( $account_id ) || ! isset ( $access_token ) )
 		$errors->add( 'invalid-wepay', __( 'Please enter valid WePay credentials.', 'atcf' ) ); 
 }
-add_action( 'atcf_campaign_submit_validate', 'atcf_campaign_submit_validate_wepay', 10, 2 );
+if ( atcf_gateway_wepay_is_specific() )
+	add_action( 'atcf_campaign_submit_validate', 'atcf_campaign_submit_validate_wepay', 10, 2 );
 
 /**
  * Save WePay on the frontend
@@ -64,7 +75,8 @@ function atcf_submit_process_after_wepay_save( $campaign, $postdata ) {
 	update_post_meta( $campaign, 'wepay_account_id', sanitize_text_field( $account_id ) );
 	update_post_meta( $campaign, 'wepay_access_token', sanitize_text_field( $access_token ) );
 }
-add_action( 'atcf_submit_process_after', 'atcf_submit_process_after_wepay_save', 10, 2 );
+if ( atcf_gateway_wepay_is_specific() )
+	add_action( 'atcf_submit_process_after', 'atcf_submit_process_after_wepay_save', 10, 2 );
 
 /**
  * PayPal Adaptive Payments field on backend.
@@ -88,7 +100,8 @@ function atcf_metabox_campaign_info_after_wepay_creds( $campaign ) {
 	</p>
 <?php
 }
-add_action( 'atcf_metabox_campaign_info_after', 'atcf_metabox_campaign_info_after_wepay_creds' );
+if ( atcf_gateway_wepay_is_specific() )
+	add_action( 'atcf_metabox_campaign_info_after', 'atcf_metabox_campaign_info_after_wepay_creds' );
 
 /**
  * Save WePay on the backend.
@@ -103,7 +116,8 @@ function atcf_metabox_save_wepay( $fields ) {
 
 	return $fields;
 }
-add_filter( 'edd_metabox_fields_save', 'atcf_metabox_save_wepay' );
+if ( atcf_gateway_wepay_is_specific() )
+	add_filter( 'edd_metabox_fields_save', 'atcf_metabox_save_wepay' );
 
 /**
  * Additional WePay settings needed by Crowdfunding
@@ -114,13 +128,16 @@ add_filter( 'edd_metabox_fields_save', 'atcf_metabox_save_wepay' );
  * @return array $settings Modified WePay settings
  */
 function atcf_gateway_wepay_settings( $settings ) {
-	$settings[ 'wepay_app_fee' ] = array(
-		'id' => 'wepay_app_fee',
-		'name'  => __( 'Site Fee', 'atcf' ),
-		'desc'  => '% <span class="description">' . __( 'The percentage of each pledge amount the site keeps (on top of WePay fees)', 'atcf' ) . '</span>',
-		'type'  => 'text',
-		'size'  => 'small'
-	);
+
+	if ( atcf_gateway_wepay_is_specific() ) {
+		$settings[ 'wepay_app_fee' ] = array(
+			'id' => 'wepay_app_fee',
+			'name'  => __( 'Site Fee', 'atcf' ),
+			'desc'  => '% <span class="description">' . __( 'The percentage of each pledge amount the site keeps (on top of WePay fees)', 'atcf' ) . '</span>',
+			'type'  => 'text',
+			'size'  => 'small'
+		);
+	}
 
 	return $settings;
 }
