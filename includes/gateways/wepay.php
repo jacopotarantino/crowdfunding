@@ -8,6 +8,13 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * If WePay is being used per-campaign or globally on the site.
+ *
+ * @since CrowdFunding 1.3
+ *
+ * @return void
+ */
 function atcf_gateway_wepay_is_specific() {
 	global $edd_options;
 
@@ -120,6 +127,36 @@ if ( atcf_gateway_wepay_is_specific() )
 	add_filter( 'edd_metabox_fields_save', 'atcf_metabox_save_wepay' );
 
 /**
+ * Figure out the WePay account info to send the funds to.
+ *
+ * @since CrowdFunding 1.3
+ *
+ * @return $creds
+ */
+function atcf_gateway_wepay_edd_wepay_get_api_creds( $creds ) {
+	$cart_items  = edd_get_cart_contents();
+	$campaign_id = null;
+
+	foreach ( $cart_items as $item ) {
+		$campaign_id = $item[ 'id' ];
+
+		break;
+	}
+
+	$campaign = atcf_get_campaign( $campaign_id );
+
+	$access_token = $campaign->__get( 'wepay_access_token' );
+	$account_id   = $campaign->__get( 'wepay_account_id' );
+
+	$creds[ 'access_token' ] = trim( $access_token );
+	$creds[ 'account_id' ]   = trim( $account_id );
+
+	return $creds;
+}
+if ( atcf_gateway_wepay_is_specific() )
+	add_filter( 'edd_wepay_get_api_creds', 'atcf_gateway_wepay_edd_wepay_get_api_creds' );
+
+/**
  * Additional WePay settings needed by Crowdfunding
  *
  * @since Appthemer Crowdfunding 1.3
@@ -142,6 +179,30 @@ function atcf_gateway_wepay_settings( $settings ) {
 	return $settings;
 }
 add_filter( 'edd_gateway_wepay_settings', 'atcf_gateway_wepay_settings' );
+
+/**
+ * Calculate a fee to keep for the site.
+ *
+ * @since CrowdFunding 1.3
+ *
+ * @return $args
+ */
+function atcf_gateway_wepay_edd_wepay_checkout_args( $args ) {
+	global $edd_options;
+
+	if ( '' == $edd_options[ 'wepay_app_fee' ] )
+		return $args;
+
+	$percent  = absint( $edd_options[ 'wepay_app_fee' ] ) / 100;
+	$subtotal = edd_get_cart_subtotal();
+
+	$fee = $subtotal * $percent;
+
+	$args[ 'app_fee' ] = $fee;
+
+	return $args;
+}
+add_filter( 'edd_wepay_checkout_args', 'atcf_gateway_wepay_edd_wepay_checkout_args' );
 
 /**
  * Process preapproved payments
