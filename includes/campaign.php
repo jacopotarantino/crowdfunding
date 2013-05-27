@@ -65,6 +65,8 @@ class ATCF_Campaigns {
 		add_filter( 'edd_metabox_fields_save', array( $this, 'meta_boxes_save' ) );
 		add_filter( 'edd_metabox_save_campaign_end_date', 'atcf_campaign_save_end_date' );
 
+		remove_action( 'edd_meta_box_fields', 'edd_render_product_type_field', 10 );
+
 		add_action( 'edd_download_price_table_head', 'atcf_pledge_limit_head' );
 		add_action( 'edd_download_price_table_row', 'atcf_pledge_limit_column', 10, 3 );
 
@@ -893,6 +895,9 @@ class ATCF_Campaign {
 	public function backers_count() {
 		$prices  = edd_get_variable_prices( $this->ID );
 		$total   = 0;
+
+		if ( empty( $prices ) )
+			return 0;
 
 		foreach ( $prices as $price ) {
 			$total = $total + ( isset ( $price[ 'bought' ] ) ? $price[ 'bought' ] : 0 );
