@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function atcf_gateway_wepay_is_specific() {
 	global $edd_options;
 
-	return ! empty ( $edd_options[ 'wepay_access_token' ] )
+	return '' == $edd_options[ 'wepay_access_token' ];
 }
 
 /**
@@ -133,6 +133,9 @@ if ( atcf_gateway_wepay_is_specific() )
 function atcf_gateway_wepay_edd_wepay_get_api_creds( $creds ) {
 	$cart_items  = edd_get_cart_contents();
 	$campaign_id = null;
+
+	if ( empty( $cart_items ) )
+		return $creds;
 
 	foreach ( $cart_items as $item ) {
 		$campaign_id = $item[ 'id' ];
