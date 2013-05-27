@@ -1123,7 +1123,7 @@ function atcf_edd_variable_pricing_toggle_text( $text ) {
  * @since AppThemer Crowdfunding 0.9
  */
 function atcf_campaign_types() {
-	$types = apply_filters( 'atcf_campaign_types', array(
+	$types = array(
 		'fixed'    => array(
 			'title'       => __( 'All-or-nothing', 'atcf' ),
 			'description' => __( 'Only collect pledged funds when the campaign ends if the set goal is met.', 'atcf' )
@@ -1132,9 +1132,18 @@ function atcf_campaign_types() {
 			'title'       => __( 'Flexible', 'atcf' ),
 			'description' => __( 'Collect funds pledged at the end of the campaign no matter what.', 'atcf' )
 		)
-	) );
+	);
 
-	return $types;
+	if ( ! atcf_has_preapproval_gateway() ) {
+		$types = array(
+			'donation'    => array(
+				'title'       => __( 'Donation', 'atcf' ),
+				'description' => __( 'Funds will be collected automatically as pledged.', 'atcf' )
+			)
+		);
+	}
+
+	return apply_filters( 'atcf_campaign_types', $types );
 }
 
 function atcf_campaign_types_active() {
@@ -1156,7 +1165,7 @@ function atcf_campaign_types_active() {
 }
 
 function atcf_campaign_type_default() {
-	$type = apply_filters( 'atcf_campaign_type_default', 'fixed' );
+	$type = apply_filters( 'atcf_campaign_type_default', atcf_has_preapproval_gateway() ? 'fixed' : 'donation' );
 
 	return $type;
 }

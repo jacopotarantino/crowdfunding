@@ -67,6 +67,13 @@ function atcf_has_preapproval_gateway() {
 
 				break;
 
+			case 'wepay' :
+
+				if ( isset( $edd_options[ 'wepay_preapprove_only' ] ) )
+					$has_support = true;
+
+				break;
+				
 			default :
 				$has_support = apply_filters( 'atcf_has_preapproval_gateway', $has_support );
 

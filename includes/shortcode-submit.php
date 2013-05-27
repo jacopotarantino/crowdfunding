@@ -166,14 +166,20 @@ function atcf_shortcode_submit_field_type( $atts, $campaign ) {
 	if ( $atts[ 'editing' ]  )
 		return;
 
-	$types = atcf_campaign_types();
 	$type  = $atts[ 'previewing' ] ? $campaign->type() : atcf_campaign_type_default();
+	$types = atcf_campaign_types_active();
+
+	if ( count( $types ) == 1 ) {
+		echo '<input type="hidden" name="campaign_type" value="' . key( $types ) . '" />';
+
+		return;
+	}
 ?>
 	<h4><?php _e( 'Funding Type', 'atcf' ); ?> <?php if ( $edd_options[ 'faq_page' ] ) : ?><small> &mdash; <a href="<?php echo esc_url( get_permalink( $edd_options[ 'faq_page' ] ) ); ?>"><?php echo apply_filters( 'atcf_submit_field_type_more_link', __( 'Learn More', 'atcf' ) ); ?></a></small><?php endif; ?></h4>
 
 	<p class="atcf-submit-campaign-type">
-		<?php foreach ( atcf_campaign_types_active() as $key => $desc ) : ?>
-		<label for="campaign_type[<?php echo esc_attr( $key ); ?>]"><input type="radio" name="campaign_type" id="campaign_type[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $key, $type ); ?> /> <?php echo $types[ $key ][ 'title' ]; ?></label> &mdash; <small><?php echo $types[ $key ][ 'description' ]; ?></small><br />
+		<?php foreach ( $types as $key => $desc ) : ?>
+		<label for="campaign_type[<?php echo esc_attr( $key ); ?>]"><input type="radio" name="campaign_type" id="campaign_type[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $key, $type ); ?> /><?php echo $desc; ?></label><br />
 		<?php endforeach; ?>
 		<?php do_action( 'atcf_shortcode_submit_field_type' ); ?>
 	</p>
