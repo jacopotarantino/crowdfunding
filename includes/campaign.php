@@ -236,8 +236,9 @@ class ATCF_Campaigns {
 
 		if ( 
 			! $campaign->is_collected() && 
-			( 'flexible' == $campaign->type() || $campaign->is_funded() || ! $campaign->failed_payments() ) && 
-			atcf_has_preapproval_gateway() 
+			( 'flexible' == $campaign->type() || $campaign->is_funded() ) &&
+			atcf_has_preapproval_gateway() ||
+			$campaign->failed_payments()
 		)
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
