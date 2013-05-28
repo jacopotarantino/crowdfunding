@@ -133,7 +133,7 @@ function atcf_gateway_paypal_adaptive_payments_receivers( $campaign ) {
  *
  * @return void
  */
-function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $campaign, $failed_payments; ) {
+function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $campaign, $failed_payments ) {
 	global $edd_options, $failed_payments;
 
 	if ( ! isset ( $gateway_args[ 'payments' ] ) )
