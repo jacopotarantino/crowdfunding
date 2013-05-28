@@ -14,22 +14,22 @@
  */
 function atcf_roles() {
 	global $wp_roles;
-	
-	$campaign_contributor = add_role( 'campaign_contributor', 'Campaign Contributor', array(
+		
+	$author = get_role( 'author' );
+
+	$campaign_contributor = add_role( 'campaign_contributor', 'Campaign Contributor', wp_parse_args( array(
 		'read' 						=> true,
 		'edit_posts' 				=> true,
 		'publish_posts'             => true,
 		'delete_posts' 				=> false,
 		'upload_files'              => true,
-	) );
+	), $author->capabilities ) );
 
-	if ( class_exists('WP_Roles') )
-		if ( ! isset( $wp_roles ) )
-			$wp_roles = new WP_Roles();
+	$contributor = get_role( 'campaign_contributor' );
 
-	$wp_roles->add_cap( 'campaign_contributor', 'submit_campaigns' );
-	$wp_roles->add_cap( 'campaign_contributor', 'edit_product' );
-	$wp_roles->add_cap( 'campaign_contributor', 'edit_products' );
+	$contributor->add_cap( 'submit_campaigns' );
+	$contributor->add_cap( 'edit_product' );
+	$contributor->add_cap( 'edit_products' );
 }
 add_action( 'init', 'atcf_roles' );
 

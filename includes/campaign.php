@@ -134,6 +134,7 @@ class ATCF_Campaigns {
 	function download_supports( $supports ) {
 		$supports[] = 'excerpt';
 		$supports[] = 'comments';
+		$supports[] = 'author';
 
 		if ( ! atcf_theme_supports( 'campaign-featured-image' ) ) {
 			if ( ( $key = array_search( 'thumbnail', $supports ) ) !== false ) {
