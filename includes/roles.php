@@ -14,16 +14,13 @@
  */
 function atcf_roles() {
 	global $wp_roles;
-		
-	$author = get_role( 'author' );
-
-	$campaign_contributor = add_role( 'campaign_contributor', 'Campaign Contributor', wp_parse_args( array(
+	
+	$campaign_contributor = add_role( 'campaign_contributor', 'Campaign Contributor', array(
 		'read' 						=> true,
-		'edit_posts' 				=> true,
 		'publish_posts'             => true,
 		'delete_posts' 				=> false,
 		'upload_files'              => true,
-	), $author->capabilities ) );
+	) );
 
 	$contributor = get_role( 'campaign_contributor' );
 

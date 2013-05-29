@@ -448,7 +448,7 @@ function atcf_shortcode_submit_field_contact_email( $atts, $campaign ) {
 		<p class="atcf-submit-campaign-contact-email">
 		<?php if ( ! is_user_logged_in() ) : ?>
 			<label for="email"><?php _e( 'Contact Email', 'atcf' ); ?></label>
-			<input type="text" name="contact-email" id="contact-email" value="<?php echo $editing ? $campaign->contact_email() : null; ?>" />
+			<input type="text" name="contact-email" id="contact-email" value="<?php echo $atts[ 'editing' ] ? $campaign->contact_email() : null; ?>" />
 			<?php if ( ! $atts[ 'editing' ] ) : ?><span class="description"><?php _e( 'An account will be created for you with this email address. It must be active.', 'atcf' ); ?></span><?php endif; ?>
 		<?php else : ?>
 			<?php $current_user = wp_get_current_user(); ?>
@@ -648,7 +648,6 @@ function atcf_shortcode_submit_process() {
 	if ( ! isset ( $current_user ) ) {
 		$user_id = atcf_register_user( array(
 			'user_login'           => $c_email, 
-			'user_pass'            => $password, 
 			'user_email'           => $c_email,
 			'display_name'         => $author,
 		) );

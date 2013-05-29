@@ -35,11 +35,7 @@ function atcf_create_permalink( $endpoint, $base_url ) {
 
 	$url = $base_url;
 
-	if ( $wp_rewrite->permalink_structure == '' ) {
-		$url = add_query_arg( array( $endpoint => 1 ), $url );
-	} else {
-		$url = trailingslashit( trailingslashit( $url ) . $endpoint );
-	}
+	$url = add_query_arg( array( $endpoint => 1 ), $url );
 
 	return esc_url( $url );
 }
