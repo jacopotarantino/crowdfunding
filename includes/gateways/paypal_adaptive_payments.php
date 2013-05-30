@@ -146,7 +146,7 @@ function atcf_gateway_pap_log_payments_per_user( $payment_id, $new_status, $old_
 	if ( ! atcf_is_gatweay_active( 'paypal_adaptive_payments' ) )
 		return;
 
-	if ( '' == $edd_options[ 'epap_payments_per_user' ] )
+	if ( ! isset( $edd_options[ 'epap_payments_per_user' ] ) )
 		return;
 
 	if ( $old_status != 'pending' )
@@ -354,7 +354,7 @@ function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $
 		$charge = epap_process_preapprovals( $payment, atcf_gateway_paypal_adaptive_payments_receivers( $campaign ) );
 		
 		if ( ! $charge )
-			$failed_payments[ $gateway ] = $payment;
+			$failed_payments[ $gateway ][] = $payment;
 
 		do_action( 'atcf_process_payment_' . $gateway, $payment, $charge );
 	}

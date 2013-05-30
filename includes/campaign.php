@@ -342,7 +342,7 @@ class ATCF_Campaigns {
 			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $failed_payments );
 		}
 
-		if ( $failed_payments ) {
+		if ( ! empty( $failed_payments ) ) {
 			$failed_count = 0;
 
 			foreach ( $failed_payments as $gateway ) {
