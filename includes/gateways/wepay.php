@@ -30,10 +30,16 @@ function atcf_gateway_wepay_is_specific() {
  */
 function atcf_shortcode_submit_field_wepay_creds( $atts, $campaign ) {
 	if ( $atts[ 'editing' ] ) {
+		$client_id    = $campaign->__get( 'wepay_client_id' );
 		$access_token = $campaign->__get( 'wepay_access_token' );
 		$account_id   = $campaign->__get( 'wepay_account_id' );
 	}
 ?>
+	<p class="atcf-submit-campaign-wepay-client-id">
+		<label for="wepay_client_id"><?php _e( 'WePay Client ID:', 'atcf' ); ?></label>
+		<input type="text" name="wepay_client_id" id="wepay_client_id" value="<?php echo $atts[ 'editing' ] ? $client_id : null; ?>" />
+	</p>
+
 	<p class="atcf-submit-campaign-wepay-account-id">
 		<label for="wepay_account_id"><?php _e( 'WePay Account ID:', 'atcf' ); ?></label>
 		<input type="text" name="wepay_account_id" id="wepay_account_id" value="<?php echo $atts[ 'editing' ] ? $account_id : null; ?>" />
@@ -56,10 +62,11 @@ if ( atcf_gateway_wepay_is_specific() )
  * @return void
  */
 function atcf_campaign_submit_validate_wepay( $postdata, $errors ) {
+	$client_id    = $postdata[ 'wepay_client_id' ];
 	$account_id   = $postdata[ 'wepay_account_id' ];
 	$access_token = $postdata[ 'wepay_account_token' ];
 
-	if ( ! isset ( $account_id ) || ! isset ( $access_token ) )
+	if ( ! isset ( $account_id ) || ! isset ( $access_token ) || ! isset ( $client_id ) )
 		$errors->add( 'invalid-wepay', __( 'Please enter valid WePay credentials.', 'atcf' ) ); 
 }
 if ( atcf_gateway_wepay_is_specific() )
@@ -73,9 +80,11 @@ if ( atcf_gateway_wepay_is_specific() )
  * @return void
  */
 function atcf_submit_process_after_wepay_save( $campaign, $postdata ) {
+	$client_id    = $postdata[ 'wepay_client_id' ];
 	$account_id   = $postdata[ 'wepay_account_id' ];
 	$access_token = $postdata[ 'wepay_account_token' ];
 
+	update_post_meta( $campaign, 'wepay_client_id', sanitize_text_field( $client_id ) );
 	update_post_meta( $campaign, 'wepay_account_id', sanitize_text_field( $account_id ) );
 	update_post_meta( $campaign, 'wepay_access_token', sanitize_text_field( $access_token ) );
 }
@@ -90,9 +99,15 @@ if ( atcf_gateway_wepay_is_specific() )
  * @return void
  */
 function atcf_metabox_campaign_info_after_wepay_creds( $campaign ) {
+	$client_id    = $campaign->__get( 'wepay_client_id' );
 	$access_token = $campaign->__get( 'wepay_access_token' );
 	$account_id   = $campaign->__get( 'wepay_account_id' );
 ?>
+	<p>
+		<strong><label for="wepay_client_id"><?php _e( 'WePay Client ID:', 'atcf' ); ?></label></strong><br />
+		<input type="text" name="wepay_client_id" id="wepay_client_id" class="regular-text" value="<?php echo esc_attr( $client_id ); ?>" />
+	</p>
+
 	<p>
 		<strong><label for="wepay_account_id"><?php _e( 'WePay Account ID:', 'atcf' ); ?></label></strong><br />
 		<input type="text" name="wepay_account_id" id="wepay_account_id" class="regular-text" value="<?php echo esc_attr( $account_id ); ?>" />
@@ -115,6 +130,7 @@ if ( atcf_gateway_wepay_is_specific() )
  * @return void
  */
 function atcf_metabox_save_wepay( $fields ) {
+	$fields[] = 'wepay_client_id';
 	$fields[] = 'wepay_account_id';
 	$fields[] = 'wepay_access_token';
 
@@ -131,11 +147,18 @@ if ( atcf_gateway_wepay_is_specific() )
  * @return $creds
  */
 function atcf_gateway_wepay_edd_wepay_get_api_creds( $creds ) {
-	$cart_items  = edd_get_cart_contents();
+	global $edd_options;
+
 	$campaign_id = null;
 
-	if ( empty( $cart_items ) )
-		return $creds;
+	$cart_items  = edd_get_cart_contents();
+
+	/** Try pulling from session */
+	if ( empty( $cart_items ) && is_page( $edd_options[ 'success_page' ] ) ) {
+		$session = edd_get_purchase_session();
+
+		$cart_items = $session[ 'cart_details' ];
+	}
 
 	foreach ( $cart_items as $item ) {
 		$campaign_id = $item[ 'id' ];
@@ -145,9 +168,11 @@ function atcf_gateway_wepay_edd_wepay_get_api_creds( $creds ) {
 
 	$campaign = atcf_get_campaign( $campaign_id );
 
+	$client_id    = $campaign->__get( 'wepay_client_id' );
 	$access_token = $campaign->__get( 'wepay_access_token' );
 	$account_id   = $campaign->__get( 'wepay_account_id' );
 
+	$creds[ 'client_id' ]    = trim( $client_id );
 	$creds[ 'access_token' ] = trim( $access_token );
 	$creds[ 'account_id' ]   = trim( $account_id );
 

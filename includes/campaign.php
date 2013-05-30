@@ -346,13 +346,15 @@ class ATCF_Campaigns {
 			$failed_count = 0;
 
 			foreach ( $failed_payments as $gateway ) {
+				$_gateway = $gateway;
+
 				/** Loop through each gateway's failed payments */
 				foreach ( $gateway as $payment_id ) {
-					edd_insert_payment_note( $payment_id, apply_filters( 'atcf_failed_payment_note', sprintf( __( 'Error processing preapproved payment via %s', 'atcf' ), edd_get_gateway_admin_label( $gateway ) ) ) );
+					edd_insert_payment_note( $payment_id, apply_filters( 'atcf_failed_payment_note', sprintf( __( 'Error processing preapproved payment via %s', 'atcf' ), edd_get_gateway_admin_label( $_gateway ) ) ) );
 
 					$failed_count++;
 
-					do_action( 'atcf_failed_payment', $payment, $gateway );
+					do_action( 'atcf_failed_payment', $payment_id, $gateway );
 				}
 			}
 
