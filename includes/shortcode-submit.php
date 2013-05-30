@@ -390,10 +390,12 @@ function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
 
 			<?php do_action( 'atcf_shortcode_submit_field_rewards_after' ); ?>
 
+			<?php if ( ! $disabled ) : ?>
 			<p class="atcf-submit-campaign-reward-remove">
 				<label>&nbsp;</label><br />
 				<a href="#">&times;</a>
 			</p>
+			<?php endif; ?>
 		</div>
 		<?php endforeach; ?>
 
