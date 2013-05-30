@@ -302,19 +302,15 @@ add_action( 'atcf_shortcode_submit_field_rewards_list_before', 'atcf_gateway_pap
 
 /**
  * Process preapproved payments
+ * Create a list of receivers
  *
- * @since Appthemer Crowdfunding 1.1
+ * @since Appthemer Crowdfunding 1.3
  *
- * @return void
+ * @return array $receivers
  */
-function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $campaign, $errors ) {
-	global $edd_options, $errors;
+function atcf_gateway_paypal_adaptive_payments_receivers( $campaign ) {
+	global $edd_options;
 
-	if ( ! isset ( $gateway_args[ 'payments' ] ) )
-		return;
-
-	$paypal_adaptive = new PayPalAdaptivePaymentsGateway();
-	
 	$owner           = $edd_options[ 'epap_receivers' ];
 	$owner           = explode( '|', $owner );
 	$owner_email     = $owner[0];
@@ -338,47 +334,31 @@ function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $
 		)
 	);
 
+	return apply_filters( 'atcf_gateway_paypal_adaptive_payments_receivers', $receivers, $campaign );
+}
+
+/**
+ * Process preapproved payments
+ *
+ * @since Appthemer Crowdfunding 1.1
+ *
+ * @return void
+ */
+function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $campaign, $failed_payments ) {
+	global $edd_options, $failed_payments;
+
+	if ( ! isset ( $gateway_args[ 'payments' ] ) )
+		return;
+
 	foreach ( $gateway_args[ 'payments' ] as $payment ) {
-		$payment_id      = $payment;
+		$charge = epap_process_preapprovals( $payment, atcf_gateway_paypal_adaptive_payments_receivers( $campaign ) );
+		
+		if ( ! $charge )
+			$failed_payments[ $gateway ] = $payment;
 
-		$sender_email    = get_post_meta( $payment_id, '_edd_epap_sender_email', true );
-		$amount          = get_post_meta( $payment_id, '_edd_epap_amount', true );
-		$paid            = get_post_meta( $payment_id, '_edd_epap_paid', true );
-		$preapproval_key = get_post_meta( $payment_id, '_edd_epap_preapproval_key', true );
-
-		/** Already paid or other error */
-		if ( $paid > $amount ) {
-			$errors->add( 'already-paid-' . $payment_id, __( 'This payment has already been collected.', 'atcf' ) );
-			
-			continue;
-		}
-
-		if ( $payment = $paypal_adaptive->pay_preapprovals( $payment_id, $preapproval_key, $sender_email, $amount, $receivers ) ) {
-			$responsecode = strtoupper( $payment[ 'responseEnvelope' ][ 'ack' ] );
-			
-			if ( $responsecode == 'SUCCESS' || $responsecode == 'SUCCESSWITHWARNING' ) {
-				$pay_key = $payment[ 'payKey' ];
-				
-				add_post_meta( $payment_id, '_edd_epap_pay_key', $pay_key );
-				add_post_meta( $payment_id, '_edd_epap_preapproval_paid', true );
-				
-				edd_update_payment_status( $payment_id, 'publish' );
-			} else {
-				$errors->add( 
-					'invalid-response-' . $payment_id, 
-					sprintf( 
-						__( 'There was an error collecting funds for payment <a href="%1$s">#%2$d</a>. PayPal responded with %3$s', 'atcf' ), 
-						admin_url( 'edit.php?post_type=download&page=edd-payment-history&edd-action=edit-payment&purchase_id=' . $payment_id ), 
-						$payment_id, 
-						'<pre style="max-width: 100%; overflow: scroll; height: 200px;">' . print_r( array_merge( $payment,  compact( 'payment_id', 'preapproval_key', 'sender_email', 'amount', 'receivers' ) ), true ) . '</pre>'
-					)
-				);
-			}
-		} else {
-			$errors->add( 'payment-error-' . $payment_id, __( 'There was an error.', 'atcf' ) );
-		}
+		do_action( 'atcf_process_payment_' . $gateway, $payment, $charge );
 	}
 
-	return $errors;
+	return $failed_payments;
 }
 add_action( 'atcf_collect_funds_paypal_adaptive_payments', 'atcf_collect_funds_paypal_adaptive_payments', 10, 4 );

@@ -243,7 +243,12 @@ class ATCF_Campaigns {
 
 		$campaign = atcf_get_campaign( $post );
 
-		if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && atcf_has_preapproval_gateway() && 'auto-draft' != $post->post_status )
+		if ( 
+			( ! $campaign->is_collected() && 
+			( 'flexible' == $campaign->type() || $campaign->is_funded() ) &&
+			atcf_has_preapproval_gateway() ) ||
+			$campaign->failed_payments()
+		)
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
@@ -289,7 +294,7 @@ class ATCF_Campaigns {
 	 * @return void
 	 */
 	function collect_funds() {
-		global $edd_options, $errors;
+		global $edd_options, $failed_payments;
 
 		$campaign = absint( $_GET[ 'campaign' ] );
 		$campaign = atcf_get_campaign( $campaign );
@@ -306,31 +311,59 @@ class ATCF_Campaigns {
 			exit();
 		}
 
-		$backers  = $campaign->backers();
-		$gateways = edd_get_enabled_payment_gateways(); 
-		$errors   = new WP_Error();
+		$backers          = $campaign->backers();
+		$gateways         = edd_get_enabled_payment_gateways();
+		$failed_payments  = array();
 
 		if ( empty( $backers ) ) {
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 14 ), admin_url( 'post.php' ) ) );
 			exit();
 		}
 
-		foreach ( $backers as $backer ) {
-			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
-			$gateway    = get_post_meta( $payment_id, '_edd_payment_gateway', true );
+		$existing_failed_payments = $campaign->failed_payments();
 
-			$gateways[ $gateway ][ 'payments' ][] = $payment_id;
-		}
-
-		foreach ( $gateways as $gateway => $gateway_args ) {
-			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $errors );
-		}
-
-		if ( ! empty ( $errors->errors ) )
-			wp_die( $errors );
+		/**
+		 * If failed payments exist, this has been run before, so go through those instead
+		 */
+		if ( $existing_failed_payments && is_array( $existing_failed_payments ) )
+			$process = $existing_failed_payments;
 		else {
+			foreach ( $backers as $backer ) {
+				$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
+				$gateway    = get_post_meta( $payment_id, '_edd_payment_gateway', true );
+
+				$gateways[ $gateway ][ 'payments' ][] = $payment_id;
+			}
+
+			$process = $gateways;
+		}
+
+		foreach ( $process as $gateway => $gateway_args ) {
+			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $failed_payments );
+		}
+
+		if ( $failed_payments ) {
+			$failed_count = 0;
+
+			foreach ( $failed_payments as $gateway ) {
+				/** Loop through each gateway's failed payments */
+				foreach ( $gateway as $payment_id ) {
+					edd_insert_payment_note( $payment_id, apply_filters( 'atcf_failed_payment_note', sprintf( __( 'Error processing preapproved payment via %s', 'atcf' ), edd_get_gateway_admin_label( $gateway ) ) ) );
+
+					$failed_count++;
+
+					do_action( 'atcf_failed_payment', $payment, $gateway );
+				}
+			}
+
+			update_post_meta( $campaign->ID, '_campaign_failed_payments', $failed_payments );
+
+			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 15, 'failed' => $failed_count ), admin_url( 'post.php' ) ) );
+			exit();
+		} else {
 			update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
 			update_post_meta( $campaign->ID, '_campaign_bulk_collected', 1 );
+			delete_post_meta( $campaign->ID, '_campaign_failed_payments' );
 
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 13, 'collected' => $campaign->backers_count() ), admin_url( 'post.php' ) ) );
 			exit();
@@ -348,8 +381,9 @@ class ATCF_Campaigns {
 	function messages( $messages ) {
 		$messages[ 'download' ][11] = sprintf( __( 'This %s has not reached its funding goal.', 'atcf' ), strtolower( edd_get_label_singular() ) );
 		$messages[ 'download' ][12] = sprintf( __( 'You do not have permission to collect funds for %s.', 'atcf' ), strtolower( edd_get_label_plural() ) );
-		$messages[ 'download' ][13] = sprintf( __( '%d payments have been collected for this %s.', 'atcf' ), isset ( $_GET[ 'collected' ] ) ? $_GET[ 'collected' ] : 0, strtolower( edd_get_label_singular() ) );
+		$messages[ 'download' ][13] = sprintf( __( 'All payments have been processed and collected for this %s.', 'atcf' ), strtolower( edd_get_label_singular() ) );
 		$messages[ 'download' ][14] = sprintf( __( 'There are no payments for this %s.', 'atcf' ), strtolower( edd_get_label_singular() ) );
+		$messages[ 'download' ][15] = sprintf( __( '<strong>Payments processed.</strong> %d payments failed to process. Please check <a href="%s">gateway logs</a> before trying again.', 'atcf' ), isset ( $_GET[ 'failed' ] ) ? intval( $_GET[ 'failed' ] ) : 0, admin_url( 'edit.php?view=gateway_errors&post_type=download&page=edd-reports&tab=logs' ) );
 
 		return $messages;
 	}
@@ -493,7 +527,8 @@ function _atcf_metabox_campaign_stats() {
 function _atcf_metabox_campaign_funds() {
 	global $post;
 
-	$campaign = atcf_get_campaign( $post );
+	$campaign        = atcf_get_campaign( $post );
+	$failed_payments = $campaign->failed_payments();
 
 	do_action( 'atcf_metabox_campaign_funds_before', $campaign );
 ?>
@@ -503,7 +538,11 @@ function _atcf_metabox_campaign_funds() {
 	<p><?php printf( __( 'This %1$s is flexible. You may collect the funds at any time. This will end the %1$s.', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?></p>
 	<?php endif; ?>
 
-	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button button-primary"><?php _e( 'Collect Funds', 'atcf' ); ?></a></p>
+	<?php if ( $failed_payments ) : ?>
+	<p><strong><?php printf( _n( '%d payment failed to process.', '%d payments failed to process.', count( $failed_payments ), 'atcf' ), count( $failed_payments ) ); ?></strong> <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'edd-reports', 'tab' => 'logs', 'view' => 'gateway_errors', 'post_type' => 'download' ), admin_url( 'edit.php' ) ) ); ?>"><?php _e( 'View gateway errors', 'atcf' ); ?></a>.</p>
+	<?php endif; ?>
+
+	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button button-primary"><?php echo $failed_payments ? __( 'Collect Failed Payments', 'atcf' ) : __( 'Collect Funds', 'atcf' ); ?></a></p>
 <?php
 	do_action( 'atcf_metabox_campaign_funds_after', $campaign );
 }
@@ -1034,6 +1073,10 @@ class ATCF_Campaign {
 			return edd_currency_filter( edd_format_amount( $total ) );
 
 		return $total;
+	}
+
+	function failed_payments() {
+		return $this->__get( '_campaign_failed_payments' );
 	}
 
 	/**

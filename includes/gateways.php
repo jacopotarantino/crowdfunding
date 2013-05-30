@@ -75,12 +75,12 @@ function atcf_has_preapproval_gateway() {
 				break;
 				
 			default :
-				$has_support = apply_filters( 'atcf_has_preapproval_gateway', $has_support );
+				$has_support = $has_support;
 
 		}
 	}
 
-	return $has_support;
+	return apply_filters( 'atcf_has_preapproval_gateway', $has_support );
 }
 
 function atcf_is_gatweay_active( $gateway ) {
