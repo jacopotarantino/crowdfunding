@@ -24,7 +24,7 @@ function atcf_shortcode_submit( $atts ) {
 	$atts = shortcode_atts( array(
 		'editing'    => false,
 		'previewing' => false
-    ), $atts );
+	), $atts );
 
 	$crowdfunding = crowdfunding();
 	$campaign     = null;
@@ -33,7 +33,7 @@ function atcf_shortcode_submit( $atts ) {
 
 	/** Allow things to change the content of the shortcode. */
 	if ( apply_filters( 'atcf_shortcode_submit_hide', false ) ) {
-		do_action( 'atcf_shortcode_submit_hidden' );
+		do_action( 'atcf_shortcode_submit_hidden', $atts );
 
 		$form = ob_get_clean();
 
