@@ -31,6 +31,15 @@ function atcf_shortcode_submit( $atts ) {
 
 	ob_start();
 
+	/** Allow things to change the content of the shortcode. */
+	if ( apply_filters( 'atcf_shortcode_submit_hide', false ) ) {
+		do_action( 'atcf_shortcode_submit_hidden' );
+
+		$form = ob_get_clean();
+
+		return $form;
+	}
+
 	if ( $atts[ 'editing' ] || $atts[ 'previewing' ] ) {
 		global $post;
 		
@@ -43,9 +52,6 @@ function atcf_shortcode_submit( $atts ) {
 	wp_localize_script( 'atcf-scripts', 'CrowdFundingL10n', array(
 		'oneReward' => __( 'At least one reward is required.', 'atcf' )
 	) );
-
-	if ( apply_filters( 'atcf_shortcode_submit_hide', false ) )
-		return do_action( 'atcf_shortcode_submit_hidden' );
 ?>
 	<?php do_action( 'atcf_shortcode_submit_before', $atts, $campaign ); ?>
 	<form action="" method="post" class="atcf-submit-campaign" enctype="multipart/form-data">
