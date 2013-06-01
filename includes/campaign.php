@@ -344,7 +344,7 @@ class ATCF_Campaigns {
 		}
 
 		if ( ! empty( $failed_payments ) ) {
-			$failed_count = 0;
+			$failed_count = 1;
 
 			foreach ( $failed_payments as $gateway ) {
 				$_gateway = $gateway;
@@ -364,13 +364,14 @@ class ATCF_Campaigns {
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 15, 'failed' => $failed_count ), admin_url( 'post.php' ) ) );
 			exit();
 		} else {
-			update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
 			update_post_meta( $campaign->ID, '_campaign_bulk_collected', 1 );
 			delete_post_meta( $campaign->ID, '_campaign_failed_payments' );
 
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 13, 'collected' => $campaign->backers_count() ), admin_url( 'post.php' ) ) );
 			exit();
 		}
+
+		update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
 	}
 
 	/**
