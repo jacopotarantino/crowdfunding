@@ -25,7 +25,7 @@ function atcf_collect_funds_stripe( $gateway, $gateway_args, $campaign, $failed_
 		$charge = edds_charge_preapproved( $payment );
 
 		if ( ! $charge )
-			$failed_payments[ $gateway ] = $payment;
+			$failed_payments[ $gateway ][ 'payments'][] = $payment;
 
 		do_action( 'atcf_process_payment_' . $gateway, $payment, $charge );
 	}
