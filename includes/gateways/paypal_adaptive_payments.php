@@ -354,7 +354,7 @@ function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $
 		$charge = epap_process_preapprovals( $payment, atcf_gateway_paypal_adaptive_payments_receivers( $campaign ) );
 		
 		if ( ! $charge )
-			$failed_payments[ $gateway ][] = $payment;
+			$failed_payments[ $gateway ][ 'payments' ][] = $payment;
 
 		do_action( 'atcf_process_payment_' . $gateway, $payment, $charge );
 	}

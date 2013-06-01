@@ -246,7 +246,8 @@ class ATCF_Campaigns {
 		if ( 
 			( ! $campaign->is_collected() && 
 			( 'flexible' == $campaign->type() || $campaign->is_funded() ) &&
-			atcf_has_preapproval_gateway() ) ||
+			atcf_has_preapproval_gateway() /*&&
+			$campaign->backers_count() > 0*/ ) ||
 			$campaign->failed_payments()
 		)
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
@@ -531,6 +532,13 @@ function _atcf_metabox_campaign_funds() {
 
 	$campaign        = atcf_get_campaign( $post );
 	$failed_payments = $campaign->failed_payments();
+	$count           = 0;
+
+	foreach ( $failed_payments as $gateways ) {
+		foreach ( $gateways as $gateway ) {
+			$count = $count + count( $gateway );
+		}
+	}
 
 	do_action( 'atcf_metabox_campaign_funds_before', $campaign );
 ?>
@@ -541,7 +549,7 @@ function _atcf_metabox_campaign_funds() {
 	<?php endif; ?>
 
 	<?php if ( $failed_payments ) : ?>
-	<p><strong><?php printf( _n( '%d payment failed to process.', '%d payments failed to process.', count( $failed_payments ), 'atcf' ), count( $failed_payments ) ); ?></strong> <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'edd-reports', 'tab' => 'logs', 'view' => 'gateway_errors', 'post_type' => 'download' ), admin_url( 'edit.php' ) ) ); ?>"><?php _e( 'View gateway errors', 'atcf' ); ?></a>.</p>
+	<p><strong><?php printf( _n( '%d payment failed to process.', '%d payments failed to process.', $count, 'atcf' ), $count ); ?></strong> <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'edd-reports', 'tab' => 'logs', 'view' => 'gateway_errors', 'post_type' => 'download' ), admin_url( 'edit.php' ) ) ); ?>"><?php _e( 'View gateway errors', 'atcf' ); ?></a>.</p>
 	<?php endif; ?>
 
 	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button button-primary"><?php echo $failed_payments ? __( 'Collect Failed Payments', 'atcf' ) : __( 'Collect Funds', 'atcf' ); ?></a></p>
