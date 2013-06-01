@@ -344,7 +344,7 @@ class ATCF_Campaigns {
 		}
 
 		if ( ! empty( $failed_payments ) ) {
-			$failed_count = 1;
+			$failed_count = 0;
 
 			foreach ( $failed_payments as $gateway ) {
 				$_gateway = $gateway;
