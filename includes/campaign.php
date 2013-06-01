@@ -534,9 +534,11 @@ function _atcf_metabox_campaign_funds() {
 	$failed_payments = $campaign->failed_payments();
 	$count           = 0;
 
-	foreach ( $failed_payments as $gateways ) {
-		foreach ( $gateways as $gateway ) {
-			$count = $count + count( $gateway );
+	if ( $failed_payments ) {
+		foreach ( $failed_payments as $gateways ) {
+			foreach ( $gateways as $gateway ) {
+				$count = $count + count( $gateway );
+			}
 		}
 	}
 
