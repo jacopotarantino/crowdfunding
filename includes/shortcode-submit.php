@@ -101,7 +101,7 @@ function atcf_shortcode_submit_field_title( $atts, $campaign ) {
 
 	<p class="atcf-submit-title">
 		<label for="title"><?php _e( 'Title', 'atcf' ); ?></label>
-		<input type="text" name="title" id="title" placeholder="<?php esc_attr_e( 'Title', 'atcf' ); ?>" value="<?php echo esc_attr( $title ); ?>">
+		<input type="text" name="title" id="title" value="<?php echo esc_attr( $title ); ?>">
 	</p>
 <?php
 }
@@ -411,7 +411,7 @@ function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
 
 			<p class="atcf-submit-campaign-reward-price">
 				<label for="rewards[0][price]"><?php printf( __( 'Amount (%s)', 'atcf' ), edd_currency_filter( '' ) ); ?></label>
-				<input class="name" type="text" name="rewards[0][price]" id="rewards[0][price]" placeholder="20">
+				<input class="name" type="text" name="rewards[0][price]" id="rewards[0][price]" placeholder="<?php echo edd_format_amount( 20 ); ?>">
 			</p>
 
 			<p class="atcf-submit-campaign-reward-description">

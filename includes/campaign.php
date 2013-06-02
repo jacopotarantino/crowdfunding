@@ -555,7 +555,9 @@ function _atcf_metabox_campaign_funds() {
 	<p><strong><?php printf( _n( '%d payment failed to process.', '%d payments failed to process.', $count, 'atcf' ), $count ); ?></strong> <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'edd-reports', 'tab' => 'logs', 'view' => 'gateway_errors', 'post_type' => 'download' ), admin_url( 'edit.php' ) ) ); ?>"><?php _e( 'View gateway errors', 'atcf' ); ?></a>.</p>
 	<?php endif; ?>
 
+	<?php if ( ! apply_filters( 'atcf_hide_collect_funds_button', false ) ) : ?>
 	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button button-primary"><?php echo $failed_payments ? __( 'Collect Failed Payments', 'atcf' ) : __( 'Collect Funds', 'atcf' ); ?></a></p>
+	<?php endif; ?>
 <?php
 	do_action( 'atcf_metabox_campaign_funds_after', $campaign );
 }

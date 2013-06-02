@@ -9,6 +9,36 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
+ * Check the PayPal Adaptive Payments version, and add a notice if
+ * it is out of date.
+ *
+ * @since CrowdFunding 1.3
+ *
+ * @return boolean
+ */
+function atcf_gateway_paypal_adaptive_payments_version() {
+	if ( version_compare( EDD_EPAP_VERSION, '1.2', '<' ) ) {
+		add_action( 'atcf_metabox_campaign_funds_after', 'atcf_gateway_paypal_adaptive_payments_version_notice' );
+
+		return true;
+	}
+
+	return false;
+}
+add_filter( 'atcf_hide_collect_funds_button', 'atcf_gateway_paypal_adaptive_payments_version' );
+
+/**
+ * Show a notice if PayPal Adaptive Payments is out of date.
+ *
+ * @since CrowdFunding 1.3
+ *
+ * @return void
+ */
+function atcf_gateway_paypal_adaptive_payments_version_notice() {
+	printf( '<p>' . __( '<strong>Note:</strong> Please upgrade your PayPal Adaptive Payments extension before collecting funds.', 'atcf' ) . '</p>' );
+}
+
+/**
  * PayPal Adaptive Payments field on frontend submit and edit.
  *
  * @since CrowdFunding 1.1
@@ -264,7 +294,7 @@ function atcf_gateway_pap_shortcode_submit_hide( $show ) {
 	if ( ! is_user_logged_in() )
 		return $show;
 
-	if ( '' == $edd_options[ 'epap_campaigns_per_year' ] )
+	if ( ! isset( $edd_options[ 'epap_campaigns_per_year' ] ) )
 		return $show;
 
 	$user      = wp_get_current_user();
@@ -293,7 +323,7 @@ add_filter( 'atcf_shortcode_submit_hide', 'atcf_gateway_pap_shortcode_submit_hid
 function atcf_gateway_pap_shortcode_submit_field_rewards_list_before() {
 	global $edd_options;
 
-	if ( '' == $edd_options[ 'epap_max_donation' ] )
+	if ( ! isset( $edd_options[ 'epap_max_donation' ] ) )
 		return;
 
 	printf( '<p class="atcf-submit-max-pledge-limit">%s</p>', sprintf( __( '<strong>Note:</strong> There is a %s maximum allowed per reward level.', 'atcf' ), edd_currency_filter( edd_format_amount( $edd_options[ 'epap_max_donation' ] ) ) ) );

@@ -70,12 +70,15 @@ https://github.com/Astoundify/crowdfunding/issues?milestone=8&page=1&state=close
 * New: Edit reward levels that haven't been pledged once a campaign has started.
 * New: Set limits and track pledges/campaigns when using PayPal Adaptive Payments to avoid breaking TOS.
 * New: Support for embeddable campaign widgets (provided by theme via campaign-widget.php).
-* Fix: Better tracking of failed payment collection.
-* Fix: Improve media permissions when uploading/browsing images via frontend submission form.
+* New: Tracking of failed payment collection, with the ability to try to reprocess.
+* New: 'Donation' funding type when no preapproval gateway is enabled.
 * Fix: Remove single price option from WordPress admin panel to avoid confusion.
 * Fix: Automatically set an end date when creating a campaign via the admin panel to avoid confusion.
 * Fix: Don't increase backer count when in test mode and test mode logging isn't enabled.
-* Fix: Other various bug fixes and improvements.
+* Tweak: Remove file download fields from frontend form submission.
+* Tweak: Don't show funding types if only one type is enabled.
+
+* Note: If using PayPal Adaptive Payments extension, it must be upgraded to the latest version.
 
 = 1.2: May 8, 2013 =
 
