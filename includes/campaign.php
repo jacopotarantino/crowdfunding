@@ -29,7 +29,7 @@ class ATCF_Campaigns {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'setup' ), 1 );
+		add_action( 'init', array( $this, 'setup' ), 0 );
 	}
 
 	/**
