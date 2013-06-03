@@ -61,7 +61,7 @@ Yes. However, it won't look much different than a standard EDD install. Template
 
 == Changelog ==
 
-= 1.3: May X, 2013 =
+= 1.3: June 2, 2013 =
 
 https://github.com/Astoundify/crowdfunding/issues?milestone=8&page=1&state=closed
 
