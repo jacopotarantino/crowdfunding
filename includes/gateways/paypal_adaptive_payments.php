@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return boolean
  */
 function atcf_gateway_paypal_adaptive_payments_version() {
-	if ( version_compare( EDD_EPAP_VERSION, '1.2', '<' ) ) {
+	if ( version_compare( EDD_EPAP_VERSION, '1.1', '<' ) ) {
 		add_action( 'atcf_metabox_campaign_funds_after', 'atcf_gateway_paypal_adaptive_payments_version_notice' );
 
 		return true;
