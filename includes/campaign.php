@@ -29,7 +29,7 @@ class ATCF_Campaigns {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'setup' ), 1 );
+		add_action( 'init', array( $this, 'setup' ), 0 );
 	}
 
 	/**
@@ -64,6 +64,8 @@ class ATCF_Campaigns {
 
 		add_filter( 'edd_metabox_fields_save', array( $this, 'meta_boxes_save' ) );
 		add_filter( 'edd_metabox_save_campaign_end_date', 'atcf_campaign_save_end_date' );
+
+		remove_action( 'edd_meta_box_fields', 'edd_render_product_type_field', 10 );
 
 		add_action( 'edd_download_price_table_head', 'atcf_pledge_limit_head' );
 		add_action( 'edd_download_price_table_row', 'atcf_pledge_limit_column', 10, 3 );
@@ -132,6 +134,13 @@ class ATCF_Campaigns {
 	function download_supports( $supports ) {
 		$supports[] = 'excerpt';
 		$supports[] = 'comments';
+		$supports[] = 'author';
+
+		if ( ! atcf_theme_supports( 'campaign-featured-image' ) ) {
+			if ( ( $key = array_search( 'thumbnail', $supports ) ) !== false ) {
+				unset( $supports[$key]);
+			}
+		}
 
 		return $supports;
 	}
@@ -234,12 +243,20 @@ class ATCF_Campaigns {
 
 		$campaign = atcf_get_campaign( $post );
 
-		if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && atcf_has_preapproval_gateway() )
+		if ( 
+			( ! $campaign->is_collected() && 
+			( 'flexible' == $campaign->type() || $campaign->is_funded() ) &&
+			atcf_has_preapproval_gateway() /*&&
+			$campaign->backers_count() > 0*/ ) ||
+			$campaign->failed_payments()
+		)
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
 		add_meta_box( 'atcf_campaign_updates', __( 'Campaign Updates', 'atcf' ), '_atcf_metabox_campaign_updates', 'download', 'normal', 'high' );
-		add_meta_box( 'atcf_campaign_video', __( 'Campaign Video', 'atcf' ), '_atcf_metabox_campaign_video', 'download', 'normal', 'high' );
+
+		if ( atcf_theme_supports( 'campaign-video' ) )
+			add_meta_box( 'atcf_campaign_video', __( 'Campaign Video', 'atcf' ), '_atcf_metabox_campaign_video', 'download', 'normal', 'high' );
 
 		add_action( 'edd_meta_box_fields', '_atcf_metabox_campaign_info', 5 );
 	}
@@ -278,7 +295,7 @@ class ATCF_Campaigns {
 	 * @return void
 	 */
 	function collect_funds() {
-		global $edd_options, $errors;
+		global $edd_options, $failed_payments;
 
 		$campaign = absint( $_GET[ 'campaign' ] );
 		$campaign = atcf_get_campaign( $campaign );
@@ -295,35 +312,66 @@ class ATCF_Campaigns {
 			exit();
 		}
 
-		$backers  = $campaign->backers();
-		$gateways = edd_get_enabled_payment_gateways(); 
-		$errors   = new WP_Error();
+		$backers          = $campaign->backers();
+		$gateways         = edd_get_enabled_payment_gateways();
+		$failed_payments  = array();
 
 		if ( empty( $backers ) ) {
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 14 ), admin_url( 'post.php' ) ) );
 			exit();
 		}
 
-		foreach ( $backers as $backer ) {
-			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
-			$gateway    = get_post_meta( $payment_id, '_edd_payment_gateway', true );
+		$existing_failed_payments = $campaign->failed_payments();
 
-			$gateways[ $gateway ][ 'payments' ][] = $payment_id;
-		}
-
-		foreach ( $gateways as $gateway => $gateway_args ) {
-			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $errors );
-		}
-
-		if ( ! empty ( $errors->errors ) )
-			wp_die( $errors );
+		/**
+		 * If failed payments exist, this has been run before, so go through those instead
+		 */
+		if ( $existing_failed_payments && is_array( $existing_failed_payments ) )
+			$process = $existing_failed_payments;
 		else {
-			update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
+			foreach ( $backers as $backer ) {
+				$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
+				$gateway    = get_post_meta( $payment_id, '_edd_payment_gateway', true );
+
+				$gateways[ $gateway ][ 'payments' ][] = $payment_id;
+			}
+
+			$process = $gateways;
+		}
+
+		foreach ( $process as $gateway => $gateway_args ) {
+			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $failed_payments );
+		}
+
+		if ( ! empty( $failed_payments ) ) {
+			$failed_count = 0;
+
+			foreach ( $failed_payments as $gateway ) {
+				$_gateway = $gateway;
+
+				/** Loop through each gateway's failed payments */
+				foreach ( $gateway as $payment_id ) {
+					edd_insert_payment_note( $payment_id, apply_filters( 'atcf_failed_payment_note', sprintf( __( 'Error processing preapproved payment via %s', 'atcf' ), edd_get_gateway_admin_label( $_gateway ) ) ) );
+
+					$failed_count++;
+
+					do_action( 'atcf_failed_payment', $payment_id, $gateway );
+				}
+			}
+
+			update_post_meta( $campaign->ID, '_campaign_failed_payments', $failed_payments );
+
+			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 15, 'failed' => $failed_count ), admin_url( 'post.php' ) ) );
+			exit();
+		} else {
 			update_post_meta( $campaign->ID, '_campaign_bulk_collected', 1 );
+			delete_post_meta( $campaign->ID, '_campaign_failed_payments' );
 
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 13, 'collected' => $campaign->backers_count() ), admin_url( 'post.php' ) ) );
 			exit();
 		}
+
+		update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
 	}
 
 	/**
@@ -337,8 +385,9 @@ class ATCF_Campaigns {
 	function messages( $messages ) {
 		$messages[ 'download' ][11] = sprintf( __( 'This %s has not reached its funding goal.', 'atcf' ), strtolower( edd_get_label_singular() ) );
 		$messages[ 'download' ][12] = sprintf( __( 'You do not have permission to collect funds for %s.', 'atcf' ), strtolower( edd_get_label_plural() ) );
-		$messages[ 'download' ][13] = sprintf( __( '%d payments have been collected for this %s.', 'atcf' ), isset ( $_GET[ 'collected' ] ) ? $_GET[ 'collected' ] : 0, strtolower( edd_get_label_singular() ) );
+		$messages[ 'download' ][13] = sprintf( __( 'All payments have been processed and collected for this %s.', 'atcf' ), strtolower( edd_get_label_singular() ) );
 		$messages[ 'download' ][14] = sprintf( __( 'There are no payments for this %s.', 'atcf' ), strtolower( edd_get_label_singular() ) );
+		$messages[ 'download' ][15] = sprintf( __( '<strong>Payments processed.</strong> %d payments failed to process. Please check <a href="%s">gateway logs</a> before trying again.', 'atcf' ), isset ( $_GET[ 'failed' ] ) ? intval( $_GET[ 'failed' ] ) : 0, admin_url( 'edit.php?view=gateway_errors&post_type=download&page=edd-reports&tab=logs' ) );
 
 		return $messages;
 	}
@@ -482,7 +531,17 @@ function _atcf_metabox_campaign_stats() {
 function _atcf_metabox_campaign_funds() {
 	global $post;
 
-	$campaign = atcf_get_campaign( $post );
+	$campaign        = atcf_get_campaign( $post );
+	$failed_payments = $campaign->failed_payments();
+	$count           = 0;
+
+	if ( $failed_payments ) {
+		foreach ( $failed_payments as $gateways ) {
+			foreach ( $gateways as $gateway ) {
+				$count = $count + count( $gateway );
+			}
+		}
+	}
 
 	do_action( 'atcf_metabox_campaign_funds_before', $campaign );
 ?>
@@ -492,7 +551,13 @@ function _atcf_metabox_campaign_funds() {
 	<p><?php printf( __( 'This %1$s is flexible. You may collect the funds at any time. This will end the %1$s.', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?></p>
 	<?php endif; ?>
 
-	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button button-primary"><?php _e( 'Collect Funds', 'atcf' ); ?></a></p>
+	<?php if ( $failed_payments ) : ?>
+	<p><strong><?php printf( _n( '%d payment failed to process.', '%d payments failed to process.', $count, 'atcf' ), $count ); ?></strong> <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'edd-reports', 'tab' => 'logs', 'view' => 'gateway_errors', 'post_type' => 'download' ), admin_url( 'edit.php' ) ) ); ?>"><?php _e( 'View gateway errors', 'atcf' ); ?></a>.</p>
+	<?php endif; ?>
+
+	<?php if ( ! apply_filters( 'atcf_hide_collect_funds_button', false ) ) : ?>
+	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button button-primary"><?php echo $failed_payments ? __( 'Collect Failed Payments', 'atcf' ) : __( 'Collect Funds', 'atcf' ); ?></a></p>
+	<?php endif; ?>
 <?php
 	do_action( 'atcf_metabox_campaign_funds_after', $campaign );
 }
@@ -559,6 +624,15 @@ function _atcf_metabox_campaign_info() {
 	$campaign = atcf_get_campaign( $post );
 
 	$end_date = $campaign->end_date();
+
+	if ( ! $end_date ) {
+		$min = isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14;
+		$max = isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 48;
+
+		$start = apply_filters( 'atcf_shortcode_submit_field_length_start', round( ( $min + $max ) / 2 ) );
+
+		$end_date = date( 'Y-m-d h:i:s', time() + ( $start * 86400 ) );
+	}
 
 	$jj = mysql2date( 'd', $end_date, false );
 	$mm = mysql2date( 'm', $end_date, false );
@@ -669,6 +743,28 @@ function atcf_sanitize_campaign_updates( $updates ) {
 	return $updates;
 }
 add_filter( 'edd_metabox_save_campaign_updates', 'atcf_sanitize_campaign_updates' );
+
+/**
+ * Load Admin Scripts
+ *
+ * @since AppThemer Crowdfunding 1.3
+ *
+ * @return void
+ */
+function atcf_load_admin_scripts( $hook ) {
+	global $pagenow, $typenow;
+ 
+ 	if ( ! in_array( $pagenow, array( 'post.php', 'post-new.php' ) ) )
+ 		return;
+
+ 	if ( 'download' != $typenow )
+ 		return;
+
+ 	$crowdfunding = crowdfunding();
+
+	wp_enqueue_script( 'atcf-admin-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding-admin.js', array( 'jquery', 'edd-admin-scripts' ) );
+}
+add_action( 'admin_enqueue_scripts', 'atcf_load_admin_scripts' );
 
 /** Single Campaign *******************************************************/
 
@@ -852,12 +948,17 @@ class ATCF_Campaign {
 	 * @return int Campaign Backers Count
 	 */
 	public function backers_count() {
-		$backers = $this->backers();
-		
-		if ( ! $backers )
+		$prices  = edd_get_variable_prices( $this->ID );
+		$total   = 0;
+
+		if ( empty( $prices ) )
 			return 0;
 
-		return absint( count( $backers ) );
+		foreach ( $prices as $price ) {
+			$total = $total + ( isset ( $price[ 'bought' ] ) ? $price[ 'bought' ] : 0 );
+		}
+		
+		return absint( $total );
 	}
 
 	/**
@@ -989,6 +1090,10 @@ class ATCF_Campaign {
 		return $total;
 	}
 
+	function failed_payments() {
+		return $this->__get( '_campaign_failed_payments' );
+	}
+
 	/**
 	 * Campaign Active
 	 *
@@ -1052,94 +1157,6 @@ function atcf_get_campaign( $campaign ) {
 	return $campaign;
 }
 
-/** Frontend Submission *******************************************************/
-
-/**
- * Process shortcode submission.
- *
- * @since Appthemer CrowdFunding 0.1-alpha
- *
- * @return void
- */
-function atcf_campaign_edit() {
-	global $edd_options, $post;
-	
-	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
-		return;
-	
-	if ( empty( $_POST['action' ] ) || ( 'atcf-campaign-edit' !== $_POST[ 'action' ] ) )
-		return;
-
-	if ( ! wp_verify_nonce( $_POST[ '_wpnonce' ], 'atcf-campaign-edit' ) )
-		return;
-
-	if ( ! ( $post->post_author == get_current_user_id() || current_user_can( 'manage_options' ) ) )
-		return;
-
-	if ( ! function_exists( 'wp_handle_upload' ) ) {
-		require_once( ABSPATH . 'wp-admin/includes/admin.php' );
-	}
-
-	$errors    = new WP_Error();
-	
-	$category  = $_POST[ 'cat' ];
-	$content   = $_POST[ 'description' ];
-	$updates   = $_POST[ 'updates' ];
-	$excerpt   = $_POST[ 'excerpt' ];
-
-	$email     = $_POST[ 'email' ];
-	$author    = $_POST[ 'name' ];
-	$location  = $_POST[ 'location' ];
-
-	if ( isset ( $_POST[ 'contact-email' ] ) )
-		$c_email = $_POST[ 'contact-email' ];
-	else {
-		$current_user = wp_get_current_user();
-		$c_email = $current_user->user_email;
-	}
-
-	/** Check Category */
-	$category = absint( $category );
-
-	/** Check Content */
-	if ( empty( $content ) )
-		$errors->add( 'invalid-content', __( 'Please add content to this campaign.', 'atcf' ) );
-
-	/** Check Excerpt */
-	if ( empty( $excerpt ) )
-		$excerpt = null;
-
-	do_action( 'atcf_edit_campaign_validate', $_POST, $errors );
-
-	if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
-		wp_die( $errors );
-
-	$args = apply_filters( 'atcf_edit_campaign_data', array(
-		'ID'           => $post->ID,
-		'post_content' => $content,
-		'post_excerpt' => $excerpt,
-		'tax_input'    => array(
-			'download_category' => array( $category )
-		)
-	), $_POST );
-
-	$campaign = wp_update_post( $args, true );
-
-	/** Extra Campaign Information */
-	update_post_meta( $post->ID, 'campaign_email', sanitize_text_field( $email ) );
-	update_post_meta( $post->ID, 'campaign_contact_email', sanitize_text_field( $c_email ) );
-	update_post_meta( $post->ID, 'campaign_location', sanitize_text_field( $location ) );
-	update_post_meta( $post->ID, 'campaign_author', sanitize_text_field( $author ) );
-	update_post_meta( $post->ID, 'campaign_updates', wp_kses_post( $updates ) );
-
-	do_action( 'atcf_edit_campaign_after', $post->ID, $_POST );
-
-	$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', add_query_arg( array( 'success' => 'true' ), get_permalink( $post->ID ) ) );
-	wp_safe_redirect( $redirect );
-	exit();
-}
-add_action( 'template_redirect', 'atcf_campaign_edit' );
-
 /**
  * Price Options Heading
  *
@@ -1170,7 +1187,7 @@ function atcf_edd_variable_pricing_toggle_text( $text ) {
  * @since AppThemer Crowdfunding 0.9
  */
 function atcf_campaign_types() {
-	$types = apply_filters( 'atcf_campaign_types', array(
+	$types = array(
 		'fixed'    => array(
 			'title'       => __( 'All-or-nothing', 'atcf' ),
 			'description' => __( 'Only collect pledged funds when the campaign ends if the set goal is met.', 'atcf' )
@@ -1179,9 +1196,18 @@ function atcf_campaign_types() {
 			'title'       => __( 'Flexible', 'atcf' ),
 			'description' => __( 'Collect funds pledged at the end of the campaign no matter what.', 'atcf' )
 		)
-	) );
+	);
 
-	return $types;
+	if ( ! atcf_has_preapproval_gateway() ) {
+		$types = array(
+			'donation'    => array(
+				'title'       => __( 'Donation', 'atcf' ),
+				'description' => __( 'Funds will be collected automatically as pledged.', 'atcf' )
+			)
+		);
+	}
+
+	return apply_filters( 'atcf_campaign_types', $types );
 }
 
 function atcf_campaign_types_active() {
@@ -1203,7 +1229,7 @@ function atcf_campaign_types_active() {
 }
 
 function atcf_campaign_type_default() {
-	$type = apply_filters( 'atcf_campaign_type_default', 'fixed' );
+	$type = apply_filters( 'atcf_campaign_type_default', atcf_has_preapproval_gateway() ? 'fixed' : 'donation' );
 
 	return $type;
 }

@@ -28,6 +28,9 @@ function atcf_log_pledge_limit( $payment_id, $new_status, $old_status ) {
 	if ( in_array( $new_status, array( 'refunded', 'failed', 'revoked' ) ) )
 		return;
 
+	if ( edd_is_test_mode() && ! apply_filters( 'edd_log_test_payment_stats', false ) )
+		return;
+
 	$payment_data = edd_get_payment_meta( $payment_id );
 	$downloads    = maybe_unserialize( $payment_data['downloads'] );
 	
@@ -60,18 +63,12 @@ add_action( 'edd_update_payment_status', 'atcf_log_pledge_limit', 100, 3 );
  * @return void
  */
 function atcf_clear_cart() {
-	global $edd_options;
-
 	edd_empty_cart();
-
-	return;
 }
 add_action( 'atcf_found_single', 'atcf_clear_cart' );
 
 function atcf_edd_purchase_form_user_info() {
-	$support = get_theme_support( 'appthemer-crowdfunding' );
-
-	if ( ! $support[0][ 'anonymous-backers' ] )
+	if ( ! atcf_theme_supports( 'anonymous-backers' ) )
 		return;
 ?>
 	<p id="edd-anon-wrap">

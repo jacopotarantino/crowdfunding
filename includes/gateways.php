@@ -29,7 +29,7 @@ function atcf_load_gateway_support() {
 		}
 	}
 }
-add_action( 'init', 'atcf_load_gateway_support', 200 );
+add_action( 'init', 'atcf_load_gateway_support', 1 );
 
 /**
  * Determine if any of the currently active gateways have preapproval
@@ -55,28 +55,36 @@ function atcf_has_preapproval_gateway() {
 		switch ( $gateway ) {
 			case 'stripe' :
 
-				if ( $edd_options[ 'stripe_preapprove_only' ] )
+				if ( isset ( $edd_options[ 'stripe_preapprove_only' ] ) )
 					$has_support = true;
 
 				break;
 
 			case 'paypal_adaptive_payments' : 
 
-				if ( $edd_options[ 'epap_preapproval' ] )
+				if ( isset( $edd_options[ 'epap_preapproval' ] ) )
 					$has_support = true;
 
 				break;
 
+			case 'wepay' :
+
+				if ( isset( $edd_options[ 'wepay_preapprove_only' ] ) )
+					$has_support = true;
+
+				break;
+				
 			default :
-				$has_support = apply_filters( 'atcf_has_preapproval_gateway', $has_support );
+				$has_support = $has_support;
 
 		}
 	}
 
-	return $has_support;
+	return apply_filters( 'atcf_has_preapproval_gateway', $has_support );
 }
 
-add_action( 'init', 'this', 100 );
-function this() {
-	atcf_has_preapproval_gateway();
+function atcf_is_gatweay_active( $gateway ) {
+	$active_gateways = edd_get_enabled_payment_gateways();
+
+	return array_key_exists( $gateway, $active_gateways );
 }

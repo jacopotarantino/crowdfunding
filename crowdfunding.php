@@ -5,7 +5,7 @@
  * Description: A crowd funding platform in the likes of Kickstarter and Indigogo
  * Author:      Astoundify
  * Author URI:  http://astoundify.com
- * Version:     1.2
+ * Version:     1.3
  * Text Domain: atcf
  */
 
@@ -61,7 +61,7 @@ final class ATCF_CrowdFunding {
 	private function setup_globals() {
 		/** Versions **********************************************************/
 
-		$this->version    = '1.2';
+		$this->version    = '1.3';
 		$this->db_version = '1';
 
 		/** Paths *************************************************************/
@@ -162,7 +162,7 @@ final class ATCF_CrowdFunding {
 ?>
 		<div class="updated">
 			<p><?php printf( 
-						__( '<strong>Notice:</strong> Crowdfunding by AppThemer requires <a href="%s">Easy Digital Downloads</a> in order to function properly.', 'atcf' ), 
+						__( '<strong>Notice:</strong> Crowdfunding by Astoundify requires <a href="%s">Easy Digital Downloads</a> in order to function properly.', 'atcf' ), 
 						wp_nonce_url( network_admin_url( 'update.php?action=install-plugin&plugin=easy-digital-downloads' ), 'install-plugin_easy-digital-downloads' )
 				); ?></p>
 		</div>
@@ -186,22 +186,45 @@ final class ATCF_CrowdFunding {
 	public function template_loader( $template ) {
 		global $wp_query;
 		
-		$find  = array();
-		$files = array();
+		$find    = array();
+		$files   = array();
 
-		if ( isset ( $wp_query->query_vars[ 'edit' ] ) && is_singular( 'download' ) && ( $wp_query->queried_object->post_author == get_current_user_id() || current_user_can( 'manage_options' ) ) ) {
+		/** Check if we are editing */
+		if ( isset ( $wp_query->query_vars[ 'edit' ] ) && 
+			 is_singular( 'download' ) && 
+			 ( $wp_query->queried_object->post_author == get_current_user_id() || current_user_can( 'manage_options' ) ) &&
+			 atcf_theme_supports( 'campaign-edit' )
+		) {
 			do_action( 'atcf_found_edit' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_edit', array( 'single-campaign-edit.php' ) );
-		} else if ( is_singular( 'download' ) ) {
+		} 
+
+		/** Check if viewing a widget */
+		else if ( isset ( $wp_query->query_vars[ 'widget' ] ) && 
+			 is_singular( 'download' ) &&
+			 atcf_theme_supports( 'campaign-widget' )
+		) {
+			do_action( 'atcf_found_widget' );
+
+			$files = apply_filters( 'atcf_crowdfunding_templates_widget', array( 'campaign-widget.php' ) );
+		}
+
+		/** Check if viewing standard campaign */
+		else if ( is_singular( 'download' ) ) {
 			do_action( 'atcf_found_single' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_campaign', array( 'single-campaign.php', 'single-download.php', 'single.php' ) );
-		} else if ( is_post_type_archive( 'download' ) || is_tax( 'download_category' ) ) {
+		} 
+
+		/** Check if viewing archives */
+		else if ( is_post_type_archive( 'download' ) || is_tax( 'download_category' ) ) {
 			do_action( 'atcf_found_archive' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_archive', array( 'archive-campaigns.php', 'archive-download.php', 'archive.php' ) );
 		}
+
+		$files = apply_filters( 'atcf_template_loader', $files );
 
 		foreach ( $files as $file ) {
 			$find[] = $file;
@@ -212,7 +235,7 @@ final class ATCF_CrowdFunding {
 			$template = locate_template( $find );
 
 			if ( ! $template ) 
-				$template = $this->plugin_dir . '/templates/' . $file;
+				$template = $this->plugin_dir . 'templates/' . $file;
 		}
 
 		return $template;
@@ -243,6 +266,21 @@ final class ATCF_CrowdFunding {
 
 		return false;
 	}
+}
+
+/**
+ * Does the current theme support certain functionality?
+ *
+ * @since AppThemer Crowdfunding 1.3
+ *
+ * @param string $feature The name of the feature to check.
+ * @return boolean If the feature is supported or not.
+ */
+function atcf_theme_supports( $feature ) {
+	$supports = get_theme_support( 'appthemer-crowdfunding' );
+	$supports = $supports[0];
+
+	return isset ( $supports[ $feature ] );
 }
 
 /**

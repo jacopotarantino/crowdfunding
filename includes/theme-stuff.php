@@ -57,7 +57,7 @@ function atcf_purchase_variable_pricing( $download_id ) {
 
 	do_action( 'atcf_campaign_contribute_options', $prices, $type, $download_id );
 
-	add_action( 'edd_after_price_options', $download_id );
+	do_action( 'edd_after_price_options', $download_id );
 }
 
 /**
@@ -99,3 +99,55 @@ function atcf_theme_custom_variable_pricing() {
 	add_action( 'init', 'atcf_theme_variable_pricing' );
 }
 add_action( 'after_setup_theme', 'atcf_theme_custom_variable_pricing', 100 );
+
+/**
+ * When a campaign is over, show a message.
+ *
+ * @since AppThemer Crowdfunding 1.3
+ *
+ * @return void
+ */
+function atcf_campaign_notes( $campaign ) {
+	$end_date = date( get_option( 'date_format' ), strtotime( $campaign->end_date() ) );
+
+	if ( 'fixed' == $campaign->type() ) {
+?>
+	<?php if ( ! $campaign->is_active() && ! $campaign->is_funded() ) : ?>
+		<div class="edd_errors">
+			<p class="edd_error"><?php printf( __( '<strong>Funding Unsuccessful</strong>. This project reached the deadline without achieving its funding goal on %s.', 'atcf' ), $end_date ); ?></p>
+		</div>
+	<?php elseif ( $campaign->is_funded() && ! $campaign->is_active() ) : ?>
+		<div class="edd_errors">
+			<p class="edd_error"><?php printf( __( '<strong>Funding Successful</strong>. This project reached its goal before %s.', 'atcf' ), $end_date ); ?></p>
+		</div>
+	<?php endif; ?>
+<?php
+	} elseif ( 'flexible' == $campaign->type() ) {
+?>
+	<?php if ( ! $campaign->is_active() ) : ?>
+		<div class="edd_errors">
+			<p class="edd_error"><?php printf( __( '<strong>Campaign Complete</strong>. This project has ended on %s. No more contributions can be made.', 'atcf' ), $end_date ); ?></p>
+		</div>
+	<?php endif; ?>
+<?php
+	} else {
+		do_action( 'atcf_campaign_notes_before_' . $campaign->type(), $campaign );
+	}
+}
+add_action( 'atcf_campaign_before', 'atcf_campaign_notes' );
+
+function atcf_campaign_preview_note() {
+	global $post;
+
+	if ( ! is_preview() )
+		return;
+?>
+	<div class="edd_errors">
+		<p class="edd_error"><?php printf( __( 'This is a preview of your %1$s. <a href="%2$s">Edit</a>', 'atcf' ), strtolower( edd_get_label_singular() ), add_query_arg( array( 'edit' => true ), get_permalink( $post->ID ) ) ); ?></p>
+	</div>
+<?php
+}
+add_action( 'atcf_campaign_before', 'atcf_campaign_preview_note' );
+
+add_action( 'atcf_campaign_before', 'edd_print_errors' );
+add_action( 'atcf_shortcode_submit_hidden', 'edd_print_errors' );

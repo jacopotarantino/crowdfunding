@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 1.2
+Stable Tag: 1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -15,7 +15,7 @@ A crowdfunding platform in the likes of Kickstarter and Indigogo
 
 == Description ==
 
-Crowdfunding by [Astoundify](http://Astoundify.com/fundify.html) is a funding platform for WordPress. An extension that seamlessly integrates with [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/), the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
+Crowdfunding by [Astoundify](http://Astoundify.com/) is a funding platform for WordPress. An extension that seamlessly integrates with [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/), the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
 
 "Backers" can pledge specified amounts of money towards a project and receive rewards for their contributions. Pledge amounts are only collected if a campaign reaches its goal in the time specified.
 
@@ -36,7 +36,10 @@ Features of the plugin include:
 
 = Premium Themes =
 
-The first compatible theme that has been released is called "Fundify" from [Astoundify](http://Astoundify.com/fundify.html).
+We currently have two compatible themes that have been released:
+
+* The first theme released is called "Fundify" from [Astoundify](http://Astoundify.com/fundify.html) A large community crowdfunding theme, like Kickstarter or Indiegogo.
+* The second theme released is called "Campaignify" from [Astoundify](http://Astoundify.com/) A multi-purpose crowdfunding theme, great for single project crowdfunding.
 
 = Get Involved =
 
@@ -57,6 +60,25 @@ Developers can contribute to the source code of the project on [GitHub](https://
 Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
 == Changelog ==
+
+= 1.3: June 2, 2013 =
+
+https://github.com/Astoundify/crowdfunding/issues?milestone=8&page=1&state=closed
+
+* New: Themes must declare support for certain features: campaign-edit, campaign-featured-image, campaign-video, campaign-widget.
+* New: Preview and update campaigns before submitting for review.
+* New: Edit reward levels that haven't been pledged once a campaign has started.
+* New: Set limits and track pledges/campaigns when using PayPal Adaptive Payments to avoid breaking TOS.
+* New: Support for embeddable campaign widgets (provided by theme via campaign-widget.php).
+* New: Tracking of failed payment collection, with the ability to try to reprocess.
+* New: 'Donation' funding type when no preapproval gateway is enabled.
+* Fix: Remove single price option from WordPress admin panel to avoid confusion.
+* Fix: Automatically set an end date when creating a campaign via the admin panel to avoid confusion.
+* Fix: Don't increase backer count when in test mode and test mode logging isn't enabled.
+* Tweak: Remove file download fields from frontend form submission.
+* Tweak: Don't show funding types if only one type is enabled.
+
+* Note: If using PayPal Adaptive Payments extension, it must be upgraded to the latest version.
 
 = 1.2: May 8, 2013 =
 

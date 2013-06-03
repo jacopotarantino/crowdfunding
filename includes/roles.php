@@ -14,19 +14,19 @@
  */
 function atcf_roles() {
 	global $wp_roles;
-
+	
 	$campaign_contributor = add_role( 'campaign_contributor', 'Campaign Contributor', array(
 		'read' 						=> true,
-		'edit_posts' 				=> false,
-		'delete_posts' 				=> false
+		'publish_posts'             => true,
+		'delete_posts' 				=> false,
+		'upload_files'              => true,
 	) );
 
-	if ( class_exists('WP_Roles') )
-		if ( ! isset( $wp_roles ) )
-			$wp_roles = new WP_Roles();
+	$contributor = get_role( 'campaign_contributor' );
 
-	$wp_roles->add_cap( 'campaign_contributor', 'submit_campaigns' );
-	$wp_roles->add_cap( 'campaign_contributor', 'read' );
+	$contributor->add_cap( 'submit_campaigns' );
+	$contributor->add_cap( 'edit_product' );
+	$contributor->add_cap( 'edit_products' );
 }
 add_action( 'init', 'atcf_roles' );
 
@@ -38,7 +38,7 @@ add_action( 'init', 'atcf_roles' );
  * @return void
  */
 function atcf_prevent_admin_access() {
-	if ( current_user_can( 'submit_campaigns' ) && ! current_user_can( 'edit_posts' ) ) {
+	if ( current_user_can( 'submit_campaigns' ) && ! current_user_can( 'edit_posts' ) && ! ( defined( 'DOING_AJAX') && DOING_AJAX ) ) {
 		wp_safe_redirect( home_url() );
 		exit;
 	}
