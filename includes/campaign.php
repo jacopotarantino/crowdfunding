@@ -937,6 +937,9 @@ class ATCF_Campaign {
 			'posts_per_page' => -1
 		) );
 
+		if ( ! $backers )
+			return array();
+
 		return $backers;
 	}
 
