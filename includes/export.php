@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return boolean If a user can export campaign data.
  */
 function atcf_export_capability() {
-	return current_user_can( 'submit_campaigns' );
+	return current_user_can( 'submit_campaigns' ) || current_user_can( 'manage_options' );
 }
 add_filter( 'edd_export_capability', 'atcf_export_capability' );
 
