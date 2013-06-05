@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AppThemer Crowdfunding\n"
-"POT-Creation-Date: 2013-06-02 10:27-0500\n"
-"PO-Revision-Date: 2013-06-02 10:27-0500\n"
+"POT-Creation-Date: 2013-06-05 08:50-0500\n"
+"PO-Revision-Date: 2013-06-05 08:50-0500\n"
 "Last-Translator: Spencer Finnell <spencerfinnell@gmail.com>\n"
 "Language-Team: AppThemer <contact@appthemer.com>\n"
 "MIME-Version: 1.0\n"
@@ -239,36 +239,36 @@ msgstr ""
 msgid "End Date:"
 msgstr ""
 
-#: ../includes/campaign.php:1169
+#: ../includes/campaign.php:1172
 msgid "Reward Options:"
 msgstr ""
 
-#: ../includes/campaign.php:1181
+#: ../includes/campaign.php:1184
 msgid "Enable multiple reward options"
 msgstr ""
 
-#: ../includes/campaign.php:1192
+#: ../includes/campaign.php:1195
 msgid "All-or-nothing"
 msgstr ""
 
-#: ../includes/campaign.php:1193
+#: ../includes/campaign.php:1196
 msgid ""
 "Only collect pledged funds when the campaign ends if the set goal is met."
 msgstr ""
 
-#: ../includes/campaign.php:1196
+#: ../includes/campaign.php:1199
 msgid "Flexible"
 msgstr ""
 
-#: ../includes/campaign.php:1197
+#: ../includes/campaign.php:1200
 msgid "Collect funds pledged at the end of the campaign no matter what."
 msgstr ""
 
-#: ../includes/campaign.php:1204
+#: ../includes/campaign.php:1207
 msgid "Donation"
 msgstr ""
 
-#: ../includes/campaign.php:1205
+#: ../includes/campaign.php:1208
 msgid "Funds will be collected automatically as pledged."
 msgstr ""
 
@@ -647,7 +647,7 @@ msgstr ""
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: ../includes/shortcode-register.php:107 ../includes/shortcode-submit.php:644
+#: ../includes/shortcode-register.php:107 ../includes/shortcode-submit.php:641
 msgid "That contact email address already exists."
 msgstr ""
 
@@ -679,7 +679,7 @@ msgstr ""
 msgid "Campaign Information"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:103 ../includes/shortcode-submit.php:104
+#: ../includes/shortcode-submit.php:103
 msgid "Title"
 msgstr ""
 
@@ -717,11 +717,11 @@ msgid "Excerpt"
 msgstr ""
 
 #: ../includes/shortcode-submit.php:326
-msgid "Featuerd Image"
+msgid "Featured Image"
 msgstr ""
 
 #: ../includes/shortcode-submit.php:351
-msgid "Featued Video URL"
+msgid "Featured Video URL"
 msgstr ""
 
 #: ../includes/shortcode-submit.php:369
@@ -779,32 +779,32 @@ msgstr ""
 msgid "Location"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:532
+#: ../includes/shortcode-submit.php:529
 msgid "Success! Your campaign has been received. It will be reviewed shortly."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:596
+#: ../includes/shortcode-submit.php:593
 msgid "Please agree to the Terms and Conditions"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:600
+#: ../includes/shortcode-submit.php:597
 msgid "Please add a title to this campaign."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:606
+#: ../includes/shortcode-submit.php:603
 #, php-format
 msgid "Please enter a valid goal amount. All goals are set in the %s currency."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:629
+#: ../includes/shortcode-submit.php:626
 msgid "Please add content to this campaign."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:637
+#: ../includes/shortcode-submit.php:634
 msgid "Please add a campaign image."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:641
+#: ../includes/shortcode-submit.php:638
 msgid "Please add at least one reward to the campaign."
 msgstr ""
 
