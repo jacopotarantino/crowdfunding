@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 1.3
+Stable Tag: 1.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,6 +60,15 @@ Developers can contribute to the source code of the project on [GitHub](https://
 Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
 == Changelog ==
+
+= 1.3.1: June 7, 2013 =
+
+https://github.com/Astoundify/crowdfunding/issues?milestone=10&state=closed
+
+* Fix: Avoid undefined indexes when adding to cart which prevented some browsers from adding to cart.
+* Fix: Always show terms of service when previewing/editing.
+* Fix: Spelling errors.
+* Tweaks: Update language files.
 
 = 1.3: June 2, 2013 =
 

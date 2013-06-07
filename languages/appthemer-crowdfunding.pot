@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AppThemer Crowdfunding\n"
-"POT-Creation-Date: 2013-06-05 08:50-0500\n"
-"PO-Revision-Date: 2013-06-05 08:50-0500\n"
+"POT-Creation-Date: 2013-06-07 11:45-0500\n"
+"PO-Revision-Date: 2013-06-07 11:45-0500\n"
 "Last-Translator: Spencer Finnell <spencerfinnell@gmail.com>\n"
 "Language-Team: AppThemer <contact@appthemer.com>\n"
 "MIME-Version: 1.0\n"
@@ -808,27 +808,27 @@ msgstr ""
 msgid "Please add at least one reward to the campaign."
 msgstr ""
 
-#: ../includes/theme-stuff.php:117
+#: ../includes/theme-stuff.php:116
 #, php-format
 msgid ""
 "<strong>Funding Unsuccessful</strong>. This project reached the deadline "
 "without achieving its funding goal on %s."
 msgstr ""
 
-#: ../includes/theme-stuff.php:121
+#: ../includes/theme-stuff.php:120
 #, php-format
 msgid ""
 "<strong>Funding Successful</strong>. This project reached its goal before %s."
 msgstr ""
 
-#: ../includes/theme-stuff.php:129
+#: ../includes/theme-stuff.php:128
 #, php-format
 msgid ""
 "<strong>Campaign Complete</strong>. This project has ended on %s. No more "
 "contributions can be made."
 msgstr ""
 
-#: ../includes/theme-stuff.php:146
+#: ../includes/theme-stuff.php:145
 #, php-format
 msgid "This is a preview of your %1$s. <a href=\"%2$s\">Edit</a>"
 msgstr ""
@@ -879,12 +879,12 @@ msgstr ""
 msgid "You have reached the maximum number of pledges-per-campaign allowed."
 msgstr ""
 
-#: ../includes/gateways/paypal_adaptive_payments.php:307
+#: ../includes/gateways/paypal_adaptive_payments.php:305
 msgid ""
 "You have submitted the maximum number of campaigns allowed for this year."
 msgstr ""
 
-#: ../includes/gateways/paypal_adaptive_payments.php:329
+#: ../includes/gateways/paypal_adaptive_payments.php:327
 #, php-format
 msgid "<strong>Note:</strong> There is a %s maximum allowed per reward level."
 msgstr ""
