@@ -786,7 +786,7 @@ function atcf_shortcode_submit_redirect() {
 	if ( ! is_a( $post, 'WP_Post' ) )
 		return;
 
-	if ( ! is_user_logged_in() && ( $post->ID == $edd_options[ 'submit_page' ] ) && isset ( $edd_options[ 'atcf_settings_require_account' ] ) ) {
+	if ( ! is_user_logged_in() && ( isset( $edd_options[ 'submit_page' ] ) && $post->ID == $edd_options[ 'submit_page' ] ) && isset ( $edd_options[ 'atcf_settings_require_account' ] ) ) {
 		$redirect = apply_filters( 'atcf_require_account_redirect', isset ( $edd_options[ 'login_page' ] ) ? get_permalink( $edd_options[ 'login_page' ] ) : home_url() );
 
 		wp_safe_redirect( $redirect );
