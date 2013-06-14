@@ -150,7 +150,7 @@ function atcf_shortcode_profile_campaigns( $user ) {
 	$campaigns = new WP_Query( array(
 		'post_type'   => 'download',
 		'author' => $user->ID,
-		'post_status' => array( 'publish', 'pending' ),
+		'post_status' => array( 'publish', 'pending', 'draft' ),
 		'nopaging'    => true
 	) );
 ?>
@@ -171,6 +171,10 @@ function atcf_shortcode_profile_campaigns( $user ) {
 				<?php do_action( 'atcf_profile_campaign_pending_before', $campaign ); ?>
 				<span class="campaign-awaiting-review"><?php _e( 'This campaign is awaiting review.', 'atcf' ); ?></span>
 				<?php do_action( 'atcf_profile_campaign_pending_after', $campaign ); ?>
+			<?php elseif ( 'draft' == get_post()->post_status ) : ?>
+				<?php do_action( 'atcf_profile_campaign_draft_before', $campaign ); ?>
+				<span class="campaign-awaiting-review"><?php printf( __( 'This campaign is a draft. <a href="%s">Finish editing</a> it and submit it for review.', 'atcf' ), add_query_arg( array( 'edit' => true ), get_permalink( get_post()->ID ) ) ); ?></span>
+				<?php do_action( 'atcf_profile_campaign_draft_after', $campaign ); ?>			
 			<?php else : ?>	
 				<?php do_action( 'atcf_profile_campaign_published_before', $campaign ); ?>
 
