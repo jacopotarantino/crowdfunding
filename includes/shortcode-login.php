@@ -44,8 +44,10 @@ add_shortcode( 'appthemer_crowdfunding_login', 'atcf_shortcode_login' );
 function atcf_shortcode_login_form() {
 	global $edd_options;
 
+	$redirect = isset ( $_GET[ 'redirect_to' ] ) ? $_GET[ 'redirect_to' ] : atcf_get_current_url();
+
 	wp_login_form( apply_filters( 'atcf_shortcode_login_form_args', array(
-		'redirect' => isset ( $edd_options[ 'profile_page' ] ) ? get_permalink( $edd_options[ 'profile_page' ] ) : home_url()
+		'redirect' => esc_url( $redirect )
 	) ) );
 }
 add_action( 'atcf_shortcode_login', 'atcf_shortcode_login_form' );
@@ -75,3 +77,7 @@ function atcf_shortcode_login_form_bottom() {
 	return $add;
 }
 add_action( 'login_form_bottom', 'atcf_shortcode_login_form_bottom' );
+
+function atcf_get_current_url() { 
+	return set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ); 
+}
