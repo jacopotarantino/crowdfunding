@@ -153,11 +153,14 @@ function atcf_shortcode_profile_campaigns( $user ) {
 		'post_status' => array( 'publish', 'pending', 'draft' ),
 		'nopaging'    => true
 	) );
+
+	if ( ! $campaigns->have_posts() )
+		return;
 ?>
 	<h3 class="atcf-profile-section your-campaigns"><?php _e( 'Your Campaigns', 'atcf' ); ?></h3>
 
 	<ul class="atcf-profile-campaigns">
-	<?php if ( $campaigns->have_posts() ) : while ( $campaigns->have_posts() ) : $campaigns->the_post(); $campaign = atcf_get_campaign( get_post()->ID ); ?>
+	<?php while ( $campaigns->have_posts() ) : $campaigns->the_post(); $campaign = atcf_get_campaign( get_post()->ID ); ?>
 		<li class="atcf-profile-campaign-overview">
 			<?php do_action( 'atcf_profile_campaign_before', $campaign ); ?>
 
@@ -199,11 +202,48 @@ function atcf_shortcode_profile_campaigns( $user ) {
 			<?php endif; ?>
 			<?php do_action( 'atcf_profile_campaign_after', $campaign ); ?>
 		</li>	
-	<?php endwhile; endif; wp_reset_query(); ?>
+	<?php endwhile; wp_reset_query(); ?>
 	</ul>
 <?php
 }
 add_action( 'atcf_shortcode_profile', 'atcf_shortcode_profile_campaigns', 20, 1 );
+
+/**
+ * Campaign Contributinos
+ *
+ * @since CrowdFunding 1.4
+ *
+ * @return void
+ */
+function atcf_shortcode_profile_contributions( $user ) {
+	global $edd_options;
+
+	$contributions = edd_get_payments( array(
+		'user' => $user->ID
+	) );
+
+	if ( empty( $contributions ) )
+		return;
+?>
+	<h3 class="atcf-profile-section your-campaigns"><?php _e( 'Your Contributions', 'atcf' ); ?></h3>
+
+	<ul class="atcf-profile-contributinos">
+		<?php foreach ( $contributions as $contribution ) : ?>
+		<?php
+			$payment_data = edd_get_payment_meta( $contribution->ID );
+			$cart         = edd_get_payment_meta_cart_details( $contribution->ID );
+			$key          = edd_get_payment_key( $contribution->ID );
+		?>
+		<li>
+			<?php foreach ( $cart as $download ) : ?>
+			<?php printf( _x( '<a href="%s">%s</a> pledge to <a href="%s">%s</a>', 'price for download (payment history)', 'atcf' ), add_query_arg( 'payment_key', $key, get_permalink( $edd_options[ 'success_page' ] ) ), edd_currency_filter( edd_format_amount( $download[ 'price' ] ) ), get_permalink( $download[ 'id' ] ), $download[ 'name' ] ); ?>
+			<?php endforeach; ?>
+		</li>
+		<?php endforeach; ?>
+	</ul>
+<?php
+}
+add_action( 'atcf_shortcode_profile', 'atcf_shortcode_profile_contributions', 30, 1 );
 
 /**
  * Process shortcode submission.
