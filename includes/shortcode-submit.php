@@ -152,7 +152,13 @@ function atcf_shortcode_submit_field_length( $atts, $campaign ) {
 	$length = $atts[ 'previewing' ] ? $campaign->days_remaining() : $length;
 ?>
 	<p class="atcf-submit-campaign-length">
-		<label for="length"><?php _e( 'Length (Days)', 'atcf' ); ?></label>
+		<label for="length">
+			<?php _e( 'Length (Days)', 'atcf' ); ?>
+
+			<?php if ( ! atcf_has_preapproval_gateway() ) : ?>
+				<a href="#" class="atcf-toggle-neverending"><?php _e( 'No End Date', 'atcf' ); ?></a>
+			<?php endif; ?>
+		</label>
 		<input type="number" min="<?php echo esc_attr( $min ); ?>" max="<?php echo esc_attr( $max ); ?>" step="1" name="length" id="length" value="<?php echo esc_attr( $length ); ?>">
 	</p>
 <?php
@@ -351,7 +357,7 @@ function atcf_shortcode_submit_field_video( $atts, $campaign ) {
 	$video = $atts[ 'editing' ] || $atts[ 'previewing' ] ? $campaign->video() : null;
 ?>
 	<p class="atcf-submit-campaign-video">
-		<label for="length"><?php _e( 'Featured Video URL', 'atcf' ); ?></label>
+		<label for="video"><?php _e( 'Featured Video URL', 'atcf' ); ?></label>
 		<input type="text" name="video" id="video" value="<?php echo esc_attr( $video ); ?>">
 	</p>
 <?php
@@ -499,7 +505,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_author'
 function atcf_shortcode_submit_field_location( $atts, $campaign ) {
 ?>
 	<p class="atcf-submit-campaign-location">
-		<label for="length"><?php _e( 'Location', 'atcf' ); ?></label>
+		<label for="location"><?php _e( 'Location', 'atcf' ); ?></label>
 		<input type="text" name="location" id="location" value="<?php echo $atts[ 'editing' ] || $atts[ 'previewing' ] ? $campaign->location() : null; ?>" />
 	</p>
 <?php
@@ -620,6 +626,8 @@ function atcf_shortcode_submit_process() {
 	
 		$end_date = strtotime( sprintf( '+%d day', $length ) );
 		$end_date = get_gmt_from_date( date( 'Y-m-d H:i:s', $end_date ) );
+	} else {
+		$end_date = null;
 	}
 
 	/** Check Category */
@@ -703,8 +711,10 @@ function atcf_shortcode_submit_process() {
 	if ( $c_email )
 		update_post_meta( $campaign, 'campaign_contact_email', sanitize_text_field( $c_email ) );
 	
-	if ( $length )
+	if ( $end_date )
 		update_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
+	else
+		update_post_meta( $campaign, 'campaign_endless', 1 );
 	
 	if ( $location )
 		update_post_meta( $campaign, 'campaign_location', sanitize_text_field( $location ) );

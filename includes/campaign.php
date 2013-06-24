@@ -278,6 +278,7 @@ class ATCF_Campaigns {
 		$fields[] = 'campaign_goal';
 		$fields[] = 'campaign_contact_email';
 		$fields[] = 'campaign_end_date';
+		$fields[] = 'campaign_endless';
 		$fields[] = 'campaign_video';
 		$fields[] = 'campaign_location';
 		$fields[] = 'campaign_author';
@@ -405,8 +406,15 @@ class ATCF_Campaigns {
  * @return string $end_date Formatted date
  */
 function atcf_campaign_save_end_date( $new ) {
-	if ( ! isset( $_POST[ 'end-aa' ] ) )
+	global $post;
+
+	if ( ! isset( $_POST[ 'end-aa' ] ) ) {
+		if ( $_POST[ 'campaign_endless' ] == 0 ) {
+			delete_post_meta( $post->ID, 'campaign_endless' );
+		}
+
 		return;
+	}
 
 	$aa = $_POST['end-aa'];
 	$mm = $_POST['end-mm'];
@@ -625,7 +633,7 @@ function _atcf_metabox_campaign_info() {
 
 	$end_date = $campaign->end_date();
 
-	if ( ! $end_date ) {
+	if ( ! $end_date && ! $campaign->is_endless() ) {
 		$min = isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14;
 		$max = isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 48;
 
@@ -664,7 +672,6 @@ function _atcf_metabox_campaign_info() {
 	</p>
 
 	<p>
-
 		<?php foreach ( atcf_campaign_types_active() as $key => $desc ) : ?>
 		<label for="campaign_type[<?php echo esc_attr( $key ); ?>]"><input type="radio" name="campaign_type" id="campaign_type[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $key, $campaign->type() ); ?> /> <strong><?php echo $types[ $key ][ 'title' ]; ?></strong> &mdash; <?php echo $types[ $key ][ 'description' ]; ?></label><br />
 		<?php endforeach; ?>
@@ -713,6 +720,12 @@ function _atcf_metabox_campaign_info() {
 		<input type="text" id="end-mn" name="end-mn" value="<?php echo esc_attr( $mn ); ?>" size="2" maxlength="2" autocomplete="off" />
 		<input type="hidden" id="end-ss" name="end-ss" value="<?php echo esc_attr( $ss ); ?>" />
 		<input type="hidden" id="campaign_end_date" name="campaign_end_date" />
+	</p>
+	
+	<p>
+		<label for="campaign_endless">
+			<input type="checkbox" name="campaign_endless" id="campaign_endless" value="1" <?php checked( 1, $campaign->is_endless() ); ?>> <?php printf( __( 'This %s never ends', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?>
+		</label>
 	</p>
 <?php
 	do_action( 'atcf_metabox_campaign_info_after', $campaign );
@@ -893,6 +906,17 @@ class ATCF_Campaign {
 	 */
 	public function end_date() {
 		return mysql2date( 'Y-m-d h:i:s', $this->__get( 'campaign_end_date' ), false );
+	}
+
+	/**
+	 * Is Endless
+	 *
+	 * @since Appthemer CrowdFunding 1.4
+	 *
+	 * @return boolean
+	 */
+	public function is_endless() {
+		return $this->__get( 'campaign_endless' );
 	}
 
 	/**
@@ -1147,6 +1171,9 @@ class ATCF_Campaign {
 
 		if ( $this->is_collected() )
 			$active = false;
+
+		if ( $this->is_endless() )
+			$active = true;
 
 		return apply_filters( 'atcf_campaign_active', $active, $this );
 	}
