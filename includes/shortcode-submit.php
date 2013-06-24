@@ -169,8 +169,11 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_length'
 function atcf_shortcode_submit_field_type( $atts, $campaign ) {
 	global $edd_options;
 
-	if ( $atts[ 'editing' ]  )
+	if ( $atts[ 'editing' ]  ) {
+		echo '<input type="hidden" name="campaign_type" value="' . $campaign->type() . '" />';
+
 		return;
+	}
 
 	$type  = $atts[ 'previewing' ] ? $campaign->type() : atcf_campaign_type_default();
 	$types = atcf_campaign_types_active();
