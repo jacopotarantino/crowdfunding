@@ -1037,6 +1037,32 @@ class ATCF_Campaign {
 	}
 
 	/**
+	 * Campaign Hours Remaining
+	 *
+	 * Calculate the end date, minus today's date, and output a number.
+	 *
+	 * @since Appthemer CrowdFunding 1.4
+	 *
+	 * @return int The hours remaining
+	 */
+	public function hours_remaining() {
+		$expires = strtotime( $this->end_date() );
+		$now     = current_time( 'timestamp' );
+
+		if ( $now > $expires )
+			return 0;
+
+		$diff = $expires - $now;
+
+		if ( $diff < 0 )
+			return 0;
+
+		$days = $diff / ( 60 * 60 );
+
+		return floor( $days );
+	}
+
+	/**
 	 * Campaign Percent Completed
 	 *
 	 * MATH!
