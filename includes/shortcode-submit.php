@@ -64,7 +64,7 @@ function atcf_shortcode_submit( $atts ) {
 
 			<?php if ( is_user_logged_in() && ! $atts[ 'editing' ] ) : ?>
 			<button type="submit" name="submit" value="preview" class="button button-secondary">
-				<?php _e( 'Save and Preview', 'atcf' ); ?>
+				<?php _e( 'Preview', 'atcf' ); ?>
 			</button>
 			<?php endif; ?>
 
@@ -147,13 +147,13 @@ function atcf_shortcode_submit_field_length( $atts, $campaign ) {
 	$min = isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14;
 	$max = isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 48;
 
-	$start = apply_filters( 'atcf_shortcode_submit_field_length_start', round( ( $min + $max ) / 2 ) );
+	$length = apply_filters( 'atcf_shortcode_submit_field_length_start', round( ( $min + $max ) / 2 ) );
 
-	$length = $atts[ 'previewing' ] ? $campaign->days_remaining() : null;
+	$length = $atts[ 'previewing' ] ? $campaign->days_remaining() : $length;
 ?>
 	<p class="atcf-submit-campaign-length">
 		<label for="length"><?php _e( 'Length (Days)', 'atcf' ); ?></label>
-		<input type="number" min="<?php echo esc_attr( $min ); ?>" max="<?php echo esc_attr( $max ); ?>" step="1" name="length" id="length" value="<?php echo esc_attr( $start ); ?>" value="<?php echo esc_attr( $length ); ?>">
+		<input type="number" min="<?php echo esc_attr( $min ); ?>" max="<?php echo esc_attr( $max ); ?>" step="1" name="length" id="length" value="<?php echo esc_attr( $length ); ?>">
 	</p>
 <?php
 }
@@ -728,7 +728,7 @@ function atcf_shortcode_submit_process() {
 			'name'   => sanitize_text_field( $reward[ 'description' ] ),
 			'amount' => apply_filters( 'edd_metabox_save_edd_price', $reward[ 'price' ] ),
 			'limit'  => sanitize_text_field( $reward[ 'limit' ] ),
-			'bought' => sanitize_text_field( $reward[ 'bought' ] )
+			'bought' => isset ( $reward[ 'bought' ] ) ? sanitize_text_field( $reward[ 'bought' ] ) : 0
 		);
 	}
 

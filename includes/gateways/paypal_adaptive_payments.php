@@ -46,12 +46,14 @@ function atcf_gateway_paypal_adaptive_payments_version_notice() {
  * @return void
  */
 function atcf_shortcode_submit_field_paypal_adaptive_payments_email( $atts, $campaign ) {
-	if ( $atts[ 'editing' ] )
+	$paypal_email = null;
+
+	if ( $atts[ 'editing' ] || $atts[ 'previewing' ] )
 		$paypal_email = $campaign->__get( 'campaign_email' );
 ?>
 	<p class="atcf-submit-campaign-paypal-email">
 		<label for="email"><?php _e( 'PayPal Email', 'atcf' ); ?></label>
-		<input type="text" name="email" id="email" value="<?php echo $atts[ 'editing' ] ? $paypal_email : null; ?>" />
+		<input type="text" name="email" id="email" value="<?php echo $paypal_email; ?>" />
 	</p>
 <?php
 }

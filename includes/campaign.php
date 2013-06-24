@@ -1033,7 +1033,7 @@ class ATCF_Campaign {
 
 		$days = $diff / 86400;
 
-		return floor( $days );
+		return ceil( $days );
 	}
 
 	/**
