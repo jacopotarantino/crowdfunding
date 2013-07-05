@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 1.3.1
+Stable Tag: 1.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,6 +60,17 @@ Developers can contribute to the source code of the project on [GitHub](https://
 Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
 == Changelog ==
+
+= 1.4: July 5, 2013 =
+
+https://github.com/astoundify/crowdfunding/issues?milestone=9&page=1&state=closed
+
+* New: Show contributions in user dashboard shortcode.
+* New: Add the option to fund forever (no end date).
+* Fix: Better redirection after login.
+* Fix: Show draft campaigns in user dashboard shortcode.
+* Fix: Better editing/saving of campaigns. Avoid losing data.
+* Fix: Alert the user if their username is already in use.
 
 = 1.3.1: June 7, 2013 =
 
