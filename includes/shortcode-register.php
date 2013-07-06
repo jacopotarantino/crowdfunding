@@ -65,7 +65,7 @@ function atcf_shortcode_register_form() {
 		<label for="user_pass"><?php _e( 'Password', 'atcf' ); ?></label>
 		<input type="password" name="user_pass" id="user_pass" class="input" value="" />
 	</p>
-	
+
 	<p class="atcf-register-submit">
 		<input type="submit" name="submit" id="submit" class="<?php echo apply_filters( 'atcf_shortcode_register_button_class', 'button-primary' ); ?>" value="<?php _e( 'Register', 'atcf' ); ?>" />
 		<input type="hidden" name="action" value="atcf-register-submit" />
@@ -85,7 +85,7 @@ add_action( 'atcf_shortcode_register', 'atcf_shortcode_register_form' );
 function atcf_registration_handle() {
 	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
 		return;
-	
+
 	if ( empty( $_POST['action' ] ) || ( 'atcf-register-submit' !== $_POST[ 'action' ] ) )
 		return;
 
@@ -107,7 +107,7 @@ function atcf_registration_handle() {
 		$errors->add( 'taken-email', __( 'That contact email address already exists.', 'atcf' ) );
 
 	/** Check Password */
-	if ( empty( $register ) )
+	if ( empty( $password ) )
 		$errors->add( 'invalid-password', __( 'Please choose a secure password.', 'atcf' ) );
 
 	/** Check Username */
@@ -126,8 +126,8 @@ function atcf_registration_handle() {
 		$nicename = $username;
 
 	$user_id = atcf_register_user( array(
-		'user_login'           => $username, 
-		'user_pass'            => $password, 
+		'user_login'           => $username,
+		'user_pass'            => $password,
 		'user_email'           => $email,
 		'display_name'         => $nicename,
 	) );
@@ -164,7 +164,7 @@ function atcf_register_user( $args = array() ) {
 	);
 
 	$args = wp_parse_args( $args, $defaults );
-	
+
 	$user_id = wp_insert_user($args);
 
 	$secure_cookie = is_ssl() ? true : false;
