@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 1.4
+Stable Tag: 1.4.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -61,7 +61,11 @@ Yes. However, it won't look much different than a standard EDD install. Template
 
 == Changelog ==
 
-= 1.4: July 5, 2013 =
+= 1.4.1: July 6, 2013 =
+
+https://github.com/astoundify/crowdfunding/issues?milestone=12&page=1&state=closed
+
+* Fix: Bug with account creation / secure password error fixed.
 
 https://github.com/astoundify/crowdfunding/issues?milestone=9&page=1&state=closed
 
