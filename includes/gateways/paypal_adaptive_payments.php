@@ -323,10 +323,10 @@ add_filter( 'atcf_shortcode_submit_hide', 'atcf_gateway_pap_shortcode_submit_hid
 function atcf_gateway_pap_shortcode_submit_field_rewards_list_before() {
 	global $edd_options;
 
-	if ( ! isset( $edd_options[ 'epap_max_donation' ] ) )
+	if ( ! isset( $edd_options[ 'epap_max_donation' ] ) || 0 == $edd_options[ 'epap_max_donation' ] )
 		return;
 
-	printf( '<p class="atcf-submit-max-pledge-limit">%s</p>', sprintf( __( '<strong>Note:</strong> There is a %s maximum allowed per reward level.', 'atcf' ), edd_currency_filter( edd_format_amount( $edd_options[ 'epap_max_donation' ] ) ) ) );
+	printf( '<p class="atcf-submit-max-pledge-limit">%s</p>', sprintf( __( '<strong>Note:</strong> There is a %s maximum allowed per reward level.', 'atcf' ), edd_currency_filter( edd_format_amount( (int)$edd_options[ 'epap_max_donation' ] ) ) ) );
 }
 add_action( 'atcf_shortcode_submit_field_rewards_list_before', 'atcf_gateway_pap_shortcode_submit_field_rewards_list_before' );
 
