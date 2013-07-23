@@ -28,7 +28,7 @@ class ATCF_Campaign_Export extends EDD_Export {
 	 * @return array $cols
 	 */
 	public function csv_cols() {
-		$cols = array(
+		$cols = apply_filters( 'atcf_csv_cols', array(
 			'id'       => __( 'ID',   'atcf' ),
 			'email'    => __( 'Email', 'atcf' ),
 			'first'    => __( 'First Name', 'atcf' ),
@@ -42,7 +42,7 @@ class ATCF_Campaign_Export extends EDD_Export {
 			'date'     => __( 'Date', 'atcf' ),
 			'user'     => __( 'User', 'atcf' ),
 			'status'   => __( 'Status', 'atcf' )
-		);
+		) );
 
 		return $cols;
 	}
@@ -110,7 +110,7 @@ class ATCF_Campaign_Export extends EDD_Export {
 
 			$shipping = isset ( $payment_meta[ 'shipping' ] ) ? $payment_meta[ 'shipping' ] : null;
 
-			$data[] = array(
+			$data[] = apply_filters( 'atcf_csv_cols_values', array(
 				'id'       => $payment_id,
 				'email'    => $payment_meta['email'],
 				'first'    => $user_info['first_name'],
@@ -125,7 +125,7 @@ class ATCF_Campaign_Export extends EDD_Export {
 				'date'     => date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ),
 				'user'     => $user ? $user->display_name : __( 'guest', 'edd' ),
 				'status'   => edd_get_payment_status( $payment, true )
-			);
+			) );
 
 		}
 
