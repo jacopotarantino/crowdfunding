@@ -210,30 +210,18 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_type', 
  * @return void
  */
 function atcf_shortcode_submit_field_category( $atts, $campaign ) {
-	if ( $atts[ 'editing' ] || $atts[ 'previewing' ] ) {
-		$categories = get_the_terms( $campaign->ID, 'download_category' );
+	if ( ! atcf_theme_supports( 'campaign-categories' ) )
+		return;
 
-		$selected = 0;
-
-		if ( ! $categories )
-			$categories = array();
-
-		foreach( $categories as $category ) {
-			$selected = $category->term_id;
-			break;
-		}
-	} else {
-		$selected = 0;
+	if ( ! function_exists( 'wp_terms_checklist' ) ) {
+		require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 	}
 ?>
 	<p class="atcf-submit-campaign-category">
 		<label for="category"><?php _e( 'Category', 'atcf' ); ?></label>			
 		<?php 
-			wp_dropdown_categories( array( 
-				'orderby'    => 'name', 
-				'hide_empty' => 0,
-				'taxonomy'   => 'download_category',
-				'selected'   => $selected
+			wp_terms_checklist( isset ( $campaign->ID ) ? $campaign->ID : 0, array( 
+				'taxonomy'   => 'download_category'
 			) );
 		?>
 	</p>
@@ -607,7 +595,7 @@ function atcf_shortcode_submit_process() {
 	$length    = isset ( $_POST[ 'length' ] ) ? $_POST[ 'length' ] : null;
 	$type      = isset ( $_POST[ 'campaign_type' ] ) ? $_POST[ 'campaign_type' ] : null;
 	$location  = isset ( $_POST[ 'location' ] ) ? $_POST[ 'location' ] : null;
-	$category  = isset ( $_POST[ 'cat' ] ) ? $_POST[ 'cat' ] : 0;
+	$category  = isset ( $_POST[ 'tax_input' ][ 'download_category' ] ) ? $_POST[ 'tax_input' ][ 'download_category' ]: null;
 	$tags      = isset ( $_POST[ 'tax_input' ][ 'download_tag' ] ) ? $_POST[ 'tax_input' ][ 'download_tag' ]: null;
 	$content   = isset ( $_POST[ 'description' ] ) ? $_POST[ 'description' ] : null;
 	$updates   = isset ( $_POST[ 'updates' ] ) ? $_POST[ 'updates' ] : null;
@@ -657,9 +645,6 @@ function atcf_shortcode_submit_process() {
 	} else {
 		$end_date = null;
 	}
-
-	/** Check Category */
-	$category = absint( $category );
 
 	/** Check Content */
 	if ( $content && '' == $content )
@@ -725,7 +710,7 @@ function atcf_shortcode_submit_process() {
 		$campaign = wp_update_post( $args );
 	}
 
-	wp_set_object_terms( $campaign, array( $category ), 'download_category' );
+	wp_set_post_terms( $campaign, $category, 'download_category' );
 	
 	/** Convert tag IDs to names */
 	if ( $tags ) {
