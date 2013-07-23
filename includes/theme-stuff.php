@@ -8,6 +8,21 @@
  */
 
 /**
+ * Does the current theme support certain functionality?
+ *
+ * @since AppThemer Crowdfunding 1.3
+ *
+ * @param string $feature The name of the feature to check.
+ * @return boolean If the feature is supported or not.
+ */
+function atcf_theme_supports( $feature ) {
+	$supports = get_theme_support( 'appthemer-crowdfunding' );
+	$supports = $supports[0];
+
+	return isset ( $supports[ $feature ] );
+}
+
+/**
  * Extend WP_Query with some predefined defaults to query
  * only campaign items.
  *

@@ -242,6 +242,33 @@ function atcf_shortcode_submit_field_category( $atts, $campaign ) {
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_category', 40, 2 );
 
 /**
+ * Campaign Tags
+ *
+ * @since CrowdFunding 1.5
+ *
+ * @return void
+ */
+function atcf_shortcode_submit_field_tags( $atts, $campaign ) {
+	if ( ! atcf_theme_supports( 'campaign-tags' ) )
+		return;
+
+	if ( ! function_exists( 'wp_terms_checklist' ) ) {
+		require_once( ABSPATH . 'wp-admin/includes/admin.php' );
+	}
+?>
+	<p class="atcf-submit-campaign-tags">
+		<label for="tags"><?php _e( 'Tags', 'atcf' ); ?></label>			
+		<?php 
+			wp_terms_checklist( isset ( $campaign->ID ) ? $campaign->ID : 0, array(
+				'taxonomy' => 'download_tag'
+			) );
+		?>
+	</p>
+<?php
+}
+add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_tags', 45, 2 );
+
+/**
  * Campaign Description
  *
  * @since CrowdFunding 0.1-alpha
@@ -581,6 +608,7 @@ function atcf_shortcode_submit_process() {
 	$type      = isset ( $_POST[ 'campaign_type' ] ) ? $_POST[ 'campaign_type' ] : null;
 	$location  = isset ( $_POST[ 'location' ] ) ? $_POST[ 'location' ] : null;
 	$category  = isset ( $_POST[ 'cat' ] ) ? $_POST[ 'cat' ] : 0;
+	$tags      = isset ( $_POST[ 'tax_input' ][ 'download_tag' ] ) ? $_POST[ 'tax_input' ][ 'download_tag' ]: null;
 	$content   = isset ( $_POST[ 'description' ] ) ? $_POST[ 'description' ] : null;
 	$updates   = isset ( $_POST[ 'updates' ] ) ? $_POST[ 'updates' ] : null;
 	$excerpt   = isset ( $_POST[ 'excerpt' ] ) ? $_POST[ 'excerpt' ] : null;
@@ -657,8 +685,6 @@ function atcf_shortcode_submit_process() {
 	if ( ! empty ( $errors->errors ) ) // Not sure how to avoid empty instantiated WP_Error
 		wp_die( $errors );
 
-	//die( print_r( $_POST ) );
-
 	if ( ! $type )
 		$type = atcf_campaign_type_default();
 
@@ -700,6 +726,18 @@ function atcf_shortcode_submit_process() {
 	}
 
 	wp_set_object_terms( $campaign, array( $category ), 'download_category' );
+	
+	/** Convert tag IDs to names */
+	if ( $tags ) {
+		$_tags = array();
+
+		foreach ( $tags as $key => $term ) { 
+			$obj = get_term_by( 'id', $term, 'download_tag' );
+			$_tags[] = $obj->name;
+		}
+
+		wp_set_post_terms( $campaign, $_tags, 'download_tag' );
+	}
 
 	/** Extra Campaign Information */
 	if ( $goal )
