@@ -327,24 +327,19 @@ class ATCF_Campaigns {
 			exit();
 		}
 
-		$existing_failed_payments = $campaign->failed_payments();
+		
+		foreach ( $backers as $backer ) {
+			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
+			$gateway    = get_post_meta( $payment_id, '_edd_payment_gateway', true );
 
-		/**
-		 * If failed payments exist, this has been run before, so go through those instead
-		 */
-		if ( $existing_failed_payments && is_array( $existing_failed_payments ) )
-			$process = $existing_failed_payments;
-		else {
-			foreach ( $backers as $backer ) {
-				$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
-				$gateway    = get_post_meta( $payment_id, '_edd_payment_gateway', true );
+			if ( 'publish' == get_post_field( 'post_status', $payment_id ) || ! $payment_id )
+				continue;
 
-				$gateways[ $gateway ][ 'payments' ][] = $payment_id;
-			}
-
-			$process = $gateways;
+			$gateways[ $gateway ][ 'payments' ][] = $payment_id;
 		}
 
+		$process = $gateways;
+		
 		foreach ( $process as $gateway => $gateway_args ) {
 			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $failed_payments );
 		}
@@ -352,12 +347,10 @@ class ATCF_Campaigns {
 		if ( ! empty( $failed_payments ) ) {
 			$failed_count = 0;
 
-			foreach ( $failed_payments as $gateway ) {
-				$_gateway = $gateway;
-
+			foreach ( $failed_payments as $gateway => $payments ) {
 				/** Loop through each gateway's failed payments */
-				foreach ( $gateway as $payment_id ) {
-					edd_insert_payment_note( $payment_id, apply_filters( 'atcf_failed_payment_note', sprintf( __( 'Error processing preapproved payment via %s', 'atcf' ), $_gateway ) ) );
+				foreach ( $payments[ 'payments' ] as $payment_id ) {
+					edd_insert_payment_note( $payment_id, apply_filters( 'atcf_failed_payment_note', sprintf( __( 'Error processing preapproved payment via %s when collecting funds.', 'atcf' ), $gateway ) ) );
 
 					$failed_count++;
 
@@ -598,11 +591,24 @@ function _atcf_metabox_campaign_funds() {
 	<?php endif; ?>
 
 	<?php if ( $failed_payments ) : ?>
-	<p><strong><?php printf( _n( '%d payment failed to process.', '%d payments failed to process.', $count, 'atcf' ), $count ); ?></strong> <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'edd-reports', 'tab' => 'logs', 'view' => 'gateway_errors', 'post_type' => 'download' ), admin_url( 'edit.php' ) ) ); ?>"><?php _e( 'View gateway errors', 'atcf' ); ?></a>.</p>
+		<p><strong><?php printf( _n( '%d payment failed to process.', '%d payments failed to process.', $count, 'atcf' ), $count ); ?></strong> <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'edd-reports', 'tab' => 'logs', 'view' => 'gateway_errors', 'post_type' => 'download' ), admin_url( 'edit.php' ) ) ); ?>"><?php _e( 'View gateway errors', 'atcf' ); ?></a>.</p>
+
+		<ul>
+		<?php foreach ( $failed_payments as $gateway => $payments ) : ?>
+			<li><strong><?php echo edd_get_gateway_admin_label( $gateway ); ?></strong>
+
+				<ul>
+					<?php foreach ( $payments[ 'payments' ] as $payment ) : ?>
+						<li><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=edit-payment&purchase_id=' . $payment ) ); ?>">#<?php echo $payment; ?></a></li>
+					<?php endforeach; ?>
+				</ul>
+			</li>
+		<?php endforeach; ?>
+		</ul>
 	<?php endif; ?>
 
 	<?php if ( ! apply_filters( 'atcf_hide_collect_funds_button', false ) ) : ?>
-	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button button-primary"><?php echo $failed_payments ? __( 'Collect Failed Payments', 'atcf' ) : __( 'Collect Funds', 'atcf' ); ?></a></p>
+	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button button-primary"><?php _e( 'Collect Funds', 'atcf' ); ?></a></p>
 	<?php endif; ?>
 <?php
 	do_action( 'atcf_metabox_campaign_funds_after', $campaign );

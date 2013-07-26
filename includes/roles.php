@@ -27,6 +27,7 @@ function atcf_roles() {
 	$contributor->add_cap( 'submit_campaigns' );
 	$contributor->add_cap( 'edit_product' );
 	$contributor->add_cap( 'edit_products' );
+	$contributor->add_cap( 'assign_product_terms' );
 }
 add_action( 'init', 'atcf_roles' );
 
