@@ -132,6 +132,9 @@ function atcf_registration_handle() {
 		'display_name'         => $nicename,
 	) );
 
+	if ( ! empty ( $user_id->errors ) )
+		wp_die( $user_id );
+
 	do_action( 'atcf_register_process_after', $user_id, $_POST );
 
 	$redirect = apply_filters( 'atcf_register_redirect', isset ( $edd_options[ 'profile_page' ] ) ? get_permalink( $edd_options[ 'profile_page' ] ) : home_url() );
