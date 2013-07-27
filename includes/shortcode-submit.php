@@ -264,6 +264,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_tags', 
  * @return void
  */
 function atcf_shortcode_submit_field_description( $atts, $campaign ) {
+	global $post;
 ?>
 	<div class="atcf-submit-campaign-description">
 		<label for="description"><?php _e( 'Description', 'atcf' ); ?></label>

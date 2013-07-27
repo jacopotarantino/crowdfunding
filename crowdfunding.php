@@ -39,13 +39,23 @@ final class ATCF_CrowdFunding {
 	 */
 	public static function instance() {
 		if ( ! isset ( self::$instance ) ) {
-			self::$instance = new ATCF_CrowdFunding;
-			self::$instance->setup_globals();
-			self::$instance->includes();
-			self::$instance->setup_actions();
+			self::$instance = new self;
 		}
 
 		return self::$instance;
+	}
+
+	/**
+	 * Start your engines.
+	 *
+	 * @since Appthemer CrowdFunding 1.5
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$this->setup_globals();
+		$this->includes();
+		$this->setup_actions();
 	}
 
 	/** Private Methods *******************************************************/
@@ -61,7 +71,7 @@ final class ATCF_CrowdFunding {
 	private function setup_globals() {
 		/** Versions **********************************************************/
 
-		$this->version    = '1.4.1';
+		$this->version    = '1.5';
 		$this->db_version = '1';
 
 		/** Paths *************************************************************/
