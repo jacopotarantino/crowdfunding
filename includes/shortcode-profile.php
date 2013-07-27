@@ -4,7 +4,7 @@
  *
  * [appthemer_crowdfunding_profile] lists relevant information about the current user.
  *
- * @since Appthemer CrowdFunding 0.8
+ * @since Astoundify Crowdfunding 0.8
  */
 
 // Exit if accessed directly
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Base page/form. All fields are loaded through an action,
  * so the form can be extended for ever, fields can be removed, added, etc.
  *
- * @since CrowdFunding 0.8
+ * @since Astoundify Crowdfunding 0.8
  *
  * @return $form
  */
@@ -43,7 +43,7 @@ add_shortcode( 'appthemer_crowdfunding_profile', 'atcf_shortcode_profile' );
 /**
  * Profile Information
  *
- * @since CrowdFunding 0.8
+ * @since Astoundify Crowdfunding 0.8
  *
  * @return void
  */
@@ -70,7 +70,7 @@ add_action( 'atcf_shortcode_profile', 'atcf_shortcode_profile_info', 10, 1 );
 /**
  * Nicename
  *
- * @since CrowdFunding 0.8
+ * @since Astoundify Crowdfunding 0.8
  *
  * @return void
  */
@@ -87,7 +87,7 @@ add_action( 'atcf_profile_info_fields', 'atcf_profile_info_fields_nicename', 10,
 /**
  * URL
  *
- * @since CrowdFunding 0.8
+ * @since Astoundify Crowdfunding 0.8
  *
  * @return void
  */
@@ -104,7 +104,7 @@ add_action( 'atcf_profile_info_fields', 'atcf_profile_info_fields_url', 20, 2 );
 /**
  * Contact Methods
  *
- * @since CrowdFunding 0.9
+ * @since Astoundify Crowdfunding 0.9
  *
  * @return void
  */
@@ -125,7 +125,7 @@ add_action( 'atcf_profile_info_fields', 'atcf_profile_info_fields_contactmethods
 /**
  * Biography
  *
- * @since CrowdFunding 0.8
+ * @since Astoundify Crowdfunding 0.8
  *
  * @return void
  */
@@ -142,7 +142,7 @@ add_action( 'atcf_profile_info_fields', 'atcf_profile_info_fields_bio', 30, 2 );
 /**
  * Campaign History
  *
- * @since CrowdFunding 0.8
+ * @since Astoundify Crowdfunding 0.8
  *
  * @return void
  */
@@ -211,7 +211,7 @@ add_action( 'atcf_shortcode_profile', 'atcf_shortcode_profile_campaigns', 20, 1 
 /**
  * Campaign Contributinos
  *
- * @since CrowdFunding 1.4
+ * @since Astoundify Crowdfunding 1.4
  *
  * @return void
  */
@@ -248,7 +248,7 @@ add_action( 'atcf_shortcode_profile', 'atcf_shortcode_profile_contributions', 30
 /**
  * Process shortcode submission.
  *
- * @since Appthemer CrowdFunding 0.8
+ * @since Astoundify Crowdfunding 0.8
  *
  * @return void
  */
@@ -302,7 +302,7 @@ add_action( 'template_redirect', 'atcf_shortcode_profile_info_process' );
 /**
  * Request Payout
  *
- * @since Appthemer CrowdFunding 0.8
+ * @since Astoundify Crowdfunding 0.8
  *
  * @return void
  */
@@ -366,7 +366,7 @@ add_action( 'template_redirect', 'atcf_shortcode_profile_request_payout' );
 /**
  * Request Data
  *
- * @since Appthemer CrowdFunding 0.8
+ * @since Astoundify Crowdfunding 0.8
  *
  * @return void
  */
@@ -417,7 +417,7 @@ add_action( 'template_redirect', 'atcf_shortcode_profile_request_data' );
 /**
  * Success Message
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */

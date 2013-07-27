@@ -3,7 +3,7 @@
  * Add Endpoint for backers. This allows us to monitor
  * the query to create "fake" URLs for seeing backers.
  *
- * @since Appthemer CrowdFunding 0.9
+ * @since Astoundify Crowdfunding 0.9
  *
  * @return void
  */
@@ -12,7 +12,7 @@
  * Add Endpoint for backers. This allows us to monitor
  * the query to create "fake" URLs for seeing backers.
  *
- * @since Appthemer CrowdFunding 0.9
+ * @since Astoundify Crowdfunding 0.9
  *
  * @return void
  */
@@ -26,7 +26,7 @@ add_action( 'init', 'atcf_endpoints' );
  * Add Endpoint for backers. This allows us to monitor
  * the query to create "fake" URLs for seeing backers.
  *
- * @since Appthemer CrowdFunding 0.9
+ * @since Astoundify Crowdfunding 0.9
  *
  * @return void
  */

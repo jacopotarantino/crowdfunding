@@ -4,7 +4,7 @@
  *
  * Handle a bit of extra email info.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  */
 
 // Exit if accessed directly
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Causes the purchase receipt to be emailed when initially pledged.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @param int $payment_id The ID of the payment
  * @param string $new_status The status we are changing to
@@ -45,7 +45,7 @@ add_action( 'edd_update_payment_status', 'edd_trigger_purchase_receipt', 10, 3 )
  *
  * Figure out who to send to, who it's from, etc.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @param int $payment_id The ID of the payment
  * @param boolean $admin_notice Alert admins, or not
@@ -95,7 +95,7 @@ function atcf_email_pending_purchase_receipt( $payment_id, $admin_notice = true 
  * Get the actual pending email body content. Default text, can be filtered, and will
  * use all template tags that EDD supports.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @param int $payment_id The ID of the payment
  * @param array $payment_data The relevant payment data

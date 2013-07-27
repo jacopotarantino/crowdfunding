@@ -2,7 +2,7 @@
 /**
  * PayPal Adaptive Payments gateway functionality.
  *
- * @since Appthemer CrowdFunding 1.1
+ * @since Astoundify Crowdfunding 1.1
  */
 
 // Exit if accessed directly
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Check the PayPal Adaptive Payments version, and add a notice if
  * it is out of date.
  *
- * @since CrowdFunding 1.3
+ * @since Astoundify Crowdfunding 1.3
  *
  * @return boolean
  */
@@ -30,7 +30,7 @@ add_filter( 'atcf_hide_collect_funds_button', 'atcf_gateway_paypal_adaptive_paym
 /**
  * Show a notice if PayPal Adaptive Payments is out of date.
  *
- * @since CrowdFunding 1.3
+ * @since Astoundify Crowdfunding 1.3
  *
  * @return void
  */
@@ -41,7 +41,7 @@ function atcf_gateway_paypal_adaptive_payments_version_notice() {
 /**
  * PayPal Adaptive Payments field on frontend submit and edit.
  *
- * @since CrowdFunding 1.1
+ * @since Astoundify Crowdfunding 1.1
  *
  * @return void
  */
@@ -62,7 +62,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_
 /**
  * PayPal Adaptive Payments field on backend.
  *
- * @since CrowdFunding 1.1
+ * @since Astoundify Crowdfunding 1.1
  *
  * @return void
  */
@@ -80,7 +80,7 @@ add_action( 'atcf_metabox_campaign_info_after', 'atcf_metabox_campaign_info_afte
 /**
  * Validate PayPal Adaptive Payments on the frontend submission (or edit).
  *
- * @since CrowdFunding 1.1
+ * @since Astoundify Crowdfunding 1.1
  *
  * @return void
  */
@@ -96,7 +96,7 @@ add_action( 'atcf_edit_campaign_validate', 'atcf_campaign_submit_validate_paypal
 /**
  * Save PayPal Adaptive Payments on the frontend submission (or edit).
  *
- * @since CrowdFunding 1.1
+ * @since Astoundify Crowdfunding 1.1
  *
  * @return void
  */
@@ -111,7 +111,7 @@ add_action( 'atcf_edit_campaign_after', 'atcf_submit_process_after_paypal_adapti
 /**
  * Save PayPal Adaptive Payments on the backend.
  *
- * @since CrowdFunding 1.1
+ * @since Astoundify Crowdfunding 1.1
  *
  * @return void
  */
@@ -125,7 +125,7 @@ add_filter( 'edd_metabox_fields_save', 'atcf_metabox_save_paypal_adaptive_paymen
 /**
  * Add settings to set limits
  *
- * @since AppThemer Crowdfunding 1.3
+ * @since Astoundify Crowdfunding 1.3
  * 
  * @param $settings
  * @return $settings
@@ -165,7 +165,7 @@ add_filter( 'edd_settings_gateways', 'atcf_settings_gateway_paypal_adaptive_paym
 /**
  * Track number or purchases by a registered user.
  *
- * @since Appthemer CrowdFunding 1.3
+ * @since Astoundify Crowdfunding 1.3
  *
  * @param int $payment the ID number of the payment
  * @param string $new_status
@@ -218,7 +218,7 @@ add_action( 'edd_update_payment_status', 'atcf_gateway_pap_log_payments_per_user
  *
  * If using PAP, and a limit is set, don't let them if the limit is reached.
  *
- * @since Appthemer CrowdFunding 1.3
+ * @since Astoundify Crowdfunding 1.3
  *
  * @param int $download_id
  * @param array $options
@@ -253,7 +253,7 @@ add_action( 'edd_pre_add_to_cart', 'atcf_gateway_pap_edd_item_in_cart', 10, 2 );
  *
  * If using PAP and they are registered, track their submission.
  *
- * @since Appthemer CrowdFunding 1.3
+ * @since Astoundify Crowdfunding 1.3
  *
  * @param int $campaign The ID of hte campaign
  * @param array $postdata
@@ -283,7 +283,7 @@ add_action( 'atcf_submit_process_after', 'atcf_gateway_pap_submit_process_after'
 /**
  * Hide the submission form if needed.
  *
- * @since Appthemer CrowdFunding 1.3
+ * @since Astoundify Crowdfunding 1.3
  *
  * @param boolean $show
  * @return void
@@ -316,7 +316,7 @@ add_filter( 'atcf_shortcode_submit_hide', 'atcf_gateway_pap_shortcode_submit_hid
 /**
  * If there is a limit, show it on the form.
  *
- * @since Appthemer Crowdfunding 1.3
+ * @since Astoundify Crowdfunding 1.3
  *
  * @return void
  */
@@ -334,7 +334,7 @@ add_action( 'atcf_shortcode_submit_field_rewards_list_before', 'atcf_gateway_pap
  * Process preapproved payments
  * Create a list of receivers
  *
- * @since Appthemer Crowdfunding 1.3
+ * @since Astoundify Crowdfunding 1.3
  *
  * @return array $receivers
  */
@@ -370,7 +370,7 @@ function atcf_gateway_paypal_adaptive_payments_receivers( $campaign ) {
 /**
  * Process preapproved payments
  *
- * @since Appthemer Crowdfunding 1.1
+ * @since Astoundify Crowdfunding 1.1
  *
  * @return void
  */

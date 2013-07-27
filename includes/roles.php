@@ -2,7 +2,7 @@
 /**
  * Some role stuff
  *
- * @since Appthemer CrowdFunding 0.6
+ * @since Astoundify Crowdfunding 0.6
  */
 
 class ATCF_Roles {
@@ -14,7 +14,7 @@ class ATCF_Roles {
 	/**
 	 * Add the Campaign Contributor role.
 	 *
-	 * @since AppThemer Crowdfunding 1.5
+	 * @since Astoundify Crowdfunding 1.5
 	 *
 	 * @return void
 	 */
@@ -32,7 +32,7 @@ class ATCF_Roles {
 	/**
 	 * Add the contributor-specific caps
 	 *
-	 * @since AppThemer Crowdfunding 1.5
+	 * @since Astoundify Crowdfunding 1.5
 	 *
 	 * @return void
 	 */
@@ -62,7 +62,7 @@ new ATCF_Roles;
  * When an image is being uploaded, if we are on the frontend,
  * only allow images to be uploaded.
  *
- * @since Appthemer CrowdFunding 1.5
+ * @since Astoundify Crowdfunding 1.5
  *
  * @return void
  */
@@ -78,7 +78,7 @@ add_filter( 'wp_handle_upload_prefilter', 'atcf_maybe_filter_mimes' );
 /**
  * Only allow images to be uploaded.
  *
- * @since Appthemer CrowdFunding 1.5
+ * @since Astoundify Crowdfunding 1.5
  *
  * @return void
  */
@@ -95,7 +95,7 @@ function atcf_post_mime_types( $mimes ) {
 /**
  * Redirect users who shouldn't be here.
  *
- * @since Appthemer CrowdFunding 0.7.1
+ * @since Astoundify Crowdfunding 0.7.1
  *
  * @return void
  */
@@ -121,7 +121,7 @@ add_action( 'admin_init', 'atcf_prevent_admin_access', 1000 );
 /**
  * Shim default contact methods.
  *
- * @since Appthemer CrowdFunding 0.9
+ * @since Astoundify Crowdfunding 0.9
  *
  * @return void
  */

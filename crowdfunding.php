@@ -18,7 +18,7 @@ include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 /**
  * Main Crowd Funding Class
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  */
 final class ATCF_CrowdFunding {
 
@@ -33,7 +33,7 @@ final class ATCF_CrowdFunding {
 	 * Ensures that only one instance of Crowd Funding exists in memory at any one
 	 * time. Also prevents needing to define globals all over the place.
 	 *
-	 * @since Appthemer CrowdFunding 0.1-alpha
+	 * @since Astoundify Crowdfunding 0.1-alpha
 	 *
 	 * @return The one true Crowd Funding
 	 */
@@ -48,7 +48,7 @@ final class ATCF_CrowdFunding {
 	/**
 	 * Start your engines.
 	 *
-	 * @since Appthemer CrowdFunding 1.5
+	 * @since Astoundify Crowdfunding 1.5
 	 *
 	 * @return void
 	 */
@@ -64,7 +64,7 @@ final class ATCF_CrowdFunding {
 	 * Set some smart defaults to class variables. Allow some of them to be
 	 * filtered to allow for early overriding.
 	 *
-	 * @since Appthemer CrowdFunding 0.1-alpha
+	 * @since Astoundify Crowdfunding 0.1-alpha
 	 *
 	 * @return void
 	 */
@@ -98,7 +98,7 @@ final class ATCF_CrowdFunding {
 	/**
 	 * Include required files.
 	 *
-	 * @since Appthemer CrowdFunding 0.1-alpha
+	 * @since Astoundify Crowdfunding 0.1-alpha
 	 *
 	 * @return void
 	 */
@@ -129,7 +129,7 @@ final class ATCF_CrowdFunding {
 	/**
 	 * Setup the default hooks and actions
 	 *
-	 * @since Appthemer CrowdFunding 0.1-alpha
+	 * @since Astoundify Crowdfunding 0.1-alpha
 	 *
 	 * @return void
 	 */
@@ -146,7 +146,7 @@ final class ATCF_CrowdFunding {
 	/**
 	 * Easy Digital Downloads
 	 *
-	 * @since Appthemer CrowdFunding 0.2-alpha
+	 * @since Astoundify Crowdfunding 0.2-alpha
 	 *
 	 * @return void
 	 */
@@ -164,7 +164,7 @@ final class ATCF_CrowdFunding {
 	/**
 	 * Admin notice.
 	 *
-	 * @since Appthemer CrowdFunding 0.2-alpha
+	 * @since Astoundify Crowdfunding 0.2-alpha
 	 *
 	 * @return void
 	 */
@@ -254,7 +254,7 @@ final class ATCF_CrowdFunding {
 	/**
 	 * Loads the plugin language files
 	 *
-	 * @since Appthemer CrowdFunding 0.1-alpha
+	 * @since Astoundify Crowdfunding 0.1-alpha
 	 */
 	public function load_textdomain() {
 		// Traditional WordPress plugin locale filter
@@ -287,7 +287,7 @@ final class ATCF_CrowdFunding {
  *
  * Example: <?php $crowdfunding = crowdfunding(); ?>
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return The one true Crowd Funding Instance
  */

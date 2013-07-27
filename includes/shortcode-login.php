@@ -4,7 +4,7 @@
  *
  * [appthemer_crowdfunding_login] creates a log in form for users to log in with.
  *
- * @since Appthemer CrowdFunding 1.0
+ * @since Astoundify Crowdfunding 1.0
  */
 
 // Exit if accessed directly
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Login Shortcode
  *
- * @since CrowdFunding 1.0
+ * @since Astoundify Crowdfunding 1.0
  *
  * @return $form
  */
@@ -37,7 +37,7 @@ add_shortcode( 'appthemer_crowdfunding_login', 'atcf_shortcode_login' );
 /**
  * Login form
  *
- * @since CrowdFunding 1.0
+ * @since Astoundify Crowdfunding 1.0
  *
  * @return $form
  */
@@ -57,7 +57,7 @@ add_action( 'atcf_shortcode_login', 'atcf_shortcode_login_form' );
  *
  * Append helpful links to the bottom of the login form.
  *
- * @since CrowdFunding 1.0
+ * @since Astoundify Crowdfunding 1.0
  *
  * @return $form
  */

@@ -2,7 +2,7 @@
 /**
  * Checkout
  *
- * @since Appthemer CrowdFunding 0.9
+ * @since Astoundify Crowdfunding 0.9
  */
 
 // Exit if accessed directly
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Track number of purchases for each pledge amount.
  *
- * @since Appthemer CrowdFunding 0.9
+ * @since Astoundify Crowdfunding 0.9
  *
  * @param int $payment the ID number of the payment
  * @param array $payment_data The payment data for the cart
@@ -72,7 +72,7 @@ add_action( 'edd_purchase_form_user_info', 'atcf_edd_purchase_form_user_info' );
  *
  * This is up to the theme to actually honor.
  *
- * @since Appthemer CrowdFunding 1.2
+ * @since Astoundify Crowdfunding 1.2
  *
  * @param arrray $payment_meta Array of payment meta about to be saved
  * @return array $payment_meta An updated array of payment meta

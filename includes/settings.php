@@ -2,13 +2,13 @@
 /**
  * Supplement some settings stuff.
  *
- * @since Appthemer CrowdFunding 0.7
+ * @since Astoundify Crowdfunding 0.7
  */
 
 /**
  * Add pages to settings. Splice and resplice. Ghetto.
  *
- * @since AppThemer Crowdfunding 0.7
+ * @since Astoundify Crowdfunding 0.7
  * 
  * @param $settings
  * @return $settings
@@ -83,7 +83,7 @@ add_filter( 'edd_settings_general', 'atcf_settings_general_pages' );
 /**
  * Add settings to set a flexible fee
  *
- * @since AppThemer Crowdfunding 0.7
+ * @since Astoundify Crowdfunding 0.7
  * 
  * @param $settings
  * @return $settings
@@ -107,7 +107,7 @@ add_filter( 'edd_settings_gateways', 'atcf_settings_gateway', 100 );
 /**
  * General settings for Crowdfunding
  *
- * @since AppThemer Crowdfunding 0.9
+ * @since Astoundify Crowdfunding 0.9
  * 
  * @param $settings
  * @return $settings

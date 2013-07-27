@@ -2,7 +2,7 @@
 /**
  * Stripe gateway functionality.
  *
- * @since Appthemer CrowdFunding 1.1
+ * @since Astoundify Crowdfunding 1.1
  */
 
 // Exit if accessed directly
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Process preapproved payments
  *
- * @since Appthemer Crowdfunding 1.1
+ * @since Astoundify Crowdfunding 1.1
  *
  * @return void
  */

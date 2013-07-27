@@ -2,7 +2,7 @@
 /**
  * Custom gateway functionality.
  *
- * @since Appthemer CrowdFunding 1.1
+ * @since Astoundify Crowdfunding 1.1
  */
 
 // Exit if accessed directly
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * If there is any custom gateway functionality included,
  * and the gateway is active, load the extra files.
  *
- * @since Appthemer Crowdfunding 1.1
+ * @since Astoundify Crowdfunding 1.1
  *
  * @return void
  */
@@ -36,7 +36,7 @@ add_action( 'init', 'atcf_load_gateway_support', 1 );
  * functionality. There really isn't a standard way of doing this, so
  * they are manually defined in an array right now.
  * 
- * @since Appthemer Crowdfunding 1.1
+ * @since Astoundify Crowdfunding 1.1
  *
  * @return boolean $has_support If any of the currently active gateways support preapproval
  */

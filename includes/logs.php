@@ -2,13 +2,13 @@
 /**
  * Supplement some log stuff.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  */
 
 /**
  * Create a log for preapproval payments
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @param int $payment_id the ID number of the payment
  * @param string $new_status the status of the payment, probably "publish"
@@ -53,7 +53,7 @@ add_action( 'edd_update_payment_status', 'atcf_pending_purchase', 50, 3 );
 /**
  * Create a log type for preapproval payments
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @param array $types An array of valid types
  * @return array $types An updated or array of valid types

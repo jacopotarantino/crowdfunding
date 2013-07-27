@@ -4,7 +4,7 @@
  *
  * [appthemer_crowdfunding_submit] creates a submission form.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  */
 
 // Exit if accessed directly
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Base page/form. All fields are loaded through an action,
  * so the form can be extended for ever, fields can be removed, added, etc.
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return $form
  */
@@ -87,7 +87,7 @@ add_shortcode( 'appthemer_crowdfunding_submit', 'atcf_shortcode_submit' );
 /**
  * Campaign Title
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -110,7 +110,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_title',
 /**
  * Campaign Goal
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -134,7 +134,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_goal', 
 /**
  * Campaign Length 
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -168,7 +168,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_length'
 /**
  * Campaign Type
  *
- * @since CrowdFunding 0.8
+ * @since Astoundify Crowdfunding 0.8
  *
  * @return void
  */
@@ -205,7 +205,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_type', 
 /**
  * Campaign Category
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -232,7 +232,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_categor
 /**
  * Campaign Tags
  *
- * @since CrowdFunding 1.5
+ * @since Astoundify Crowdfunding 1.5
  *
  * @return void
  */
@@ -259,7 +259,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_tags', 
 /**
  * Campaign Description
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -290,7 +290,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_descrip
 /**
  * Campaign Updates
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -322,7 +322,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_updates
 /**
  * Campaign Export
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -339,7 +339,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_excerpt
 /**
  * Campaign Images
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -362,7 +362,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_images'
 /**
  * Campaign Video
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -383,7 +383,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_video',
 /**
  * Campaign Backer Rewards
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -475,7 +475,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_rewards
 /**
  * Campaign Contact Email
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -502,7 +502,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_contact
 /**
  * Campaign Author
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -519,7 +519,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_author'
 /**
  * Campaign Location
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -536,7 +536,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_locatio
 /**
  * Terms
  *
- * @since CrowdFunding 1.0
+ * @since Astoundify Crowdfunding 1.0
  *
  * @return void
  */
@@ -549,7 +549,7 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_terms',
 /**
  * Success Message
  *
- * @since CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -567,7 +567,7 @@ add_action( 'atcf_shortcode_submit_before', 'atcf_shortcode_submit_before_succes
 /**
  * Process shortcode submission.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -831,7 +831,7 @@ add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
 /**
  * Redirect submit page if needed.
  *
- * @since Appthemer CrowdFunding 1.1
+ * @since Astoundify Crowdfunding 1.1
  *
  * @return void
  */

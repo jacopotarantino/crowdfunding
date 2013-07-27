@@ -4,7 +4,7 @@
  *
  * [appthemer_crowdfunding_register] creates a log in form for users to log in with.
  *
- * @since Appthemer CrowdFunding 1.0
+ * @since Astoundify Crowdfunding 1.0
  */
 
 // Exit if accessed directly
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Register Shortcode
  *
- * @since CrowdFunding 1.0
+ * @since Astoundify Crowdfunding 1.0
  *
  * @return $form
  */
@@ -39,7 +39,7 @@ add_shortcode( 'appthemer_crowdfunding_register', 'atcf_shortcode_register' );
 /**
  * Register form
  *
- * @since CrowdFunding 1.0
+ * @since Astoundify Crowdfunding 1.0
  *
  * @return $form
  */
@@ -78,7 +78,7 @@ add_action( 'atcf_shortcode_register', 'atcf_shortcode_register_form' );
 /**
  * Process registration submission.
  *
- * @since Appthemer CrowdFunding 1.0
+ * @since Astoundify Crowdfunding 1.0
  *
  * @return void
  */
@@ -155,7 +155,7 @@ add_action( 'template_redirect', 'atcf_registration_handle' );
  * Extract a bit that actually creates the user so it can be called elsewhere
  * (such as on the campaign creation process)
  *
- * @since Appthemer CrowdFunding 1.0
+ * @since Astoundify Crowdfunding 1.0
  *
  * @return void
  */

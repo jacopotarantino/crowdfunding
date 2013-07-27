@@ -2,7 +2,7 @@
 /**
  * WePay gateway functionality.
  *
- * @since Appthemer CrowdFunding 1.3
+ * @since Astoundify Crowdfunding 1.3
  */
 
 // Exit if accessed directly
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Process preapproved payments
  *
- * @since Appthemer Crowdfunding 1.3
+ * @since Astoundify Crowdfunding 1.3
  *
  * @return void
  */

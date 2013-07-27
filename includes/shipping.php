@@ -5,7 +5,7 @@
  * Since EDD is for digital goods, it does not collect shipping information by
  * default. This remedies that, by adding shipping fields on checkout.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  */
 
 // Exit if accessed directly
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Do any items in the cart require shipping?
  *
- * @since Appthemer CrowdFunding 0.9
+ * @since Astoundify Crowdfunding 0.9
  *
  * @return void
  */
@@ -37,7 +37,7 @@ function atcf_shipping_cart_shipping() {
 /**
  * Add the HTML fields.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @return void
  */
@@ -131,7 +131,7 @@ add_action( 'edd_purchase_form_before_submit', 'atcf_shipping_address_fields', 1
 /**
  * Validate shipping information
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @param arrray $valid_data An existing array of valid data
  * @param array $data The form $_POST data
@@ -172,7 +172,7 @@ add_action( 'edd_checkout_error_checks', 'atcf_shipping_validate_meta', 10, 2 );
 /**
  * Save payment meta.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @param arrray $payment_meta Array of payment meta about to be saved
  * @return array $payment_meta An updated array of payment meta
@@ -195,7 +195,7 @@ add_filter( 'edd_payment_meta', 'atcf_shipping_save_meta' );
 /**
  * Display shipping payment meta.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @param arrray $payment_meta Array of payment meta about to be saved
  * @return void
