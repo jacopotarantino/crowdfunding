@@ -387,8 +387,9 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_video',
  * @return void
  */
 function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
-	$rewards  = $atts[ 'previewing' ] || $atts[ 'editing' ] ? edd_get_variable_prices( $campaign->ID ) : array();
-	$shipping = $atts[ 'previewing' ] || $atts[ 'editing' ] ? $campaign->needs_shipping() : 0;
+	$rewards   = $atts[ 'previewing' ] || $atts[ 'editing' ] ? edd_get_variable_prices( $campaign->ID ) : array();
+	$shipping  = $atts[ 'previewing' ] || $atts[ 'editing' ] ? $campaign->needs_shipping() : 0;
+	$norewards = $atts[ 'previewing' ] || $atts[ 'editing' ] ? $campaign->is_donations_only() : 0;
 ?>
 	<h3 class="atcf-submit-section backer-rewards"><?php _e( 'Backer Rewards', 'atcf' ); ?></h3>
 
@@ -396,10 +397,14 @@ function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
 		<label for="shipping"><input type="checkbox" id="shipping" name="shipping" value="1" <?php checked(1, $shipping); ?> /> <?php _e( 'Collect shipping information on checkout.', 'atcf' ); ?></label>
 	</p>
 
+	<p class="atcf-submit-campaign-shipping">
+		<label for="norewards"><input type="checkbox" id="norewards" name="norewards" value="1" <?php checked(1, $norewards); ?> /> <?php _e( 'No rewards, donations only.', 'atcf' ); ?></label>
+	</p>
+
 	<?php do_action( 'atcf_shortcode_submit_field_rewards_list_before' ); ?>
 
 	<div class="atcf-submit-campaign-rewards">
-		<?php foreach ( $rewards as $key => $reward ) : $disabled = isset ( $reward[ 'bought' ] ) && $reward[ 'bought' ] > 0 ? true : false; ?>
+		<?php if ( ! empty( $rewards ) ) : foreach ( $rewards as $key => $reward ) : $disabled = isset ( $reward[ 'bought' ] ) && $reward[ 'bought' ] > 0 ? true : false; ?>
 		<div class="atcf-submit-campaign-reward">
 			<?php do_action( 'atcf_shortcode_submit_field_rewards_before' ); ?>
 
@@ -428,7 +433,7 @@ function atcf_shortcode_submit_field_rewards( $atts, $campaign ) {
 			</p>
 			<?php endif; ?>
 		</div>
-		<?php endforeach; ?>
+		<?php endforeach; endif; ?>
 
 		<?php if ( ! $atts[ 'previewing' ] && ! $atts[ 'editing' ] ) : ?>
 		<div class="atcf-submit-campaign-reward">
@@ -753,16 +758,27 @@ function atcf_shortcode_submit_process() {
 	
 	update_post_meta( $campaign, '_campaign_physical', sanitize_text_field( $shipping ) );
 	
-	foreach ( $rewards as $key => $reward ) {
-		if ( '' == $reward[ 'price' ] )
-			continue;
-
-		$prices[] = array(
-			'name'   => sanitize_text_field( $reward[ 'description' ] ),
-			'amount' => apply_filters( 'edd_metabox_save_edd_price', $reward[ 'price' ] ),
-			'limit'  => sanitize_text_field( $reward[ 'limit' ] ),
-			'bought' => isset ( $reward[ 'bought' ] ) ? sanitize_text_field( $reward[ 'bought' ] ) : 0
+	if ( isset ( $_POST[ 'norewards' ] ) ) {
+		$prices[0] = array(
+			'name'   => apply_filters( 'atcf_default_no_rewards_name', __( 'Donation', 'atcf' ) ),
+			'amount' => 0,
+			'limit'  => null,
+			'bought' => 0
 		);
+
+		update_post_meta( $campaign, 'campaign_norewards', isset ( $_POST[ 'norewards' ] ) );
+	} else {
+		foreach ( $rewards as $key => $reward ) {
+			if ( '' == $reward[ 'price' ] )
+				continue;
+
+			$prices[] = array(
+				'name'   => sanitize_text_field( $reward[ 'description' ] ),
+				'amount' => apply_filters( 'edd_metabox_save_edd_price', $reward[ 'price' ] ),
+				'limit'  => sanitize_text_field( $reward[ 'limit' ] ),
+				'bought' => isset ( $reward[ 'bought' ] ) ? sanitize_text_field( $reward[ 'bought' ] ) : 0
+			);
+		}
 	}
 
 	if ( '' != $image[ 'name' ] ) {

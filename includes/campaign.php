@@ -70,6 +70,8 @@ class ATCF_Campaigns {
 		add_action( 'edd_download_price_table_head', 'atcf_pledge_limit_head' );
 		add_action( 'edd_download_price_table_row', 'atcf_pledge_limit_column', 10, 3 );
 
+		add_action( 'edd_after_price_field', 'atcf_after_price_field' );
+
 		add_action( 'admin_action_atcf-collect-funds', array( $this, 'collect_funds' ) );
 		add_action( 'admin_action_atcf-reinstate', array( $this, 'reinstate' ) );
 		add_filter( 'post_updated_messages', array( $this, 'messages' ) );
@@ -284,6 +286,7 @@ class ATCF_Campaigns {
 		$fields[] = 'campaign_contact_email';
 		$fields[] = 'campaign_end_date';
 		$fields[] = 'campaign_endless';
+		$fields[] = 'campaign_norewards';
 		$fields[] = 'campaign_video';
 		$fields[] = 'campaign_location';
 		$fields[] = 'campaign_author';
@@ -800,6 +803,19 @@ function _atcf_metabox_campaign_info() {
 	do_action( 'atcf_metabox_campaign_info_after', $campaign );
 }
 
+function atcf_after_price_field() {
+	global $post;
+
+	$campaign = atcf_get_campaign( $post );
+?>
+	<p>
+		<label for="campaign_norewards">
+			<input type="checkbox" name="campaign_norewards" id="campaign_norewards" value="1" <?php checked( 1, $campaign->is_donations_only() ); ?>> <?php printf( __( 'This %s is donations only (no rewards)', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?>
+		</label>
+	</p>
+<?php
+}
+
 /**
  * Goal Save
  *
@@ -825,6 +841,35 @@ function atcf_sanitize_campaign_updates( $updates ) {
 	return $updates;
 }
 add_filter( 'edd_metabox_save_campaign_updates', 'atcf_sanitize_campaign_updates' );
+
+/**
+ * Updates Save
+ *
+ * EDD trys to escape this data, and we don't want that.
+ *
+ * @since Appthemer CrowdFunding 0.9
+ */
+function atcf_save_variable_prices_norewards( $prices ) {
+	$norewards = isset ( $_POST[ 'campaign_norewards' ] ) ? true : false;
+	
+	if ( ! $norewards )
+		return $prices;
+
+	if ( 1 == count( $prices ) && $norewards )
+		return $prices;
+
+	$prices = array();
+
+	$prices[0] = array(
+		'name'   => apply_filters( 'atcf_default_no_rewards_name', __( 'Donation', 'atcf' ) ),
+		'amount' => 0,
+		'limit'  => null,
+		'bought' => 0
+	);
+
+	return $prices;
+}
+add_filter( 'edd_metabox_save_edd_variable_prices', 'atcf_save_variable_prices_norewards' );
 
 /**
  * Load Admin Scripts
@@ -986,6 +1031,17 @@ class ATCF_Campaign {
 	 */
 	public function is_endless() {
 		return $this->__get( 'campaign_endless' );
+	}
+
+	/**
+	 * Is donations only.
+	 *
+	 * @since Appthemer CrowdFunding 1.5
+	 *
+	 * @return boolean
+	 */
+	public function is_donations_only() {
+		return $this->__get( 'campaign_norewards' );
 	}
 
 	/**

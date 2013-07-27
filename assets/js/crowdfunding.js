@@ -61,9 +61,6 @@ var CrowdFunding = (function($) {
 				"contact-email" : {
 					required : true,
 					email    : true
-				},
-				"rewards[0][price]" : {
-					required : true
 				}
 			},
 			submitHandler: function(form) {
@@ -86,6 +83,14 @@ var CrowdFunding = (function($) {
 			removeReward();
 			validate();
 			endDate();
+
+			$( '#norewards' ).click(function() {
+				$( '.atcf-submit-campaign-rewards' ).toggle();
+			});
+
+			if ( $( '#norewards' ).is( ':checked' ) ) {
+				$( '.atcf-submit-campaign-rewards' ).hide();
+			}
 		}
 	}
 }(jQuery));
