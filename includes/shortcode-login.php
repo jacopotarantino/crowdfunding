@@ -65,7 +65,7 @@ function atcf_shortcode_login_form_bottom() {
 	global $edd_options;
 
 	$add = '<p>
-		<a href="' . esc_url( add_query_arg( 'action', 'lostpassword', site_url( 'wp-login.php' ) ) ) . '">' . __( 'Forgot Password', 'atcf' ) . '</a> ';
+		<a href="' . wp_lostpassword_url() . '">' . __( 'Forgot Password', 'atcf' ) . '</a> ';
 
 	if ( isset( $edd_options[ 'register_page' ] ) ) {
 		$add .= _x( 'or', 'login form action divider', 'atcf' );
