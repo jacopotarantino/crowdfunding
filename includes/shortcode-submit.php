@@ -218,12 +218,15 @@ function atcf_shortcode_submit_field_category( $atts, $campaign ) {
 	}
 ?>
 	<p class="atcf-submit-campaign-category">
-		<label for="category"><?php _e( 'Category', 'atcf' ); ?></label>			
+		<label for="category"><?php _e( 'Category', 'atcf' ); ?></label>
+
+		<ul class="atcf-multi-select">			
 		<?php 
 			wp_terms_checklist( isset ( $campaign->ID ) ? $campaign->ID : 0, array( 
 				'taxonomy'   => 'download_category'
 			) );
 		?>
+	</ul>
 	</p>
 <?php
 }
@@ -245,12 +248,15 @@ function atcf_shortcode_submit_field_tags( $atts, $campaign ) {
 	}
 ?>
 	<p class="atcf-submit-campaign-tags">
-		<label for="tags"><?php _e( 'Tags', 'atcf' ); ?></label>			
+		<label for="tags"><?php _e( 'Tags', 'atcf' ); ?></label>
+
+		<ul class="atcf-multi-select">		
 		<?php 
 			wp_terms_checklist( isset ( $campaign->ID ) ? $campaign->ID : 0, array(
 				'taxonomy' => 'download_tag'
 			) );
 		?>
+		</ul>
 	</p>
 <?php
 }
