@@ -64,7 +64,7 @@ function atcf_shortcode_submit( $atts ) {
 
 			<?php if ( is_user_logged_in() && ! $atts[ 'editing' ] ) : ?>
 			<button type="submit" name="submit" value="preview" class="button button-secondary">
-				<?php _e( 'Preview', 'atcf' ); ?>
+				<?php _e( 'Save and Preview', 'atcf' ); ?>
 			</button>
 			<?php endif; ?>
 
