@@ -356,7 +356,7 @@ function atcf_shortcode_submit_field_images( $atts, $campaign ) {
 		return;
 ?>
 	<p class="atcf-submit-campaign-images">
-		<label for="excerpt"><?php _e( 'Featured Image', 'atcf' ); ?></label>
+		<label for="image"><?php _e( 'Featured Image', 'atcf' ); ?></label>
 		<input type="file" name="image" id="image" />
 
 		<?php if ( $atts[ 'editing' ] || $atts[ 'previewing' ] ) : ?>
