@@ -47,7 +47,7 @@ class ATCF_Campaigns {
 		add_filter( 'edd_download_labels', array( $this, 'download_labels' ) );
 		add_filter( 'edd_default_downloads_name', array( $this, 'download_names' ) );
 		add_filter( 'edd_download_supports', array( $this, 'download_supports' ) );
-
+		
 		do_action( 'atcf_campaigns_actions' );
 		
 		if ( ! is_admin() )

@@ -223,7 +223,8 @@ function atcf_shortcode_submit_field_category( $atts, $campaign ) {
 		<ul class="atcf-multi-select">			
 		<?php 
 			wp_terms_checklist( isset ( $campaign->ID ) ? $campaign->ID : 0, array( 
-				'taxonomy'   => 'download_category'
+				'taxonomy'   => 'download_category',
+				'walker'     => new ATCF_Walker_Terms_Checklist
 			) );
 		?>
 	</ul>
@@ -253,7 +254,8 @@ function atcf_shortcode_submit_field_tags( $atts, $campaign ) {
 		<ul class="atcf-multi-select">		
 		<?php 
 			wp_terms_checklist( isset ( $campaign->ID ) ? $campaign->ID : 0, array(
-				'taxonomy' => 'download_tag'
+				'taxonomy' => 'download_tag',
+				'walker'   => new ATCF_Walker_Terms_Checklist
 			) );
 		?>
 		</ul>
@@ -858,3 +860,44 @@ function atcf_shortcode_submit_redirect() {
 	}
 }
 add_action( 'template_redirect', 'atcf_shortcode_submit_redirect', 1 );
+
+/**
+ * Walker to output an unordered list of category checkbox <input> elements.
+ *
+ * @see Walker
+ * @see wp_category_checklist()
+ * @see wp_terms_checklist()
+ * @since 2.5.1
+ */
+class ATCF_Walker_Terms_Checklist extends Walker {
+	var $tree_type = 'category';
+	var $db_fields = array ('parent' => 'parent', 'id' => 'term_id'); //TODO: decouple this
+
+	function start_lvl( &$output, $depth = 0, $args = array() ) {
+		$indent = str_repeat("\t", $depth);
+		$output .= "$indent<ul class='children'>\n";
+	}
+
+	function end_lvl( &$output, $depth = 0, $args = array() ) {
+		$indent = str_repeat("\t", $depth);
+		$output .= "$indent</ul>\n";
+	}
+
+	function start_el( &$output, $category, $depth = 0, $args = array(), $current_object_id = 0 ) {
+		extract($args);
+		if ( empty($taxonomy) )
+			$taxonomy = 'category';
+
+		if ( $taxonomy == 'category' )
+			$name = 'post_category';
+		else
+			$name = 'tax_input['.$taxonomy.']';
+
+		$class = in_array( $category->term_id, $popular_cats ) ? ' class="popular-category"' : '';
+		$output .= "\n<li id='{$taxonomy}-{$category->term_id}'$class>" . '<label class="selectit"><input value="' . $category->term_id . '" type="checkbox" name="'.$name.'[]" id="in-'.$taxonomy.'-' . $category->term_id . '"' . checked( in_array( $category->term_id, $selected_cats ), true, false ) . ' /> ' . esc_html( apply_filters('the_category', $category->name )) . '</label>';
+	}
+
+	function end_el( &$output, $category, $depth = 0, $args = array() ) {
+		$output .= "</li>\n";
+	}
+}
