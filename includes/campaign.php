@@ -187,8 +187,8 @@ class ATCF_Campaigns {
 				printf( _x( '%s of %s', 'funded of goal', 'atcf' ), $campaign->current_amount(true), $campaign->goal(true) );
 
 				break;
-			case 'expires' : 
-				echo $campaign->days_remaining();
+			case 'expires' :
+				echo $campaign->is_endless() ? '&mdash;' : $campaign->days_remaining();
 
 				break;
 			case 'type' :
@@ -552,10 +552,12 @@ function _atcf_metabox_campaign_stats() {
 		<?php echo $campaign->backers_count(); ?>
 	</p>
 
+	<?php if ( ! $campaign->is_endless() ) : ?>
 	<p>
 		<strong><?php _e( 'Days Remaining:', 'atcf' ); ?></strong>
 		<?php echo $campaign->days_remaining(); ?>
 	</p>
+	<?php endif; ?>
 <?php
 	do_action( 'atcf_metabox_campaign_stats_after', $campaign );
 }
