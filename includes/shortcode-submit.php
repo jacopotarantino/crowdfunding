@@ -748,9 +748,10 @@ function atcf_shortcode_submit_process() {
 	if ( $c_email )
 		update_post_meta( $campaign, 'campaign_contact_email', sanitize_text_field( $c_email ) );
 	
-	if ( $end_date )
+	if ( $end_date ) {
 		update_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
-	else
+		update_post_meta( $campaign, 'campaign_length', $length );
+	} else
 		update_post_meta( $campaign, 'campaign_endless', 1 );
 	
 	if ( $location )

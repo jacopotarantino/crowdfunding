@@ -76,6 +76,8 @@ class ATCF_Campaigns {
 		add_action( 'admin_action_atcf-reinstate', array( $this, 'reinstate' ) );
 		add_filter( 'post_updated_messages', array( $this, 'messages' ) );
 
+		add_action( 'wp_insert_post', array( $this, 'update_post_date_on_publish' ) );
+
 		do_action( 'atcf_campaigns_actions_admin' );
 	}
 
@@ -425,6 +427,28 @@ class ATCF_Campaigns {
 		$messages[ 'download' ][15] = sprintf( __( '<strong>Payments processed.</strong> %d payments failed to process. Please check <a href="%s">gateway logs</a> before trying again.', 'atcf' ), isset ( $_GET[ 'failed' ] ) ? intval( $_GET[ 'failed' ] ) : 0, admin_url( 'edit.php?view=gateway_errors&post_type=download&page=edd-reports&tab=logs' ) );
 
 		return $messages;
+	}
+
+	/**
+	 * When a campaign is published, reset the campaign end date based
+	 * on the original number of days set when submitting.
+	 *
+	 * @since Astoundify Crowdfunding 1.6
+	 *
+	 * @return void
+	 */
+	public function update_post_date_on_publish() {
+		global $post;
+
+		if ( 'pending' != $post->post_status )
+			return $post;
+
+		$length = $post->campaign_length;
+
+		$end_date = strtotime( sprintf( '+%d days', $length ) );
+		$end_date = get_gmt_from_date( date( 'Y-m-d H:i:s', $end_date ) );
+
+		update_post_meta( $post->ID, 'campaign_end_date', sanitize_text_field( $end_date ) );
 	}
 }
 
