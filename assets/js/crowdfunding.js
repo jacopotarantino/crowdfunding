@@ -29,35 +29,45 @@ Crowdfunding.Campaign = ( function($) {
 			var price = $( this ).asNumber( formatCurrencySettings );
 
 			delay( function() {
-				Crowdfunding.Campaign.setPrice( price );
+				Crowdfunding.Campaign.findPrice( price );
 
 				if ( currentPrice < startPledgeLevel )
-					Crowdfunding.Campaign.setPrice( startPledgeLevel );
+					Crowdfunding.Campaign.findPrice( startPledgeLevel );
 			}, 1000);
 		});
 
 		priceOptions.click(function(e) {
 			var pledgeLevel = $(this),
-			    price = pledgeLevel.data( 'price' );
+			    price       = Crowdfunding.Campaign.parsePrice( $(this) );
 
 			if ( pledgeLevel.hasClass( 'inactive' ) )
 				return;
 
-			Crowdfunding.Campaign.setPrice( price );
+			$(this).find( 'input[type="radio"]' ).attr( 'checked', true );
+
+			customPriceField
+				.val( price )
+				.formatCurrency( formatCurrencySettings );
 		});
 	}
 
 	return {
 		init : function() {
-			customPriceField  = $( '#contribute-modal-wrap #atcf_custom_price' ),
-			priceOptions      = $( '#contribute-modal-wrap .atcf-price-option' ),
-			submitButton      = $( '#contribute-modal-wrap .edd-add-to-cart' ),
+			currentPrice      = 0;
+			customPriceField  = $( '#contribute-modal-wrap #atcf_custom_price' );
+			priceOptions      = $( '#contribute-modal-wrap .atcf-price-option' );
+			submitButton      = $( '#contribute-modal-wrap .edd-add-to-cart' );
 			
 			Crowdfunding.Campaign.setBasePrice();
 			priceOptionsHandler();
 		},
 
-		setPrice : function( price ) {
+		findPrice : function( price ) {
+			var foundPrice  = {
+				price : 0,
+				el    : null
+			};
+
 			customPriceField
 				.val( price )
 				.formatCurrency( formatCurrencySettings );
@@ -65,23 +75,58 @@ Crowdfunding.Campaign = ( function($) {
 			currentPrice = price;
 
 			priceOptions.each( function( index ) {
-				var pledgeLevel = parseFloat( $(this).data( 'price' ) );
+				var price       = price = Crowdfunding.Campaign.parsePrice( $(this) );
+				var pledgeLevel = parseFloat( price );
 
-				if ( ( currentPrice >= pledgeLevel ) && ! $( this ).hasClass( 'inactive' ) )
-					$( this ).find( 'input[type="radio"]' ).attr( 'checked', true );
+				if ( ( currentPrice >= pledgeLevel ) && ! $( this ).hasClass( 'inactive' ) ) {
+					var is_greater = pledgeLevel > foundPrice.price;
+
+					if ( is_greater ) {
+						foundPrice = {
+							price : pledgeLevel,
+							el    : $(this)
+						}
+					}
+				}
 			});
+
+			foundPrice.el.find( 'input[type="radio"]' ).attr( 'checked', true );
 
 			submitButton.attr( 'disabled', false );
 		},
 
 		setBasePrice : function() {
+			var basePrice = {
+				price : 1000000000, // something crazy
+				el    : null
+			}
+
 			priceOptions.each( function( index ) {
 				if ( ! $( this ).hasClass( 'inactive' ) && null == startPledgeLevel ) {
-					startPledgeLevel = parseFloat( $(this).data( 'price' ) );
+					var price = Crowdfunding.Campaign.parsePrice( $(this) );
 
-					Crowdfunding.Campaign.setPrice( startPledgeLevel );
+					if ( price < basePrice ) {
+						basePrice = {
+							price : price,
+							el     : $( this )
+						}
+					}
 				}
 			});
+
+			basePrice.el.find( 'input[type="radio"]' ).attr( 'checked', true );
+			
+			customPriceField
+				.val( basePrice.price )
+				.formatCurrency( formatCurrencySettings );
+		},
+
+		parsePrice : function( el ) {
+			var price = el.data( 'price' );
+
+			price = price.substring( 0, price.length - 2 );
+
+			return price;
 		}
 	}
 }(jQuery));

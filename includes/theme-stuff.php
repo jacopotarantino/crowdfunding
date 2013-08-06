@@ -137,7 +137,7 @@ function atcf_campaign_contribute_options( $prices, $type, $download_id ) {
 					if ( edd_use_taxes() && edd_taxes_on_prices() )
 						$amount += edd_calculate_tax( $amount );
 				?>
-				<li class="atcf-price-option <?php echo $allgone ? 'inactive' : null; ?>" data-price="<?php echo edd_sanitize_amount( $amount ); ?>">
+				<li class="atcf-price-option <?php echo $allgone ? 'inactive' : null; ?>" data-price="<?php echo edd_sanitize_amount( $amount ); ?>-<?php echo $key; ?>">
 					<div class="clear">
 						<h3><label for="<?php echo esc_attr( 'edd_price_option_' . $download_id . '_' . $key ); ?>"><?php
 							if ( $campaign->is_active() )
