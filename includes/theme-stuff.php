@@ -73,18 +73,6 @@ function atcf_purchase_variable_pricing( $download_id ) {
 }
 
 /**
- * Always show prices in increasing order.
- *
- * @since Astoundify Crowdfunding 0.5.1
- *
- * @see atcf_purchase_variable_pricing
- * @return array
- */
-function atcf_sort_variable_prices( $a, $b ) {
-	return $a[ 'amount' ] - $b[ 'amount' ];
-}
-
-/**
  * Remove output of variable pricing, and add our own system.
  *
  * @since Astoundify Crowdfunding 0.3-alpha
@@ -148,10 +136,12 @@ function atcf_campaign_contribute_options( $prices, $type, $download_id ) {
 										esc_attr( 'edd_price_option_' . $download_id ),
 										esc_attr( $key )
 									);
-						?> <?php echo edd_currency_filter( $amount ); ?></label></h3>
+						?> <span class="pledge-verb"><?php _ex( 'Pledge', 'Pledge verb. (Pledge $5)', 'atcf' ); ?></span> <?php echo edd_currency_filter( $amount ); ?></label></h3>
 						
 						<div class="backers">
-							<i class="icon-user"></i> <?php printf( _nx( '1 Backer', '%1$s Backers', $bought, 'number of backers for pledge level', 'atcf' ), $bought ); ?>
+							<div class="backer-count">
+								<i class="icon-user"></i> <?php printf( _nx( '1 Backer', '%1$s Backers', $bought, 'number of backers for pledge level', 'atcf' ), $bought ); ?>
+							</div>
 
 							<?php if ( '' != $limit && ! $allgone ) : ?>
 								<small class="limit"><?php printf( __( 'Limit of %d &mdash; %d remaining', 'fundify' ), $limit, $limit - $bought ); ?></small>
@@ -199,6 +189,30 @@ function atcf_campaign_contribute_custom_price() {
 <?php
 }
 add_action( 'edd_purchase_link_top', 'atcf_campaign_contribute_custom_price', 5 );
+
+/**
+ * If the option to disable custom pledging has been checked,
+ * then remove a bunch of stuff we do to move the fields around,
+ * add fields, etc.
+ *
+ * @since Fundify 1.0
+ *
+ * @return void
+ */
+function atcf_disable_custom_pledging() {
+	global $edd_options;
+
+	if ( isset ( $edd_options[ 'atcf_settings_custom_pledge' ] ) )
+		return;
+
+	remove_action( 'edd_purchase_link_top', 'atcf_campaign_contribute_custom_price', 5 );
+	remove_action( 'edd_purchase_link_end', 'atcf_purchase_variable_pricing' );
+	
+	remove_filter( 'edd_add_to_cart_item', 'atcf_edd_add_to_cart_item' );
+	remove_filter( 'edd_ajax_pre_cart_item_template', 'atcf_edd_add_to_cart_item' );
+	remove_filter( 'edd_cart_item_price', 'atcf_edd_cart_item_price', 10, 3 );
+}
+add_action( 'init', 'atcf_disable_custom_pledging' );
 
 /**
  * When a campaign is over, show a message.

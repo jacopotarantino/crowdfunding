@@ -29,10 +29,10 @@ Crowdfunding.Campaign = ( function($) {
 			var price = $( this ).asNumber( formatCurrencySettings );
 
 			delay( function() {
-				Crowdfunding.Campaign.findPrice( price );
-
 				if ( currentPrice < startPledgeLevel )
 					Crowdfunding.Campaign.findPrice( startPledgeLevel );
+				else
+					Crowdfunding.Campaign.findPrice( price );
 			}, 1000);
 		});
 
@@ -114,10 +114,12 @@ Crowdfunding.Campaign = ( function($) {
 				}
 			});
 
+			startPledgeLevel = basePrice.price;
+
 			basePrice.el.find( 'input[type="radio"]' ).attr( 'checked', true );
 			
 			customPriceField
-				.val( basePrice.price )
+				.val( startPledgeLevel )
 				.formatCurrency( formatCurrencySettings );
 		},
 
@@ -230,6 +232,6 @@ jQuery(document).ready(function($) {
 	if ( atcfSettings.pages.is_submission === 1 )
 		Crowdfunding.SubmitCampaign.init();
 
-	//if ( atcfSettings.pages.is_campaign === 1 )
+	if ( atcfSettings.pages.is_campaign === 1 )
 		Crowdfunding.Campaign.init();
 });

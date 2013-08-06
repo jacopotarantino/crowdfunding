@@ -263,10 +263,10 @@ final class ATCF_CrowdFunding {
 		global $edd_options;
 
 		$is_submission = is_page( $edd_options[ 'submit_page' ] );
-		$is_campaign   = true;
+		$is_campaign   = is_singular( 'download' );
 
-		//if ( ! $is_submission || ! $is_campaign )
-		//	return;
+		if ( ! $is_submission || ! $is_campaign )
+			return;
 
 		if ( $is_submission ) {
 			wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'assets/js/jquery.validate.min.js', array( 'jquery' ) );
