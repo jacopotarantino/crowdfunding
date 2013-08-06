@@ -83,3 +83,61 @@ function atcf_anon_save_meta( $payment_meta ) {
 	return $payment_meta;
 }
 add_filter( 'edd_payment_meta', 'atcf_anon_save_meta' );
+
+/**
+ * Custom pledge level fix.
+ *
+ * If there is a custom price, figure out the difference
+ * between that, and the price level they have chosen. Store
+ * the differene in the cart item meta, so it can be added to
+ * the total in the future.
+ *
+ * @since Astoundify Crowdfunding 1.6
+ *
+ * @param array $cart_item The current cart item to be added.
+ * @return array $cart_item The modified cart item.
+ */
+function atcf_edd_add_to_cart_item( $cart_item ) {
+	if ( isset ( $_POST[ 'post_data' ] ) ) {
+		$post_data = array();
+		parse_str( $_POST[ 'post_data' ], $post_data );
+
+		$custom_price = $post_data[ 'atcf_custom_price' ];
+	} else {
+		$custom_price = $_POST[ 'atcf_custom_price' ];
+	}
+
+	$custom_price = edd_sanitize_amount( $custom_price );
+	
+	$price        = edd_get_cart_item_price( $cart_item[ 'id' ], $cart_item[ 'options' ] );
+
+	if ( $custom_price > $price ) {
+		$cart_item[ 'options' ][ 'atcf_extra_price' ] = $custom_price - $price;
+	
+		return $cart_item;
+	}
+
+	return $cart_item;
+}
+add_filter( 'edd_add_to_cart_item', 'atcf_edd_add_to_cart_item' );
+add_filter( 'edd_ajax_pre_cart_item_template', 'atcf_edd_add_to_cart_item' );
+
+/**
+ * Calculate the cart item total based on the existence of
+ * an additional pledge amount.
+ *
+ * @since Astoundify Crowdfunding 1.6
+ *
+ * @param int $price The current price.
+ * @param int $item_id The ID of the cart item.
+ * @param array $options Item meta for the current cart item.
+ * @return int $price The updated price.
+ */
+function fundify_edd_cart_item_price( $price, $item_id, $options = array() ) {
+	if ( isset ( $options[ 'atcf_extra_price' ] ) ) {
+		$price = $price + $options[ 'atcf_extra_price' ];
+	}
+
+	return $price;
+}
+add_filter( 'edd_cart_item_price', 'fundify_edd_cart_item_price', 10, 3 );

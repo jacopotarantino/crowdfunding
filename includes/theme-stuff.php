@@ -68,9 +68,7 @@ function atcf_purchase_variable_pricing( $download_id ) {
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 
 	do_action( 'edd_before_price_options', $download_id ); 
-
 	do_action( 'atcf_campaign_contribute_options', $prices, $type, $download_id );
-
 	do_action( 'edd_after_price_options', $download_id );
 }
 
@@ -95,7 +93,7 @@ function atcf_sort_variable_prices( $a, $b ) {
  */
 function atcf_theme_variable_pricing() {
 	remove_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing' );
-	add_action( 'edd_purchase_link_top', 'atcf_purchase_variable_pricing' );
+	add_action( 'edd_purchase_link_end', 'atcf_purchase_variable_pricing' );
 }
 
 /**
@@ -113,6 +111,94 @@ function atcf_theme_custom_variable_pricing() {
 	add_action( 'init', 'atcf_theme_variable_pricing' );
 }
 add_action( 'after_setup_theme', 'atcf_theme_custom_variable_pricing', 100 );
+
+/**
+ * Contribute now list options
+ *
+ * @since Campaignify 1.0
+ *
+ * @return void
+ */
+function atcf_campaign_contribute_options( $prices, $type, $download_id ) {
+	$campaign = atcf_get_campaign( $download_id );
+?>
+	<div class="edd_price_options <?php echo $campaign->is_active() ? 'active' : 'expired'; ?>" <?php echo $campaign->is_donations_only() ? 'style="display: none"' : null; ?>>
+		<ul>
+			<?php foreach ( $prices as $key => $price ) : ?>
+				<?php
+					$amount  = $price[ 'amount' ];
+					$limit   = isset ( $price[ 'limit' ] ) ? $price[ 'limit' ] : '';
+					$bought  = isset ( $price[ 'bought' ] ) ? $price[ 'bought' ] : 0;
+					$allgone = false;
+
+					if ( $bought == absint( $limit ) && '' != $limit )
+						$allgone = true;
+
+					if ( edd_use_taxes() && edd_taxes_on_prices() )
+						$amount += edd_calculate_tax( $amount );
+				?>
+				<li class="atcf-price-option <?php echo $allgone ? 'inactive' : null; ?>" data-price="<?php echo edd_sanitize_amount( $amount ); ?>">
+					<div class="clear">
+						<h3><label for="<?php echo esc_attr( 'edd_price_option_' . $download_id . '_' . $key ); ?>"><?php
+							if ( $campaign->is_active() )
+								if ( ! $allgone )
+									printf(
+										'<input type="radio" name="edd_options[price_id][]" id="%1$s" class="%2$s edd_price_options_input" value="%3$s"/>',
+										esc_attr( 'edd_price_option_' . $download_id . '_' . $key ),
+										esc_attr( 'edd_price_option_' . $download_id ),
+										esc_attr( $key )
+									);
+						?> <?php echo edd_currency_filter( $amount ); ?></label></h3>
+						
+						<div class="backers">
+							<i class="icon-user"></i> <?php printf( _nx( '1 Backer', '%1$s Backers', $bought, 'number of backers for pledge level', 'atcf' ), $bought ); ?>
+
+							<?php if ( '' != $limit && ! $allgone ) : ?>
+								<small class="limit"><?php printf( __( 'Limit of %d &mdash; %d remaining', 'fundify' ), $limit, $limit - $bought ); ?></small>
+							<?php elseif ( $allgone ) : ?>
+								<small class="gone"><?php _e( 'All gone!', 'fundify' ); ?></small>
+							<?php endif; ?>
+						</div>
+					</div>
+					<?php echo wpautop( esc_html( $price[ 'name' ] ) ); ?>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+	</div><!--end .edd_price_options-->
+<?php
+}
+if ( ! has_action( 'atcf_campaign_contribute_options' ) )
+	add_action( 'atcf_campaign_contribute_options', 'atcf_campaign_contribute_options', 10, 3 );
+
+/**
+ * Custom price field
+ *
+ * @since Fundify 1.3
+ *
+ * @return void
+ */
+function atcf_campaign_contribute_custom_price() {
+	global $edd_options;
+?>
+	<h2><?php echo apply_filters( 'atcf_pledge_custom_title', __( 'Enter your pledge amount', 'fundify' ) ); ?></h2>
+
+	<p class="atcf_custom_price_wrap">
+	<?php if ( ! isset( $edd_options['currency_position'] ) || $edd_options['currency_position'] == 'before' ) : ?>
+		<span class="currency left">
+			<?php echo edd_currency_filter( '' ); ?>
+		</span>
+
+		<input type="text" name="atcf_custom_price" id="atcf_custom_price" class="left" value="" />
+	<?php else : ?>
+		<input type="text" name="atcf_custom_price" id="atcf_custom_price" class="right" value="" />
+		<span class="currency right">
+			<?php echo edd_currency_filter( '' ); ?>
+		</span>
+	<?php endif; ?>
+	</p>
+<?php
+}
+add_action( 'edd_purchase_link_top', 'atcf_campaign_contribute_custom_price', 5 );
 
 /**
  * When a campaign is over, show a message.

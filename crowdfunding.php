@@ -135,10 +135,11 @@ final class ATCF_CrowdFunding {
 	 */
 	private function setup_actions() {
 		add_action( 'init', array( $this, 'is_edd_activated' ), 1 );
+		add_action( 'init', array( $this, 'cron' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts' ) );
+
 		add_filter( 'template_include', array( $this, 'template_loader' ) );
 
-		add_action( 'init', array( $this, 'cron' ) );
-		
 		do_action( 'atcf_setup_actions' );
 
 		$this->load_textdomain();
@@ -256,6 +257,56 @@ final class ATCF_CrowdFunding {
 	public function cron() {
 		//wp_clear_scheduled_hook( 'job_manager_check_for_expired_jobs' );
 		//wp_schedule_event( time(), 'hourly', 'job_manager_check_for_expired_jobs' );
+	}
+
+	public function frontend_scripts() {
+		global $edd_options;
+
+		$is_submission = is_page( $edd_options[ 'submit_page' ] );
+		$is_campaign   = true;
+
+		//if ( ! $is_submission || ! $is_campaign )
+		//	return;
+
+		if ( $is_submission ) {
+			wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'assets/js/jquery.validate.min.js', array( 'jquery' ) );
+		}
+
+		if ( $is_campaign ) {
+			wp_enqueue_script( 'formatCurrency', $this->plugin_url . 'assets/js/jquery.formatCurrency-1.4.0.pack.js', array( 'jquery' ), '1.4.1', true );
+		}
+
+		wp_enqueue_script( 'atcf-scripts', $this->plugin_url . 'assets/js/crowdfunding.js', array( 'jquery' ) );
+
+		$settings = array(
+			'pages' => array(
+				'is_submission' => $is_submission,
+				'is_campaign'   => $is_campaign
+			)
+		);
+
+		if ( $is_submission ) {
+			$settings[ 'submit' ] = array(
+				array(
+					'i18n' => array(
+						'oneReward' => __( 'At least one reward is required.', 'atcf' )
+					)
+				)
+			);
+		}
+
+		if ( $is_campaign ) {
+			$settings[ 'campaign' ] = array(
+				'i18n'     => array(),
+				'currency' => array(
+					'thousands' => $edd_options[ 'thousands_separator' ],
+					'decimal'   => $edd_options[ 'decimal_separator' ],
+					'symbol'    => edd_currency_filter( '' )
+				)
+			);
+		}
+
+		wp_localize_script( 'atcf-scripts', 'atcfSettings', $settings );
 	}
 
 	/**

@@ -45,13 +45,6 @@ function atcf_shortcode_submit( $atts ) {
 		
 		$campaign = atcf_get_campaign( $post );
 	}
-
-	wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'assets/js/jquery.validate.min.js');
-	wp_enqueue_script( 'atcf-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding.js', array( 'jquery', 'jquery-validation' ) );
-
-	wp_localize_script( 'atcf-scripts', 'CrowdFundingL10n', array(
-		'oneReward' => __( 'At least one reward is required.', 'atcf' )
-	) );
 ?>
 	<?php do_action( 'atcf_shortcode_submit_before', $atts, $campaign ); ?>
 	<form action="" method="post" class="atcf-submit-campaign" enctype="multipart/form-data">

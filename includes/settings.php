@@ -120,6 +120,14 @@ function atcf_settings_general( $settings ) {
 		'type' => 'header'
 	);
 
+	$settings[ 'atcf_settings_custom_pledge' ] = array(
+		'id'      => 'atcf_settings_custom_pledge',
+		'name'    => __( 'Custom Pledging', 'fundify' ),
+		'desc'    => __( 'Allow arbitrary amounts to be pledged.', 'fundify' ),
+		'type'    => 'checkbox',
+		'std'     => 1
+	);
+
 	$settings[ 'atcf_settings_campaign_minimum' ] = array(
 		'id'   => 'atcf_campaign_length_min',
 		'name' => __( 'Minimum Campaign Length', 'atcf' ),
