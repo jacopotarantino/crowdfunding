@@ -440,6 +440,9 @@ class ATCF_Campaigns {
 	public function update_post_date_on_publish() {
 		global $post;
 
+		if ( ! isset ( $post ) )
+			return;
+
 		if ( 'pending' != $post->post_status )
 			return $post;
 
