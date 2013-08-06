@@ -24,12 +24,10 @@ Crowdfunding.Campaign = ( function($) {
 
 	function priceOptionsHandler() {
 		customPriceField.keyup(function() {
-			submitButton.attr( 'disabled', true );
-
 			var price = $( this ).asNumber( formatCurrencySettings );
 
 			delay( function() {
-				if ( currentPrice < startPledgeLevel )
+				if ( price < startPledgeLevel )
 					Crowdfunding.Campaign.findPrice( startPledgeLevel );
 				else
 					Crowdfunding.Campaign.findPrice( price );
@@ -56,7 +54,7 @@ Crowdfunding.Campaign = ( function($) {
 			currentPrice      = 0;
 			customPriceField  = $( '#contribute-modal-wrap #atcf_custom_price' );
 			priceOptions      = $( '#contribute-modal-wrap .atcf-price-option' );
-			submitButton      = $( '#contribute-modal-wrap .edd-add-to-cart' );
+			submitButton      = $( '#contribute-modal-wrap a.edd-add-to-cart' );
 			
 			Crowdfunding.Campaign.setBasePrice();
 			priceOptionsHandler();
@@ -91,8 +89,6 @@ Crowdfunding.Campaign = ( function($) {
 			});
 
 			foundPrice.el.find( 'input[type="radio"]' ).attr( 'checked', true );
-
-			submitButton.attr( 'disabled', false );
 		},
 
 		setBasePrice : function() {
@@ -102,10 +98,10 @@ Crowdfunding.Campaign = ( function($) {
 			}
 
 			priceOptions.each( function( index ) {
-				if ( ! $( this ).hasClass( 'inactive' ) && null == startPledgeLevel ) {
+				if ( ! $( this ).hasClass( 'inactive' ) ) {
 					var price = Crowdfunding.Campaign.parsePrice( $(this) );
-
-					if ( price < basePrice ) {
+					
+					if ( parseFloat( price ) < parseFloat( basePrice.price ) ) {
 						basePrice = {
 							price : price,
 							el     : $( this )
@@ -114,9 +110,10 @@ Crowdfunding.Campaign = ( function($) {
 				}
 			});
 
-			startPledgeLevel = basePrice.price;
+			startPledgeLevel = parseFloat( basePrice.price );
 
-			basePrice.el.find( 'input[type="radio"]' ).attr( 'checked', true );
+			if ( null != basePrice.el )
+				basePrice.el.find( 'input[type="radio"]' ).attr( 'checked', true );
 			
 			customPriceField
 				.val( startPledgeLevel )
@@ -229,9 +226,9 @@ Crowdfunding.SubmitCampaign = ( function($) {
 }(jQuery));
 
 jQuery(document).ready(function($) {
-	if ( atcfSettings.pages.is_submission === 1 )
+	if ( atcfSettings.pages.is_submission === true )
 		Crowdfunding.SubmitCampaign.init();
 
-	if ( atcfSettings.pages.is_campaign === 1 )
+	if ( atcfSettings.pages.is_campaign === true )
 		Crowdfunding.Campaign.init();
 });

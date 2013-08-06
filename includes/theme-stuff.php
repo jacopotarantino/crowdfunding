@@ -80,8 +80,15 @@ function atcf_purchase_variable_pricing( $download_id ) {
  * @return void
  */
 function atcf_theme_variable_pricing() {
+	global $edd_options;
+
 	remove_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing' );
-	add_action( 'edd_purchase_link_end', 'atcf_purchase_variable_pricing' );
+
+	if ( isset ( $edd_options[ 'atcf_settings_custom_pledge' ] ) ) {
+		add_action( 'edd_purchase_link_end', 'atcf_purchase_variable_pricing' );
+	} else {
+		add_action( 'edd_purchase_link_top', 'atcf_purchase_variable_pricing' );
+	}
 }
 
 /**
@@ -136,7 +143,7 @@ function atcf_campaign_contribute_options( $prices, $type, $download_id ) {
 										esc_attr( 'edd_price_option_' . $download_id ),
 										esc_attr( $key )
 									);
-						?> <span class="pledge-verb"><?php _ex( 'Pledge', 'Pledge verb. (Pledge $5)', 'atcf' ); ?></span> <?php echo edd_currency_filter( $amount ); ?></label></h3>
+						?> <span class="pledge-verb"><?php _ex( 'Pledge', 'Pledge verb. (Pledge $5)', 'atcf' ); ?></span> <?php echo edd_currency_filter( edd_format_amount( $amount ) ); ?></label></h3>
 						
 						<div class="backers">
 							<div class="backer-count">
@@ -206,7 +213,8 @@ function atcf_disable_custom_pledging() {
 		return;
 
 	remove_action( 'edd_purchase_link_top', 'atcf_campaign_contribute_custom_price', 5 );
-	remove_action( 'edd_purchase_link_end', 'atcf_purchase_variable_pricing' );
+	remove_action( 'init', 'atcf_theme_variable_pricing' );
+	//add_action( 'edd_purchase_link_top', 'atcf_purchase_variable_pricing' );
 	
 	remove_filter( 'edd_add_to_cart_item', 'atcf_edd_add_to_cart_item' );
 	remove_filter( 'edd_ajax_pre_cart_item_template', 'atcf_edd_add_to_cart_item' );

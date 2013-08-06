@@ -263,9 +263,9 @@ final class ATCF_CrowdFunding {
 		global $edd_options;
 
 		$is_submission = is_page( $edd_options[ 'submit_page' ] );
-		$is_campaign   = is_singular( 'download' );
+		$is_campaign   = is_singular( 'download' ) || did_action( 'atcf_found_single' );
 
-		if ( ! $is_submission || ! $is_campaign )
+		if ( ! ( $is_submission || $is_campaign ) )
 			return;
 
 		if ( $is_submission ) {
