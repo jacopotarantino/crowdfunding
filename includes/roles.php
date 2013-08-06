@@ -21,10 +21,12 @@ class ATCF_Roles {
 	public function add_roles() {
 		remove_role( 'campaign_contributor' );
 
-		add_role( 'campaign_contributor', __( 'Campaign Contributor', 'atcf' ), array(
+		add_role( 'campaign_contributor', __( 'Campaign Contributor', 'atcf' ), apply_filters( 'atcf_campaign_contributor_role', array(
 			'read'                 => true,
-			'upload_files'         => true
-		) );
+			'upload_files'         => true,
+			'edit_others_pages'    => true,
+			'edit_published_pages' => true
+		) ) );
 	}
 
 	/**
