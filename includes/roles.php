@@ -19,8 +19,6 @@ class ATCF_Roles {
 	 * @return void
 	 */
 	public function add_roles() {
-		remove_role( 'campaign_contributor' );
-
 		add_role( 'campaign_contributor', __( 'Campaign Contributor', 'atcf' ), apply_filters( 'atcf_campaign_contributor_role', array(
 			'read'                 => true,
 			'upload_files'         => true,
