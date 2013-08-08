@@ -103,15 +103,15 @@ final class ATCF_CrowdFunding {
 	 * @return void
 	 */
 	private function includes() {
-		require( $this->includes_dir . 'install.php' );
+		require( $this->includes_dir . 'class-install.php' );
+		require( $this->includes_dir . 'class-campaigns.php' );
+		require( $this->includes_dir . 'class-campaign.php' );
 		require( $this->includes_dir . 'settings.php' );
-		require( $this->includes_dir . 'campaign.php' );
 		require( $this->includes_dir . 'gateways.php' );
 		require( $this->includes_dir . 'theme-stuff.php' );
 		require( $this->includes_dir . 'shipping.php' );
 		require( $this->includes_dir . 'logs.php' );
 		require( $this->includes_dir . 'export.php' );
-		require( $this->includes_dir . 'roles.php' );
 		require( $this->includes_dir . 'permalinks.php' );
 		require( $this->includes_dir . 'checkout.php' );
 		require( $this->includes_dir . 'shortcode-submit.php' );

@@ -15,7 +15,7 @@ class ATCF_Install {
 	 * @return void
 	 */
 	public static function init() {
-		add_option( 'atcf_installed', true );
+		update_option( 'atcf_installed', true );
 		
 		self::roles();
 		self::cron();
@@ -29,6 +29,8 @@ class ATCF_Install {
 	 * @return ATCF_Roles
 	 */
 	public static function roles() {
+		require( plugin_dir_path( __FILE__ ) . '/class-roles.php' );
+
 		return new ATCF_Roles;
 	}
 
