@@ -1420,6 +1420,11 @@ function atcf_campaign_types() {
 	return apply_filters( 'atcf_campaign_types', $types );
 }
 
+/**
+ * @missing
+ *
+ * @since Astoundify Crowdfunding unknown
+ */
 function atcf_campaign_types_active() {
 	global $edd_options;
 
@@ -1438,8 +1443,17 @@ function atcf_campaign_types_active() {
 	return $active;
 }
 
+/**
+ * @missing
+ *
+ * @since Astoundify Crowdfunding unknown
+ */
 function atcf_campaign_type_default() {
 	$type = apply_filters( 'atcf_campaign_type_default', atcf_has_preapproval_gateway() ? 'fixed' : 'donation' );
 
 	return $type;
+}
+
+function atcf_check_for_completed_campaigns() {
+	// check all active campaigns for expiration date.
 }

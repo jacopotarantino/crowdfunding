@@ -103,6 +103,7 @@ final class ATCF_CrowdFunding {
 	 * @return void
 	 */
 	private function includes() {
+		require( $this->includes_dir . 'install.php' );
 		require( $this->includes_dir . 'settings.php' );
 		require( $this->includes_dir . 'campaign.php' );
 		require( $this->includes_dir . 'gateways.php' );
@@ -135,14 +136,15 @@ final class ATCF_CrowdFunding {
 	 */
 	private function setup_actions() {
 		add_action( 'init', array( $this, 'is_edd_activated' ), 1 );
-		add_action( 'init', array( $this, 'cron' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts' ) );
-
 		add_filter( 'template_include', array( $this, 'template_loader' ) );
 
-		do_action( 'atcf_setup_actions' );
-
 		$this->load_textdomain();
+
+		register_activation_hook( $this->file, array( 'ATCF_Install', 'init' ), 10 );
+		register_activation_hook( $this->file, 'flush_rewrite_rules', 15 );
+
+		do_action( 'atcf_setup_actions' );
 	}
 
 	
@@ -252,11 +254,6 @@ final class ATCF_CrowdFunding {
 		}
 
 		return $template;
-	}
-
-	public function cron() {
-		//wp_clear_scheduled_hook( 'job_manager_check_for_expired_jobs' );
-		//wp_schedule_event( time(), 'hourly', 'job_manager_check_for_expired_jobs' );
 	}
 
 	public function frontend_scripts() {

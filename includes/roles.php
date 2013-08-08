@@ -54,8 +54,6 @@ class ATCF_Roles {
 	}
 }
 
-new ATCF_Roles;
-
 /**
  * When an image is being uploaded, if we are on the frontend,
  * only allow images to be uploaded.
