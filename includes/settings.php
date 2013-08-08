@@ -81,30 +81,6 @@ function atcf_settings_general_pages( $settings ) {
 add_filter( 'edd_settings_general', 'atcf_settings_general_pages' );
 
 /**
- * Add settings to set a flexible fee
- *
- * @since Astoundify Crowdfunding 0.7
- * 
- * @param $settings
- * @return $settings
- */
-function atcf_settings_gateway( $settings ) {
-	if ( ! class_exists( 'PayPalAdaptivePaymentsGateway' ) )
-		return $settings;
-
-	$settings[ 'epap_flexible_fee' ] = array(
-		'id'   => 'epap_flexible_fee',
-		'name' => __( 'Additional Flexible Fee', 'epap' ),
-		'desc' => __( '%. <span class="description">If a campaign is flexible, increase commission by this percent.</span>', 'atcf' ),
-		'type' => 'text',
-		'size' => 'small'
-	);
-
-	return $settings;
-}
-add_filter( 'edd_settings_gateways', 'atcf_settings_gateway', 100 );
-
-/**
  * General settings for Crowdfunding
  *
  * @since Astoundify Crowdfunding 0.9

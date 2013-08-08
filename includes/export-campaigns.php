@@ -125,7 +125,7 @@ class ATCF_Campaign_Export extends EDD_Export {
 				'date'     => date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ),
 				'user'     => $user ? $user->display_name : __( 'guest', 'edd' ),
 				'status'   => edd_get_payment_status( $payment, true )
-			) );
+			), $payment_id );
 
 		}
 

@@ -134,6 +134,14 @@ function atcf_settings_gateway_paypal_adaptive_payments( $settings ) {
 	if ( ! atcf_is_gatweay_active( 'paypal_adaptive_payments' ) )
 		return $settings;
 
+	$settings[ 'epap_flexible_fee' ] = array(
+		'id'   => 'epap_flexible_fee',
+		'name' => __( 'Additional Flexible Fee', 'epap' ),
+		'desc' => __( '%. <span class="description">If a campaign is flexible, increase commission by this percent.</span>', 'atcf' ),
+		'type' => 'text',
+		'size' => 'small'
+	);
+
 	$settings[ 'epap_max_donation' ] = array(
 		'id'   => 'epap_max_donation',
 		'name' => __( 'Maximum Pledge Amount', 'atcf' ),
@@ -160,7 +168,7 @@ function atcf_settings_gateway_paypal_adaptive_payments( $settings ) {
 
 	return $settings;
 }
-add_filter( 'edd_settings_gateways', 'atcf_settings_gateway_paypal_adaptive_payments', 200 );
+add_filter( 'edd_settings_gateways', 'atcf_settings_gateway_paypal_adaptive_payments' );
 
 /**
  * Track number or purchases by a registered user.
