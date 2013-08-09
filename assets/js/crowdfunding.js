@@ -226,9 +226,9 @@ Crowdfunding.SubmitCampaign = ( function($) {
 }(jQuery));
 
 jQuery(document).ready(function($) {
-	if ( atcfSettings.pages.is_submission === true )
+	if ( atcfSettings.pages.is_submission === 1 )
 		Crowdfunding.SubmitCampaign.init();
 
-	if ( atcfSettings.pages.is_campaign === true )
+	if ( atcfSettings.pages.is_campaign === 1 )
 		Crowdfunding.Campaign.init();
 });

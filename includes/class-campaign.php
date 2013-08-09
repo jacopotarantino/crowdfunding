@@ -537,7 +537,3 @@ function atcf_campaign_type_default() {
 
 	return $type;
 }
-
-function atcf_check_for_completed_campaigns() {
-	// check all active campaigns for expiration date.
-}

@@ -15,6 +15,8 @@ class ATCF_Install {
 	 * @return void
 	 */
 	public static function init() {
+		flush_rewrite_rules();
+
 		update_option( 'atcf_installed', true );
 		
 		self::roles();
@@ -29,8 +31,6 @@ class ATCF_Install {
 	 * @return ATCF_Roles
 	 */
 	public static function roles() {
-		require( plugin_dir_path( __FILE__ ) . '/class-roles.php' );
-
 		return new ATCF_Roles;
 	}
 

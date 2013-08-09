@@ -126,3 +126,40 @@ function atcf_get_email_body_content( $payment_id = 0, $payment_data = array() )
 
 	return apply_filters( 'atcf_pending_purchase_receipt', $email_body, $payment_id, $payment_data );
 }
+
+/**
+ * Build the campaign expired email.
+ *
+ * Figure out who to send to, who it's from, etc.
+ *
+ * @since Astoundify Crowdfunding 1.6
+ *
+ * @param object $campaign
+ * @return void
+ */
+function atcf_email_campaign_expiration( $campaign ) {
+	global $edd_options;
+
+	$message  = edd_get_email_body_header();
+	
+	$default_email_body = __( 'Dear Author', 'atcf' ) . "\n\n";
+	$default_email_body .= sprintf( __( 'We would just like to let you know that your campaign has reached its end date. You can view your campaign by clicking <a href="%s">here</a>.', 'atcf' ), get_permalink( $campaign->ID ) );
+
+	$message .= apply_filters( 'atcf_campaign_expiration_message', $default_email_body, $campaign );
+
+	$message .= edd_get_email_body_footer();
+
+	$from_name  = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
+	$from_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
+
+	$subject = apply_filters( 'atcf_campaign_expiration_subject', __( 'Your campaign is complete!', 'atcf' ), $campaign );
+	$subject = edd_email_template_tags( $subject, $payment_data, $payment_id );
+
+	$headers  = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
+	$headers .= "Reply-To: ". $from_email . "\r\n";
+	$headers .= "MIME-Version: 1.0\r\n";
+	$headers .= "Content-Type: text/html; charset=utf-8\r\n";
+
+	wp_mail( $campaign->contact_email(), $subject, $message, $headers );
+}
+add_action( 'atcf_campaign_expired', 'atcf_email_campaign_expiration' );

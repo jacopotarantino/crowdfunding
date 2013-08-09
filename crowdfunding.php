@@ -106,6 +106,7 @@ final class ATCF_CrowdFunding {
 		require( $this->includes_dir . 'class-install.php' );
 		require( $this->includes_dir . 'class-campaigns.php' );
 		require( $this->includes_dir . 'class-campaign.php' );
+		require( $this->includes_dir . 'class-roles.php' );
 		require( $this->includes_dir . 'settings.php' );
 		require( $this->includes_dir . 'gateways.php' );
 		require( $this->includes_dir . 'theme-stuff.php' );
@@ -142,7 +143,6 @@ final class ATCF_CrowdFunding {
 		$this->load_textdomain();
 
 		register_activation_hook( $this->file, array( 'ATCF_Install', 'init' ), 10 );
-		register_activation_hook( $this->file, 'flush_rewrite_rules', 15 );
 
 		do_action( 'atcf_setup_actions' );
 	}

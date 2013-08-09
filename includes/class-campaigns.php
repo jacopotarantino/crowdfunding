@@ -362,8 +362,6 @@ class ATCF_Campaigns {
 			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 13, 'collected' => $campaign->backers_count() ), admin_url( 'post.php' ) ) );
 			exit();
 		}
-
-		update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
 	}
 
 	/**
@@ -911,3 +909,35 @@ function atcf_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'atcf-admin-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding-admin.js', array( 'jquery', 'edd-admin-scripts' ) );
 }
 add_action( 'admin_enqueue_scripts', 'atcf_load_admin_scripts' );
+
+function atcf_check_for_completed_campaigns() {
+	$now = current_time( 'timestamp', true );
+
+	$active_campaigns = get_posts( array(
+		'post_type'             => array( 'download' ),
+		'post_status'           => array( 'publish' ),
+		'meta_query'            => array(
+			array(
+				'key'     => '_campaign_expired',
+				'compare' => 'NOT EXISTS'
+			)
+		),
+		'nopaging'               => true,
+		'cache_results'          => false,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false
+	) );
+
+	foreach ( $active_campaigns as $campaign ) {
+		$campaign = atcf_get_campaign( $campaign );
+
+		$expiration_date = mysql2date( 'G', $campaign->end_date() );
+
+		if ( $now > $expiration_date ) {
+			update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
+
+			do_action( 'atcf_campaign_expired', $campaign );
+		}
+	}
+}
+add_action( 'atcf_check_for_completed_campaigns', 'atcf_check_for_completed_campaigns' );
