@@ -152,7 +152,8 @@ Crowdfunding.SubmitCampaign = ( function($) {
 
 				$( this )
 					.attr( 'name', name )
-					.attr( 'id', name );
+					.attr( 'id', name )
+					.attr( 'readonly', false );
 
 				$( this ).prev()
 					.attr( 'for', label );
@@ -226,9 +227,9 @@ Crowdfunding.SubmitCampaign = ( function($) {
 }(jQuery));
 
 jQuery(document).ready(function($) {
-	if ( atcfSettings.pages.is_submission === 1 )
+	if ( atcfSettings.pages.is_submission === true ) 
 		Crowdfunding.SubmitCampaign.init();
 
-	if ( atcfSettings.pages.is_campaign === 1 )
+	if ( atcfSettings.pages.is_campaign === true )
 		Crowdfunding.Campaign.init();
 });

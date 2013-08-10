@@ -157,7 +157,7 @@ function atcf_campaign_contribute_options( $prices, $type, $download_id ) {
 							<?php endif; ?>
 						</div>
 					</div>
-					<?php echo wpautop( esc_html( $price[ 'name' ] ) ); ?>
+					<?php echo wpautop( wp_kses_data( $price[ 'name' ] ) ); ?>
 				</li>
 			<?php endforeach; ?>
 		</ul>
