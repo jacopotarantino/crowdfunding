@@ -1,14 +1,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AppThemer Crowdfunding\n"
-"POT-Creation-Date: 2013-07-05 11:00-0500\n"
-"PO-Revision-Date: 2013-07-05 11:00-0500\n"
-"Last-Translator: Astoundify <contact@astoundify.com>\n"
+"POT-Creation-Date: 2013-08-10 17:49-0500\n"
+"PO-Revision-Date: 2013-08-10 17:50-0500\n"
+"Last-Translator: Spencer Finnell <spencerfinnell@gmail.com>\n"
 "Language-Team: Astoundify <contact@astoundify.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.5.7\n"
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
 "_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;"
 "esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -16,269 +16,350 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../crowdfunding.php:165
+#: ../crowdfunding.php:180
 #, php-format
 msgid ""
 "<strong>Notice:</strong> Crowdfunding by Astoundify requires <a href=\"%s"
 "\">Easy Digital Downloads</a> in order to function properly."
 msgstr ""
 
-#: ../includes/campaign.php:89 ../includes/campaign.php:101
+#: ../crowdfunding.php:289
+msgid "At least one reward is required."
+msgstr ""
+
+#: ../includes/checkout.php:63
+msgid "Hide name on backers list?"
+msgstr ""
+
+#: ../includes/class-campaign.php:463
+msgid "Reward Options:"
+msgstr ""
+
+#: ../includes/class-campaign.php:475
+msgid "Enable multiple reward options"
+msgstr ""
+
+#: ../includes/class-campaign.php:486
+msgid "All-or-nothing"
+msgstr ""
+
+#: ../includes/class-campaign.php:487
+msgid ""
+"Only collect pledged funds when the campaign ends if the set goal is met."
+msgstr ""
+
+#: ../includes/class-campaign.php:490
+msgid "Flexible"
+msgstr ""
+
+#: ../includes/class-campaign.php:491
+msgid "Collect funds pledged at the end of the campaign no matter what."
+msgstr ""
+
+#: ../includes/class-campaign.php:498 ../includes/class-campaigns.php:881
+#: ../includes/shortcode-submit.php:766
+msgid "Donation"
+msgstr ""
+
+#: ../includes/class-campaign.php:499
+msgid "Funds will be collected automatically as pledged."
+msgstr ""
+
+#: ../includes/class-campaigns.php:82 ../includes/class-campaigns.php:94
 msgid "Campaigns"
 msgstr ""
 
-#: ../includes/campaign.php:90
+#: ../includes/class-campaigns.php:83
 msgid "Campaign"
 msgstr ""
 
-#: ../includes/campaign.php:91
+#: ../includes/class-campaigns.php:84
 msgid "Add New"
 msgstr ""
 
-#: ../includes/campaign.php:92
+#: ../includes/class-campaigns.php:85
 msgid "Add New Campaign"
 msgstr ""
 
-#: ../includes/campaign.php:93
+#: ../includes/class-campaigns.php:86
 msgid "Edit Campaign"
 msgstr ""
 
-#: ../includes/campaign.php:94
+#: ../includes/class-campaigns.php:87
 msgid "New Campaign"
 msgstr ""
 
-#: ../includes/campaign.php:95
+#: ../includes/class-campaigns.php:88
 msgid "All Campaigns"
 msgstr ""
 
-#: ../includes/campaign.php:96
+#: ../includes/class-campaigns.php:89
 msgid "View Campaign"
 msgstr ""
 
-#: ../includes/campaign.php:97
+#: ../includes/class-campaigns.php:90
 msgid "Search Campaigns"
 msgstr ""
 
-#: ../includes/campaign.php:98
+#: ../includes/class-campaigns.php:91
 msgid "No Campaigns found"
 msgstr ""
 
-#: ../includes/campaign.php:99
+#: ../includes/class-campaigns.php:92
 msgid "No Campaigns found in Trash"
 msgstr ""
 
-#: ../includes/campaign.php:161 ../includes/shortcode-profile.php:80
+#: ../includes/class-campaigns.php:154 ../includes/shortcode-profile.php:80
 msgid "Name"
 msgstr ""
 
-#: ../includes/campaign.php:162
+#: ../includes/class-campaigns.php:155
 msgid "Type"
 msgstr ""
 
-#: ../includes/campaign.php:163
+#: ../includes/class-campaigns.php:156
 msgid "Backers"
 msgstr ""
 
-#: ../includes/campaign.php:164
+#: ../includes/class-campaigns.php:157
 msgid "Amount Funded"
 msgstr ""
 
-#: ../includes/campaign.php:165
+#: ../includes/class-campaigns.php:158
 msgid "Days Remaining"
 msgstr ""
 
-#: ../includes/campaign.php:184
+#: ../includes/class-campaigns.php:177
 #, php-format
 msgctxt "funded of goal"
 msgid "%s of %s"
 msgstr ""
 
-#: ../includes/campaign.php:253
+#: ../includes/class-campaigns.php:246
 msgid "Campaign Funds"
 msgstr ""
 
-#: ../includes/campaign.php:255
+#: ../includes/class-campaigns.php:249 ../includes/class-campaigns.php:655
+msgid "Reinstate Campaign"
+msgstr ""
+
+#: ../includes/class-campaigns.php:252
 msgid "Campaign Stats"
 msgstr ""
 
-#: ../includes/campaign.php:256
+#: ../includes/class-campaigns.php:253
 msgid "Campaign Updates"
 msgstr ""
 
-#: ../includes/campaign.php:259
+#: ../includes/class-campaigns.php:256
 msgid "Campaign Video"
 msgstr ""
 
-#: ../includes/campaign.php:355
+#: ../includes/class-campaigns.php:346
 #, php-format
-msgid "Error processing preapproved payment via %s"
+msgid "Error processing preapproved payment via %s when collecting funds."
 msgstr ""
 
-#: ../includes/campaign.php:387
+#: ../includes/class-campaigns.php:409
 #, php-format
 msgid "This %s has not reached its funding goal."
 msgstr ""
 
-#: ../includes/campaign.php:388
+#: ../includes/class-campaigns.php:410
 #, php-format
 msgid "You do not have permission to collect funds for %s."
 msgstr ""
 
-#: ../includes/campaign.php:389
+#: ../includes/class-campaigns.php:411
 #, php-format
 msgid "All payments have been processed and collected for this %s."
 msgstr ""
 
-#: ../includes/campaign.php:390
+#: ../includes/class-campaigns.php:412
 #, php-format
 msgid "There are no payments for this %s."
 msgstr ""
 
-#: ../includes/campaign.php:391
+#: ../includes/class-campaigns.php:413
 #, php-format
 msgid ""
 "<strong>Payments processed.</strong> %d payments failed to process. Please "
 "check <a href=\"%s\">gateway logs</a> before trying again."
 msgstr ""
 
-#: ../includes/campaign.php:440
+#: ../includes/class-campaigns.php:489
 msgid "Whoops, the provided date is invalid."
 msgstr ""
 
-#: ../includes/campaign.php:457 ../includes/shortcode-submit.php:402
-#: ../includes/shortcode-submit.php:433
+#: ../includes/class-campaigns.php:506 ../includes/shortcode-submit.php:424
+#: ../includes/shortcode-submit.php:455
 msgid "Limit"
 msgstr ""
 
-#: ../includes/campaign.php:458
+#: ../includes/class-campaigns.php:507
 msgid "Purchased"
 msgstr ""
 
-#: ../includes/campaign.php:512
+#: ../includes/class-campaigns.php:561
 msgid "Current Amount:"
 msgstr ""
 
-#: ../includes/campaign.php:517
+#: ../includes/class-campaigns.php:566
 msgid "Backers:"
 msgstr ""
 
-#: ../includes/campaign.php:522
+#: ../includes/class-campaigns.php:572
 msgid "Days Remaining:"
 msgstr ""
 
-#: ../includes/campaign.php:557
+#: ../includes/class-campaigns.php:608
 #, php-format
 msgid ""
 "This %1$s has reached its funding goal. You may now send the funds to the "
 "owner. This will end the %1$s."
 msgstr ""
 
-#: ../includes/campaign.php:559
+#: ../includes/class-campaigns.php:610
 #, php-format
 msgid ""
 "This %1$s is flexible. You may collect the funds at any time. This will end "
 "the %1$s."
 msgstr ""
 
-#: ../includes/campaign.php:563
+#: ../includes/class-campaigns.php:614
 #, php-format
 msgid "%d payment failed to process."
 msgid_plural "%d payments failed to process."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../includes/campaign.php:563
+#: ../includes/class-campaigns.php:614
 msgid "View gateway errors"
 msgstr ""
 
-#: ../includes/campaign.php:567
-msgid "Collect Failed Payments"
-msgstr ""
-
-#: ../includes/campaign.php:567
+#: ../includes/class-campaigns.php:631
 msgid "Collect Funds"
 msgstr ""
 
-#: ../includes/campaign.php:590
+#: ../includes/class-campaigns.php:657
+msgid ""
+"<strong>Note:</strong> This will only allow funds to be collected again. All "
+"dates, etc must manually be updated."
+msgstr ""
+
+#: ../includes/class-campaigns.php:679
 msgid "oEmbed supported video links."
 msgstr ""
 
-#: ../includes/campaign.php:610
+#: ../includes/class-campaigns.php:699
 msgid "Notes and updates about the campaign."
 msgstr ""
 
-#: ../includes/campaign.php:659
+#: ../includes/class-campaigns.php:748
 msgid "Featured campaign"
 msgstr ""
 
-#: ../includes/campaign.php:666
+#: ../includes/class-campaigns.php:755
 msgid "Collect shipping information on checkout"
 msgstr ""
 
-#: ../includes/campaign.php:671
+#: ../includes/class-campaigns.php:760
 msgid "Funding Type:"
 msgstr ""
 
-#: ../includes/campaign.php:681
+#: ../includes/class-campaigns.php:770
 msgid "Goal:"
 msgstr ""
 
-#: ../includes/campaign.php:690
+#: ../includes/class-campaigns.php:779
 msgid "Location:"
 msgstr ""
 
-#: ../includes/campaign.php:695
+#: ../includes/class-campaigns.php:784
 msgid "Author:"
 msgstr ""
 
-#: ../includes/campaign.php:700
+#: ../includes/class-campaigns.php:789
 msgid "Contact Email:"
 msgstr ""
 
-#: ../includes/campaign.php:707
+#: ../includes/class-campaigns.php:796
 msgid "End Date:"
 msgstr ""
 
-#: ../includes/campaign.php:727
+#: ../includes/class-campaigns.php:816
 #, php-format
 msgid "This %s never ends"
 msgstr ""
 
-#: ../includes/campaign.php:1225
-msgid "Reward Options:"
+#: ../includes/class-campaigns.php:830
+#, php-format
+msgid "This %s is donations only (no rewards)"
 msgstr ""
 
-#: ../includes/campaign.php:1237
-msgid "Enable multiple reward options"
+#: ../includes/class-export-campaigns.php:32
+msgid "ID"
 msgstr ""
 
-#: ../includes/campaign.php:1248
-msgid "All-or-nothing"
+#: ../includes/class-export-campaigns.php:33
+msgid "Email"
 msgstr ""
 
-#: ../includes/campaign.php:1249
-msgid ""
-"Only collect pledged funds when the campaign ends if the set goal is met."
+#: ../includes/class-export-campaigns.php:34
+msgid "First Name"
 msgstr ""
 
-#: ../includes/campaign.php:1252
-msgid "Flexible"
+#: ../includes/class-export-campaigns.php:35
+msgid "Last Name"
 msgstr ""
 
-#: ../includes/campaign.php:1253
-msgid "Collect funds pledged at the end of the campaign no matter what."
+#: ../includes/class-export-campaigns.php:36 ../includes/shipping.php:70
+#: ../includes/shipping.php:73
+msgid "Shipping Address"
 msgstr ""
 
-#: ../includes/campaign.php:1260
-msgid "Donation"
+#: ../includes/class-export-campaigns.php:37
+msgid "Pledge"
 msgstr ""
 
-#: ../includes/campaign.php:1261
-msgid "Funds will be collected automatically as pledged."
+#: ../includes/class-export-campaigns.php:38
+msgid "Amount"
 msgstr ""
 
-#: ../includes/checkout.php:77
-msgid "Hide name on backers list?"
+#: ../includes/class-export-campaigns.php:39
+msgid "Tax"
+msgstr ""
+
+#: ../includes/class-export-campaigns.php:40
+msgid "Payment Method"
+msgstr ""
+
+#: ../includes/class-export-campaigns.php:41
+msgid "Purchase Key"
+msgstr ""
+
+#: ../includes/class-export-campaigns.php:42
+msgid "Date"
+msgstr ""
+
+#: ../includes/class-export-campaigns.php:43
+msgid "User"
+msgstr ""
+
+#: ../includes/class-export-campaigns.php:44
+msgid "Status"
+msgstr ""
+
+#: ../includes/class-export-campaigns.php:122
+msgid "none"
+msgstr ""
+
+#: ../includes/class-export-campaigns.php:126
+msgid "guest"
+msgstr ""
+
+#: ../includes/class-roles.php:22
+msgid "Campaign Contributor"
 msgstr ""
 
 #: ../includes/emails.php:76
@@ -296,65 +377,19 @@ msgid ""
 "your pledge amount if the %2$s receives 100% funding."
 msgstr ""
 
-#: ../includes/export-campaigns.php:32
-msgid "ID"
+#: ../includes/emails.php:145
+msgid "Dear Author"
 msgstr ""
 
-#: ../includes/export-campaigns.php:33
-msgid "Email"
+#: ../includes/emails.php:146
+#, php-format
+msgid ""
+"We would just like to let you know that your campaign has reached its end "
+"date. You can view your campaign by clicking <a href=\"%s\">here</a>."
 msgstr ""
 
-#: ../includes/export-campaigns.php:34
-msgid "First Name"
-msgstr ""
-
-#: ../includes/export-campaigns.php:35
-msgid "Last Name"
-msgstr ""
-
-#: ../includes/export-campaigns.php:36 ../includes/shipping.php:70
-#: ../includes/shipping.php:73
-msgid "Shipping Address"
-msgstr ""
-
-#: ../includes/export-campaigns.php:37
-msgid "Pledge"
-msgstr ""
-
-#: ../includes/export-campaigns.php:38
-msgid "Amount"
-msgstr ""
-
-#: ../includes/export-campaigns.php:39
-msgid "Tax"
-msgstr ""
-
-#: ../includes/export-campaigns.php:40
-msgid "Payment Method"
-msgstr ""
-
-#: ../includes/export-campaigns.php:41
-msgid "Purchase Key"
-msgstr ""
-
-#: ../includes/export-campaigns.php:42
-msgid "Date"
-msgstr ""
-
-#: ../includes/export-campaigns.php:43
-msgid "User"
-msgstr ""
-
-#: ../includes/export-campaigns.php:44
-msgid "Status"
-msgstr ""
-
-#: ../includes/export-campaigns.php:122
-msgid "none"
-msgstr ""
-
-#: ../includes/export-campaigns.php:126
-msgid "guest"
+#: ../includes/emails.php:155
+msgid "Your campaign is complete!"
 msgstr ""
 
 #: ../includes/export.php:60
@@ -422,53 +457,51 @@ msgid ""
 "shortcode."
 msgstr ""
 
-#: ../includes/settings.php:97
-msgid "Additional Flexible Fee"
+#: ../includes/settings.php:94
+msgid "Astoundify Crowdfunding Settings"
 msgstr ""
 
-#: ../includes/settings.php:98
-msgid ""
-"%. <span class=\"description\">If a campaign is flexible, increase "
-"commission by this percent.</span>"
-msgstr ""
-
-#: ../includes/settings.php:118
-msgid "AppThemer Crowdfunding Settings"
-msgstr ""
-
-#: ../includes/settings.php:119
+#: ../includes/settings.php:95
 msgid "Configuration related to crowdfunding."
 msgstr ""
 
-#: ../includes/settings.php:125
+#: ../includes/settings.php:101
+msgid "Custom Pledging"
+msgstr ""
+
+#: ../includes/settings.php:102
+msgid "Allow arbitrary amounts to be pledged."
+msgstr ""
+
+#: ../includes/settings.php:109
 msgid "Minimum Campaign Length"
 msgstr ""
 
-#: ../includes/settings.php:126
+#: ../includes/settings.php:110
 msgid "The minimum days a campaign can run for."
 msgstr ""
 
-#: ../includes/settings.php:134
+#: ../includes/settings.php:118
 msgid "Maximum Campaign Length"
 msgstr ""
 
-#: ../includes/settings.php:135
+#: ../includes/settings.php:119
 msgid "The maximum days a campaign can run for."
 msgstr ""
 
-#: ../includes/settings.php:150
+#: ../includes/settings.php:134
 msgid "Campaign Types"
 msgstr ""
 
-#: ../includes/settings.php:151
+#: ../includes/settings.php:135
 msgid "Select which campaign types are allowed."
 msgstr ""
 
-#: ../includes/settings.php:158
+#: ../includes/settings.php:142
 msgid "Require Account"
 msgstr ""
 
-#: ../includes/settings.php:159
+#: ../includes/settings.php:143
 msgid "Require users to be logged in to submit a campaign."
 msgstr ""
 
@@ -669,7 +702,7 @@ msgstr ""
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: ../includes/shortcode-register.php:107 ../includes/shortcode-submit.php:653
+#: ../includes/shortcode-register.php:107 ../includes/shortcode-submit.php:673
 msgid "That contact email address already exists."
 msgstr ""
 
@@ -681,119 +714,123 @@ msgstr ""
 msgid "Sorry, this username is already taken."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:53
-msgid "At least one reward is required."
-msgstr ""
-
-#: ../includes/shortcode-submit.php:62
+#: ../includes/shortcode-submit.php:55
 #, php-format
 msgctxt "edit \"campaign\""
 msgid "Update %s"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:62
+#: ../includes/shortcode-submit.php:55
 #, php-format
 msgctxt "submit \"campaign\""
 msgid "Submit %s"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:67
-msgid "Preview"
+#: ../includes/shortcode-submit.php:60
+msgid "Save and Preview"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:100
+#: ../includes/shortcode-submit.php:93
 msgid "Campaign Information"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:103
+#: ../includes/shortcode-submit.php:96
 msgid "Title"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:127
+#: ../includes/shortcode-submit.php:120
 #, php-format
 msgid "Goal (%s)"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:156
+#: ../includes/shortcode-submit.php:149
 msgid "Length (Days)"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:159
+#: ../includes/shortcode-submit.php:152
 msgid "No End Date"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:193
+#: ../includes/shortcode-submit.php:186
 msgid "Funding Type"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:193
+#: ../includes/shortcode-submit.php:186
 msgid "Learn More"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:230
+#: ../includes/shortcode-submit.php:214
 msgid "Category"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:254
+#: ../includes/shortcode-submit.php:245
+msgid "Tags"
+msgstr ""
+
+#: ../includes/shortcode-submit.php:271
 msgid "Description"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:286
+#: ../includes/shortcode-submit.php:303
 msgid "Updates"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:316
+#: ../includes/shortcode-submit.php:333
 msgid "Excerpt"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:335
+#: ../includes/shortcode-submit.php:352
 msgid "Featured Image"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:360
+#: ../includes/shortcode-submit.php:377
 msgid "Featured Video URL"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:378
+#: ../includes/shortcode-submit.php:396
 msgid "Backer Rewards"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:381
+#: ../includes/shortcode-submit.php:399
 msgid "Collect shipping information on checkout."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:392 ../includes/shortcode-submit.php:423
+#: ../includes/shortcode-submit.php:403
+msgid "No rewards, donations only."
+msgstr ""
+
+#: ../includes/shortcode-submit.php:414 ../includes/shortcode-submit.php:445
 #, php-format
 msgid "Amount (%s)"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:397 ../includes/shortcode-submit.php:428
+#: ../includes/shortcode-submit.php:419 ../includes/shortcode-submit.php:450
 msgid "Reward"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:429
+#: ../includes/shortcode-submit.php:451
 msgid "Description of reward for this level of contribution."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:447
+#: ../includes/shortcode-submit.php:469
 msgid "+ <em>Add Reward</em>"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:463
+#: ../includes/shortcode-submit.php:485
 msgid "Your Information"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:468
+#: ../includes/shortcode-submit.php:490
 msgid "Contact Email"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:470
+#: ../includes/shortcode-submit.php:492
 msgid ""
 "An account will be created for you with this email address. It must be "
 "active."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:473
+#: ../includes/shortcode-submit.php:495
 #, php-format
 msgid ""
 "<strong>Note</strong>: You are currently logged in as %1$s. This %2$s will "
@@ -801,64 +838,90 @@ msgid ""
 "would like to make a %2$s under a new account."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:491
+#: ../includes/shortcode-submit.php:513
 msgid "Name/Organization Name"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:508
+#: ../includes/shortcode-submit.php:530
 msgid "Location"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:539
+#: ../includes/shortcode-submit.php:561
 msgid "Success! Your campaign has been received. It will be reviewed shortly."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:603
+#: ../includes/shortcode-submit.php:626
 msgid "Please agree to the Terms and Conditions"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:607
+#: ../includes/shortcode-submit.php:630
 msgid "Please add a title to this campaign."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:613
+#: ../includes/shortcode-submit.php:636
 #, php-format
 msgid "Please enter a valid goal amount. All goals are set in the %s currency."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:638
+#: ../includes/shortcode-submit.php:658
 msgid "Please add content to this campaign."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:646
+#: ../includes/shortcode-submit.php:666
 msgid "Please add a campaign image."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:650
+#: ../includes/shortcode-submit.php:670
 msgid "Please add at least one reward to the campaign."
 msgstr ""
 
-#: ../includes/theme-stuff.php:116
+#: ../includes/theme-stuff.php:146
+msgctxt "Pledge verb. (Pledge $5)"
+msgid "Pledge"
+msgstr ""
+
+#: ../includes/theme-stuff.php:150
+#, php-format
+msgctxt "number of backers for pledge level"
+msgid "1 Backer"
+msgid_plural "%1$s Backers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../includes/theme-stuff.php:154
+#, php-format
+msgid "Limit of %d &mdash; %d remaining"
+msgstr ""
+
+#: ../includes/theme-stuff.php:156
+msgid "All gone!"
+msgstr ""
+
+#: ../includes/theme-stuff.php:180
+msgid "Enter your pledge amount"
+msgstr ""
+
+#: ../includes/theme-stuff.php:239
 #, php-format
 msgid ""
 "<strong>Funding Unsuccessful</strong>. This project reached the deadline "
 "without achieving its funding goal on %s."
 msgstr ""
 
-#: ../includes/theme-stuff.php:120
+#: ../includes/theme-stuff.php:243
 #, php-format
 msgid ""
 "<strong>Funding Successful</strong>. This project reached its goal before %s."
 msgstr ""
 
-#: ../includes/theme-stuff.php:128
+#: ../includes/theme-stuff.php:251
 #, php-format
 msgid ""
 "<strong>Campaign Complete</strong>. This project has ended on %s. No more "
 "contributions can be made."
 msgstr ""
 
-#: ../includes/theme-stuff.php:145
+#: ../includes/theme-stuff.php:268
 #, php-format
 msgid "This is a preview of your %1$s. <a href=\"%2$s\">Edit</a>"
 msgstr ""
@@ -882,39 +945,49 @@ msgid "Please make sure your PayPal email address is valid."
 msgstr ""
 
 #: ../includes/gateways/paypal_adaptive_payments.php:139
-msgid "Maximum Pledge Amount"
+msgid "Additional Flexible Fee"
 msgstr ""
 
 #: ../includes/gateways/paypal_adaptive_payments.php:140
-msgid "The maximum amount of money PayPal can accept on your account."
+msgid ""
+"%. <span class=\"description\">If a campaign is flexible, increase "
+"commission by this percent.</span>"
 msgstr ""
 
 #: ../includes/gateways/paypal_adaptive_payments.php:147
-msgid "Maximum Campaigns Per Year"
+msgid "Maximum Pledge Amount"
 msgstr ""
 
 #: ../includes/gateways/paypal_adaptive_payments.php:148
-msgid "The maximum amount of campaigns that each user may create per year."
+msgid "The maximum amount of money PayPal can accept on your account."
 msgstr ""
 
 #: ../includes/gateways/paypal_adaptive_payments.php:155
-msgid "Maximum Payments Per User"
+msgid "Maximum Campaigns Per Year"
 msgstr ""
 
 #: ../includes/gateways/paypal_adaptive_payments.php:156
+msgid "The maximum amount of campaigns that each user may create per year."
+msgstr ""
+
+#: ../includes/gateways/paypal_adaptive_payments.php:163
+msgid "Maximum Payments Per User"
+msgstr ""
+
+#: ../includes/gateways/paypal_adaptive_payments.php:164
 msgid "The maximum times a user can contribtue to a single campaign."
 msgstr ""
 
-#: ../includes/gateways/paypal_adaptive_payments.php:243
+#: ../includes/gateways/paypal_adaptive_payments.php:251
 msgid "You have reached the maximum number of pledges-per-campaign allowed."
 msgstr ""
 
-#: ../includes/gateways/paypal_adaptive_payments.php:307
+#: ../includes/gateways/paypal_adaptive_payments.php:315
 msgid ""
 "You have submitted the maximum number of campaigns allowed for this year."
 msgstr ""
 
-#: ../includes/gateways/paypal_adaptive_payments.php:329
+#: ../includes/gateways/paypal_adaptive_payments.php:337
 #, php-format
 msgid "<strong>Note:</strong> There is a %s maximum allowed per reward level."
 msgstr ""

@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 1.5
+Stable Tag: 1.6-alpha
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,6 +60,18 @@ Developers can contribute to the source code of the project on [GitHub](https://
 Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
 == Changelog ==
+
+= 1.6: August 12, 2013 =
+
+https://github.com/Astoundify/crowdfunding/issues?milestone=14&page=1&state=closed
+
+* New: MAJOR: [File changes/organization](https://github.com/Astoundify/crowdfunding/issues/246)
+* New: MAJOR: Custom pledge amounts have been removed from the theme, and added to the plugin. [More](https://github.com/Astoundify/crowdfunding/issues/244)
+* New: Support for multiple rewards of the same amount.
+* New: Campaign authors are now emailed when a campaign is completed.
+* Fix: Campaign length now respects initial length after publishing.
+* Fix: All users should be able to select terms when submitting a campaign.
+* Tweaks: Update language files, various other fixes.
 
 = 1.5: July 30, 2013 =
 
