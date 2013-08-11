@@ -55,8 +55,8 @@ class ATCF_Campaigns {
 
 		remove_action( 'edd_meta_box_fields', 'edd_render_product_type_field', 10 );
 
-		add_action( 'edd_download_price_table_head', 'atcf_pledge_limit_head' );
-		add_action( 'edd_download_price_table_row', 'atcf_pledge_limit_column', 10, 3 );
+		add_action( 'edd_download_price_table_head', 'atcf_pledge_limit_head', 9 );
+		add_action( 'edd_download_price_table_row', 'atcf_pledge_limit_column', 9, 3 );
 
 		add_action( 'edd_after_price_field', 'atcf_after_price_field' );
 
