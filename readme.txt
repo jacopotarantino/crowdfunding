@@ -2,7 +2,7 @@
 
 Author URI: http://astoundify.com
 Plugin URI: http://astoundify.com
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=contact@appthemer.com&item_name=Donation+for+Crowdfunding
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=contact@astoundify.com&item_name=Donation+for+Crowdfunding
 Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource 
 Requires at least: 3.5
@@ -15,13 +15,13 @@ A crowdfunding platform in the likes of Kickstarter and Indigogo
 
 == Description ==
 
-Crowdfunding by [Astoundify](http://Astoundify.com/) is a funding platform for WordPress. An extension that seamlessly integrates with [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/), the Crowdfunding plugin lets you crowd source everything from films, games, and music to art, design, and technology.
+Crowdfunding by [Astoundify](http://Astoundify.com/) is a funding platform for WordPress. An extension that seamlessly integrates with [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/), the Crowdfunding plugin lets you crowd fund everything from films, games, music to art, design and technology or anything you can think of.
 
 "Backers" can pledge specified amounts of money towards a project and receive rewards for their contributions. Pledge amounts are only collected if a campaign reaches its goal in the time specified.
 
 Run your own crowdfunding website for anything you can imagine.
 
-Note: The Astoundify Crowdfunding plugin is designed to work alongside the PayPal Adaptive Payments or Stripe gateway so that pledges are collected but no funds are taken until the campaign reaches its goal. The plugin will also work along side any other gateway that Easy Digital Downloads supports but funds will be taken immediately.
+Note: The Astoundify Crowdfunding plugin is designed to work alongside the WePay, PayPal Adaptive Payments or Stripe gateway so that pledges are collected but no funds are taken until the campaign reaches its goal. The plugin will also work along side any other gateway that Easy Digital Downloads supports but funds will be taken immediately.
 
 = Features =
 
@@ -29,8 +29,8 @@ Features of the plugin include:
 
 * Crowd fund anything you want!
 * Frontend form submission to easily collect campaign information.
-* Compatible with Stripe & PayPal Adaptive Payments API for pre-approved purchases. When a person commits to funding your project they are only charged if your campaign reaches its pre-defined goal.
-* Compatible with all standard payment gateways that Easy Digital Downloads supports, i.e Stripe, PayPal Pro/Express (payments will be charged immediately).
+* Compatible with WePay, Stripe & PayPal Adaptive Payments API for pre-approved purchases. When a person commits to funding your project they are only charged if your campaign reaches its pre-defined goal.
+* Compatible with all standard payment gateways that Easy Digital Downloads supports, i.e WePay, Stripe, PayPal Pro/Express.
 * Works both as a donation plugin and a Crowdfunding plugin.
 * Easy to theme and integrate into your own site which uses Easy Digital Downloads.
 
@@ -49,7 +49,7 @@ Developers can contribute to the source code of the project on [GitHub](https://
 
 1. Install the Easy Digital Downloads plugin and activate it, if you haven't already.
 2. Install the Astoundify Crowdfunding plugin and activate it.
-3. (Optional) Install the PayPal Adaptive Payments plugin. (https://easydigitaldownloads.com/extension/paypal-adaptive-payments?ref=7)
+3. (Optional) Install the WePay or PayPal Adaptive Payments plugin. (https://easydigitaldownloads.com/extensions/wepay-payment-gateway/?ref=7) (https://easydigitaldownloads.com/extension/paypal-adaptive-payments?ref=7)
 4. Create a new page for your frontend submission form add this shortcode to the page: [appthemer_crowdfunding_submit] - (this is optional).
 5. Go to Campaigns > Add New to create a new campaign.
 
@@ -238,8 +238,8 @@ https://github.com/Astoundify/crowdfunding/issues?milestone=4&state=closed
 * Fix: Better loading of exports.
 * Fix: Shipping fixes, backers, etc.
 * Fix: Load backers at the correct time.
-* Fix: Count amount based on preapproval, not total earnings.
-* New: Dont activate if EDD is not active.
+* Fix: Count amount based on pre-approval, not total earnings.
+* New: Don't activate if EDD is not active.
 * New: Text filters.
 * New: Update readme.txt
 
