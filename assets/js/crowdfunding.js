@@ -16,11 +16,7 @@ Crowdfunding.Campaign = ( function($) {
 	    currentPrice,
 	    startPledgeLevel;
 
-	var formatCurrencySettings = {
-		'decimalSymbol'    : atcfSettings.campaign.currency.decimal,
-		'digitGroupSymbol' : atcfSettings.campaign.currency.thousands,
-		'symbol'           : ''
-	}
+	var formatCurrencySettings = {};
 
 	function priceOptionsHandler() {
 		customPriceField.keyup(function() {
@@ -51,6 +47,12 @@ Crowdfunding.Campaign = ( function($) {
 
 	return {
 		init : function() {
+			formatCurrencySettings = {
+				'decimalSymbol'    : atcfSettings.campaign.currency.decimal,
+				'digitGroupSymbol' : atcfSettings.campaign.currency.thousands,
+				'symbol'           : ''
+			}
+			
 			currentPrice      = 0;
 			customPriceField  = $( '#contribute-modal-wrap #atcf_custom_price' );
 			priceOptions      = $( '#contribute-modal-wrap .atcf-price-option' );
@@ -227,9 +229,9 @@ Crowdfunding.SubmitCampaign = ( function($) {
 }(jQuery));
 
 jQuery(document).ready(function($) {
-	if ( atcfSettings.pages.is_submission === true ) 
+	if ( atcfSettings.pages.is_submission ) 
 		Crowdfunding.SubmitCampaign.init();
 
-	if ( atcfSettings.pages.is_campaign === true )
+	if ( atcfSettings.pages.is_campaign )
 		Crowdfunding.Campaign.init();
 });
