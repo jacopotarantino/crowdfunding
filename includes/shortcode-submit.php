@@ -134,9 +134,6 @@ add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_goal', 
 function atcf_shortcode_submit_field_length( $atts, $campaign ) {
 	global $edd_options;
 
-	if ( $atts[ 'editing' ] )
-		return;
-
 	$min = isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14;
 	$max = isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 48;
 
@@ -144,16 +141,20 @@ function atcf_shortcode_submit_field_length( $atts, $campaign ) {
 
 	$length = $atts[ 'previewing' ] ? $campaign->days_remaining() : $length;
 ?>
-	<p class="atcf-submit-campaign-length">
-		<label for="length">
-			<?php _e( 'Length (Days)', 'atcf' ); ?>
+	<?php if ( $atts[ 'editing' ] ) : ?>
+		<input type="hidden" name="length" id="length" value="<?php echo esc_attr( $length ); ?>">
+	<?php else : ?>
+		<p class="atcf-submit-campaign-length">
+			<label for="length">
+				<?php _e( 'Length (Days)', 'atcf' ); ?>
 
-			<?php if ( ! atcf_has_preapproval_gateway() ) : ?>
-				<a href="#" class="atcf-toggle-neverending"><?php _e( 'No End Date', 'atcf' ); ?></a>
-			<?php endif; ?>
-		</label>
-		<input type="number" min="<?php echo esc_attr( $min ); ?>" max="<?php echo esc_attr( $max ); ?>" step="1" name="length" id="length" value="<?php echo esc_attr( $length ); ?>">
-	</p>
+				<?php if ( ! atcf_has_preapproval_gateway() ) : ?>
+					<a href="#" class="atcf-toggle-neverending"><?php _e( 'No End Date', 'atcf' ); ?></a>
+				<?php endif; ?>
+			</label>
+			<input type="number" min="<?php echo esc_attr( $min ); ?>" max="<?php echo esc_attr( $max ); ?>" step="1" name="length" id="length" value="<?php echo esc_attr( $length ); ?>">
+		</p>
+	<?php endif; ?>
 <?php
 }
 add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_length', 30, 2 );
