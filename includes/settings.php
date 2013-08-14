@@ -98,8 +98,8 @@ function atcf_settings_general( $settings ) {
 
 	$settings[ 'atcf_settings_custom_pledge' ] = array(
 		'id'      => 'atcf_settings_custom_pledge',
-		'name'    => __( 'Custom Pledging', 'fundify' ),
-		'desc'    => __( 'Allow arbitrary amounts to be pledged.', 'fundify' ),
+		'name'    => __( 'Custom Pledging', 'atcf' ),
+		'desc'    => __( 'Allow arbitrary amounts to be pledged.', 'atcf' ),
 		'type'    => 'checkbox',
 		'std'     => 1
 	);

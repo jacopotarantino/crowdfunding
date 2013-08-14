@@ -151,9 +151,9 @@ function atcf_campaign_contribute_options( $prices, $type, $download_id ) {
 							</div>
 
 							<?php if ( '' != $limit && ! $allgone ) : ?>
-								<small class="limit"><?php printf( __( 'Limit of %d &mdash; %d remaining', 'fundify' ), $limit, $limit - $bought ); ?></small>
+								<small class="limit"><?php printf( __( 'Limit of %d &mdash; %d remaining', 'atcf' ), $limit, $limit - $bought ); ?></small>
 							<?php elseif ( $allgone ) : ?>
-								<small class="gone"><?php _e( 'All gone!', 'fundify' ); ?></small>
+								<small class="gone"><?php _e( 'All gone!', 'atcf' ); ?></small>
 							<?php endif; ?>
 						</div>
 					</div>
@@ -177,7 +177,7 @@ if ( ! has_action( 'atcf_campaign_contribute_options' ) )
 function atcf_campaign_contribute_custom_price() {
 	global $edd_options;
 ?>
-	<h2><?php echo apply_filters( 'atcf_pledge_custom_title', __( 'Enter your pledge amount', 'fundify' ) ); ?></h2>
+	<h2><?php echo apply_filters( 'atcf_pledge_custom_title', __( 'Enter your pledge amount', 'atcf' ) ); ?></h2>
 
 	<p class="atcf_custom_price_wrap">
 	<?php if ( ! isset( $edd_options['currency_position'] ) || $edd_options['currency_position'] == 'before' ) : ?>
