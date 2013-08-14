@@ -133,11 +133,11 @@ add_filter( 'edd_ajax_pre_cart_item_template', 'atcf_edd_add_to_cart_item' );
  * @param array $options Item meta for the current cart item.
  * @return int $price The updated price.
  */
-function fundify_edd_cart_item_price( $price, $item_id, $options = array() ) {
+function atcf_edd_cart_item_price( $price, $item_id, $options = array() ) {
 	if ( isset ( $options[ 'atcf_extra_price' ] ) ) {
 		$price = $price + $options[ 'atcf_extra_price' ];
 	}
 
 	return $price;
 }
-add_filter( 'edd_cart_item_price', 'fundify_edd_cart_item_price', 10, 3 );
+add_filter( 'edd_cart_item_price', 'atcf_edd_cart_item_price', 10, 3 );
