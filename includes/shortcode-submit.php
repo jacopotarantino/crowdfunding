@@ -778,7 +778,7 @@ function atcf_shortcode_submit_process() {
 
 			$prices[] = array(
 				'name'   => sanitize_text_field( $reward[ 'description' ] ),
-				'amount' => apply_filters( 'edd_metabox_save_edd_price', $reward[ 'price' ] ),
+				'amount' => edd_sanitize_amount( $reward[ 'price' ] ),
 				'limit'  => sanitize_text_field( $reward[ 'limit' ] ),
 				'bought' => isset ( $reward[ 'bought' ] ) ? sanitize_text_field( $reward[ 'bought' ] ) : 0
 			);

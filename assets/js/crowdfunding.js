@@ -188,8 +188,7 @@ Crowdfunding.SubmitCampaign = ( function($) {
 					required : true
 				},
 				"goal" : {
-					required : true,
-					number   : true
+					required : true
 				},
 				"contact-email" : {
 					required : true,
