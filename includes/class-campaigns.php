@@ -937,6 +937,8 @@ function atcf_check_for_completed_campaigns() {
 			update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
 
 			do_action( 'atcf_campaign_expired', $campaign );
+		} else if ( $now < $expiration_date && get_post_meta( $campaign->ID, '_campaign_expired', true ) ) {
+			delete_post_meta( $campaign->ID, '_campaign_expired' );
 		}
 	}
 }
