@@ -765,7 +765,7 @@ function atcf_shortcode_submit_process() {
 	if ( isset ( $_POST[ 'norewards' ] ) ) {
 		$prices[0] = array(
 			'name'   => apply_filters( 'atcf_default_no_rewards_name', __( 'Donation', 'atcf' ) ),
-			'amount' => 0,
+			'amount' => apply_filters( 'atcf_default_no_rewards_price', 0 ),
 			'limit'  => null,
 			'bought' => 0
 		);

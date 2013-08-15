@@ -879,7 +879,7 @@ function atcf_save_variable_prices_norewards( $prices ) {
 
 	$prices[0] = array(
 		'name'   => apply_filters( 'atcf_default_no_rewards_name', __( 'Donation', 'atcf' ) ),
-		'amount' => 0,
+		'amount' => apply_filters( 'atcf_default_no_rewards_price', 0 ),
 		'limit'  => null,
 		'bought' => 0
 	);

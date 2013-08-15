@@ -320,9 +320,14 @@ final class ATCF_CrowdFunding {
 		}
 
 		if ( $is_campaign ) {
+			global $post;
+
+			$campaign = atcf_get_campaign( $post );
+
 			$settings[ 'campaign' ] = array(
-				'i18n'     => array(),
-				'currency' => array(
+				'i18n'        => array(),
+				'isDonations' => $campaign->is_donations_only(),
+				'currency'    => array(
 					'thousands' => $edd_options[ 'thousands_separator' ],
 					'decimal'   => $edd_options[ 'decimal_separator' ],
 					'symbol'    => edd_currency_filter( '' )

@@ -117,9 +117,11 @@ Crowdfunding.Campaign = ( function($) {
 			if ( null != basePrice.el )
 				basePrice.el.find( 'input[type="radio"]' ).attr( 'checked', true );
 			
-			customPriceField
-				.val( startPledgeLevel )
-				.formatCurrency( formatCurrencySettings );
+			if ( atcfSettings.campaign.isDonations != 1 ) {
+				customPriceField
+					.val( startPledgeLevel )
+					.formatCurrency( formatCurrencySettings );
+			}
 		},
 
 		parsePrice : function( el ) {
