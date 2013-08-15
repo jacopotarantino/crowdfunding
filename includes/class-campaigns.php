@@ -868,11 +868,11 @@ add_filter( 'edd_metabox_save_campaign_updates', 'atcf_sanitize_campaign_updates
  */
 function atcf_save_variable_prices_norewards( $prices ) {
 	$norewards = isset ( $_POST[ 'campaign_norewards' ] ) ? true : false;
-	
+
 	if ( ! $norewards )
 		return $prices;
 
-	if ( 1 == count( $prices ) && $norewards )
+	if ( $prices[0][ 'name' ] != '' )
 		return $prices;
 
 	$prices = array();
