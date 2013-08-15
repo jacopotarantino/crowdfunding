@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 1.6.1
+Stable Tag: 1.6.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,6 +60,12 @@ Developers can contribute to the source code of the project on [GitHub](https://
 Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
 == Changelog ==
+
+= 1.6.2: August 15, 2013 =
+
+* New: Filter added to set minimum amount on donations.
+* New: If donations only, have input blank by default.
+* Fix: Make sure formatCurrency script is always loaded when needed.
 
 = 1.6.1: August 14, 2013 =
 
