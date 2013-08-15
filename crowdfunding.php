@@ -297,7 +297,7 @@ final class ATCF_CrowdFunding {
 		}
 
 		if ( $is_campaign ) {
-			wp_enqueue_script( 'formatCurrency', $this->plugin_url . 'assets/js/jquery.formatCurrency-1.4.0.pack.js', array( 'jquery' ), '1.4.1', true );
+			wp_enqueue_script( 'formatCurrency', $this->plugin_url . 'assets/js/jquery.formatCurrency-1.4.0.pack.js', array( 'jquery' ) );
 		}
 
 		wp_enqueue_script( 'atcf-scripts', $this->plugin_url . 'assets/js/crowdfunding.js', array( 'jquery' ) );
