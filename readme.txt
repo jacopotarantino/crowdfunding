@@ -66,6 +66,8 @@ Yes. However, it won't look much different than a standard EDD install. Template
 * New: Filter added to set minimum amount on donations.
 * New: If donations only, have input blank by default.
 * Fix: Make sure formatCurrency script is always loaded when needed.
+* Fix: Make sure a default donation reward is added automatically in the backend.
+* Fix: If a campaign expires, then the date is set to the future, remove expired flag.
 
 = 1.6.1: August 14, 2013 =
 
