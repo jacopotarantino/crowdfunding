@@ -491,8 +491,8 @@ function atcf_campaign_save_end_date( $new ) {
 
 	$end_date = get_gmt_from_date( $end_date );
 
-	if ( mysql2date( $end_date ) > current_time( 'timestamp' ) )
-		delete_post_meta( $post->ID, '_campaign_expired' )
+	if ( mysql2date( 'G', $end_date ) > current_time( 'timestamp' ) )
+		delete_post_meta( $post->ID, '_campaign_expired' );
 
 	return $end_date;
 }
