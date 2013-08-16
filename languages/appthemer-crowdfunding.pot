@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AppThemer Crowdfunding\n"
-"POT-Creation-Date: 2013-08-14 18:08-0500\n"
-"PO-Revision-Date: 2013-08-14 18:08-0500\n"
+"POT-Creation-Date: 2013-08-16 11:18-0500\n"
+"PO-Revision-Date: 2013-08-16 11:18-0500\n"
 "Last-Translator: Spencer Finnell <spencerfinnell@gmail.com>\n"
 "Language-Team: Astoundify <contact@astoundify.com>\n"
 "MIME-Version: 1.0\n"
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Collect funds pledged at the end of the campaign no matter what."
 msgstr ""
 
-#: ../includes/class-campaign.php:498 ../includes/class-campaigns.php:881
+#: ../includes/class-campaign.php:498 ../includes/class-campaigns.php:884
 #: ../includes/shortcode-submit.php:767
 msgid "Donation"
 msgstr ""
@@ -145,7 +145,7 @@ msgstr ""
 msgid "Campaign Funds"
 msgstr ""
 
-#: ../includes/class-campaigns.php:249 ../includes/class-campaigns.php:655
+#: ../includes/class-campaigns.php:249 ../includes/class-campaigns.php:658
 msgid "Reinstate Campaign"
 msgstr ""
 
@@ -197,108 +197,108 @@ msgstr ""
 msgid "Whoops, the provided date is invalid."
 msgstr ""
 
-#: ../includes/class-campaigns.php:506 ../includes/shortcode-submit.php:425
+#: ../includes/class-campaigns.php:509 ../includes/shortcode-submit.php:425
 #: ../includes/shortcode-submit.php:456
 msgid "Limit"
 msgstr ""
 
-#: ../includes/class-campaigns.php:507
+#: ../includes/class-campaigns.php:510
 msgid "Purchased"
 msgstr ""
 
-#: ../includes/class-campaigns.php:561
+#: ../includes/class-campaigns.php:564
 msgid "Current Amount:"
 msgstr ""
 
-#: ../includes/class-campaigns.php:566
+#: ../includes/class-campaigns.php:569
 msgid "Backers:"
 msgstr ""
 
-#: ../includes/class-campaigns.php:572
+#: ../includes/class-campaigns.php:575
 msgid "Days Remaining:"
 msgstr ""
 
-#: ../includes/class-campaigns.php:608
+#: ../includes/class-campaigns.php:611
 #, php-format
 msgid ""
 "This %1$s has reached its funding goal. You may now send the funds to the "
 "owner. This will end the %1$s."
 msgstr ""
 
-#: ../includes/class-campaigns.php:610
+#: ../includes/class-campaigns.php:613
 #, php-format
 msgid ""
 "This %1$s is flexible. You may collect the funds at any time. This will end "
 "the %1$s."
 msgstr ""
 
-#: ../includes/class-campaigns.php:614
+#: ../includes/class-campaigns.php:617
 #, php-format
 msgid "%d payment failed to process."
 msgid_plural "%d payments failed to process."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../includes/class-campaigns.php:614
+#: ../includes/class-campaigns.php:617
 msgid "View gateway errors"
 msgstr ""
 
-#: ../includes/class-campaigns.php:631
+#: ../includes/class-campaigns.php:634
 msgid "Collect Funds"
 msgstr ""
 
-#: ../includes/class-campaigns.php:657
+#: ../includes/class-campaigns.php:660
 msgid ""
 "<strong>Note:</strong> This will only allow funds to be collected again. All "
 "dates, etc must manually be updated."
 msgstr ""
 
-#: ../includes/class-campaigns.php:679
+#: ../includes/class-campaigns.php:682
 msgid "oEmbed supported video links."
 msgstr ""
 
-#: ../includes/class-campaigns.php:699
+#: ../includes/class-campaigns.php:702
 msgid "Notes and updates about the campaign."
 msgstr ""
 
-#: ../includes/class-campaigns.php:748
+#: ../includes/class-campaigns.php:751
 msgid "Featured campaign"
 msgstr ""
 
-#: ../includes/class-campaigns.php:755
+#: ../includes/class-campaigns.php:758
 msgid "Collect shipping information on checkout"
 msgstr ""
 
-#: ../includes/class-campaigns.php:760
+#: ../includes/class-campaigns.php:763
 msgid "Funding Type:"
 msgstr ""
 
-#: ../includes/class-campaigns.php:770
+#: ../includes/class-campaigns.php:773
 msgid "Goal:"
 msgstr ""
 
-#: ../includes/class-campaigns.php:779
+#: ../includes/class-campaigns.php:782
 msgid "Location:"
 msgstr ""
 
-#: ../includes/class-campaigns.php:784
+#: ../includes/class-campaigns.php:787
 msgid "Author:"
 msgstr ""
 
-#: ../includes/class-campaigns.php:789
+#: ../includes/class-campaigns.php:792
 msgid "Contact Email:"
 msgstr ""
 
-#: ../includes/class-campaigns.php:796
+#: ../includes/class-campaigns.php:799
 msgid "End Date:"
 msgstr ""
 
-#: ../includes/class-campaigns.php:816
+#: ../includes/class-campaigns.php:819
 #, php-format
 msgid "This %s never ends"
 msgstr ""
 
-#: ../includes/class-campaigns.php:830
+#: ../includes/class-campaigns.php:833
 #, php-format
 msgid "This %s is donations only (no rewards)"
 msgstr ""
