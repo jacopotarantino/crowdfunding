@@ -59,7 +59,8 @@ function atcf_edd_purchase_form_user_info() {
 ?>
 	<p id="edd-anon-wrap">
 		<label class="edd-label" for="edd-anon">
-			<input class="edd-input" type="checkbox" name="edd_anon" id="edd-anon" style="margin-top: -4px; vertical-align: middle;" />
+			<input class="edd-input" type="checkbox" name="edd_anon" id="edd-anon" style=
+			"vertical-align: middle;" />
 			<?php _e( 'Hide name on backers list?', 'atcf' ); ?>
 		</label>
 	</p>
