@@ -17,7 +17,7 @@ function atcf_shortcode_submit_field() {
 
 	$fields = array(
 		'title' => array(
-			'label'       => __( 'Title:', 'atcf' ),
+			'label'       => __( 'Title', 'atcf' ),
 			'default'     => null,
 			'type'        => 'text',
 			'editable'    => false,
@@ -25,7 +25,7 @@ function atcf_shortcode_submit_field() {
 			'required'    => true
 		),
 		'goal' => array(
-			'label'       => sprintf( __( 'Goal: (%s)', 'atcf' ), edd_currency_filter( '' ) ),
+			'label'       => sprintf( __( 'Goal (%s)', 'atcf' ), edd_currency_filter( '' ) ),
 			'default'     => null,
 			'type'        => 'text',
 			'editable'    => false,
@@ -33,10 +33,10 @@ function atcf_shortcode_submit_field() {
 			'required'    => true
 		),
 		'length' => array(
-			'label'       => __( 'Length:', 'atcf' ),
+			'label'       => __( 'Length', 'atcf' ),
 			'default'     => 57,
 			'type'        => 'number',
-			'editable'    => true,
+			'editable'    => false,
 			'placeholder' => null,
 			'min'         => isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14,
 			'max'         => isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 48,
@@ -52,21 +52,21 @@ function atcf_shortcode_submit_field() {
 			'required'    => true
 		),
 		'category' => array(
-			'label'       => __( 'Categories:', 'atcf' ),
+			'label'       => __( 'Categories', 'atcf' ),
 			'default'     => null,
 			'type'        => 'term_checklist',
 			'editable'    => true,
 			'placeholder' => null,
 		),
 		'tag' => array(
-			'label'       => __( 'Tags:', 'atcf' ),
+			'label'       => __( 'Tags', 'atcf' ),
 			'default'     => null,
 			'type'        => 'term_checklist',
 			'editable'    => true,
 			'placeholder' => null,
 		),
 		'description' => array(
-			'label'       => __( 'Description:', 'atcf' ),
+			'label'       => __( 'Description', 'atcf' ),
 			'default'     => null,
 			'type'        => 'wp_editor',
 			'editable'    => true,
@@ -74,31 +74,31 @@ function atcf_shortcode_submit_field() {
 			'required'    => true
 		),
 		'updates' => array(
-			'label'       => __( 'Updates:', 'atcf' ),
+			'label'       => __( 'Updates', 'atcf' ),
 			'default'     => null,
 			'type'        => 'wp_editor',
 			'editable'    => 'only',
 			'placeholder' => null,
 		),
 		'excerpt' => array(
-			'label'       => __( 'Excerpt:', 'atcf' ),
+			'label'       => __( 'Excerpt', 'atcf' ),
 			'default'     => null,
 			'type'        => 'textarea',
 			'editable'    => true,
 			'placeholder' => null,
 		),
 		'image' => array(
-			'label'       => __( 'Featured Image:', 'atcf' ),
+			'label'       => __( 'Featured Image', 'atcf' ),
 			'default'     => null,
 			'type'        => 'featured_image',
 			'editable'    => true,
 			'placeholder' => null,
 		),
 		'video' => array(
-			'label'       => __( 'Video:', 'atcf' ),
+			'label'       => __( 'Video', 'atcf' ),
 			'default'     => null,
 			'type'        => 'text',
-			'editable'    => false,
+			'editable'    => true,
 			'placeholder' => null
 		),
 		'backer_rewards_heading' => array(
@@ -134,7 +134,7 @@ function atcf_shortcode_submit_field() {
 			'editable'    => true
 		),
 		'contact_email' => array(
-			'label'       => __( 'Contact Email:', 'atcf' ),
+			'label'       => __( 'Contact Email', 'atcf' ),
 			'default'     => null,
 			'type'        => 'text',
 			'editable'    => true,
@@ -142,14 +142,14 @@ function atcf_shortcode_submit_field() {
 			'required'    => true
 		),
 		'name' => array(
-			'label'       => __( 'Name/Organization:', 'atcf' ),
+			'label'       => __( 'Name/Organization', 'atcf' ),
 			'default'     => null,
 			'type'        => 'text',
 			'editable'    => true,
 			'placeholder' => null
 		),
 		'location' => array(
-			'label'       => __( 'Location:', 'atcf' ),
+			'label'       => __( 'Location', 'atcf' ),
 			'default'     => null,
 			'type'        => 'text',
 			'editable'    => true,
@@ -208,7 +208,10 @@ function atcf_shortcode_submit( $atts ) {
 				if ( $atts[ 'editing' ] && ! $field[ 'editable' ] )
 					continue;
 
-				$field[ 'value' ] = $atts[ 'previewing' ] || $atts[ 'editing' ] ? $campaign->submit_field_data( $key ) : isset ( $_POST[ $key ] ) ? $_POST[ $key ] : $field[ 'default' ];
+				if ( $atts[ 'previewing' ] || $atts[ 'editing' ] )
+					$field[ 'value' ] = $campaign->submit_field_data( $key );
+				else
+					$field[ 'value' ] = isset ( $_POST[ $key ] ) ? $_POST[ $key ] : $field[ 'default' ];
 
 				$field = apply_filters( 'atcf_shortcode_submit_field_before_render_' . $key, $field );
 
@@ -460,14 +463,7 @@ add_action( 'atcf_shortcode_submit_field_featured_image', 'atcf_shortcode_submit
  * @return void
  */
 function atcf_shortcode_submit_field_rewards( $key, $field, $atts, $campaign ) {
-	$blank = array(
-		'amount' => null,
-		'name'   => null,
-		'limit'  => null,
-		'bought' => null
-	);
-
-	$rewards   = $atts[ 'previewing' ] || $atts[ 'editing' ] ? edd_get_variable_prices( $campaign->ID ) : array( 0 => $blank );
+	$rewards = isset ( $field[ 'value' ] ) ? $field[ 'value' ] : array( 0 => array( 'amount' => null, 'name' => null, 'limit' => null ) );
 ?>
 	<?php do_action( 'atcf_shortcode_submit_field_rewards_list_before' ); ?>
 
@@ -479,14 +475,14 @@ function atcf_shortcode_submit_field_rewards( $key, $field, $atts, $campaign ) {
 		<div class="atcf-submit-campaign-reward">
 			<?php do_action( 'atcf_shortcode_submit_field_rewards_before' ); ?>
 
-			<p class="atcf-submit-campaign-reward-price">
-				<label for="rewards[<?php echo esc_attr( $k ); ?>][price]"><?php printf( __( 'Amount (%s)', 'atcf' ), edd_currency_filter( '' ) ); ?></label>
-				<input class="name" type="text" name="rewards[<?php echo esc_attr( $k ); ?>][price]" id="rewards[<?php echo esc_attr( $k ); ?>][price]" value="<?php echo esc_attr( $reward[ 'amount' ] ); ?>" <?php if ( $disabled ) : ?>readonly="readonly"<?php endif; ?> />
+			<p class="atcf-submit-campaign-reward-amount">
+				<label for="rewards[<?php echo esc_attr( $k ); ?>][amount]"><?php printf( __( 'Amount (%s)', 'atcf' ), edd_currency_filter( '' ) ); ?></label>
+				<input class="name" type="text" name="rewards[<?php echo esc_attr( $k ); ?>][amount]" id="rewards[<?php echo esc_attr( $k ); ?>][amount]" value="<?php echo esc_attr( $reward[ 'amount' ] ); ?>" <?php if ( $disabled ) : ?>readonly="readonly"<?php endif; ?> />
 			</p>
 
-			<p class="atcf-submit-campaign-reward-description">
-				<label for="rewards[<?php echo esc_attr( $k ); ?>][description]"><?php _e( 'Reward', 'atcf' ); ?></label>
-				<input class="description" type="text" name="rewards[<?php echo esc_attr( $k ); ?>][description]" id="rewards[<?php echo esc_attr( $k ); ?>][description]" rows="3" value="<?php echo esc_attr( $reward[ 'name' ] ); ?>" <?php if ( $disabled ) : ?>readonly="readonly"<?php endif; ?> />
+			<p class="atcf-submit-campaign-reward-name">
+				<label for="rewards[<?php echo esc_attr( $k ); ?>][name]"><?php _e( 'Reward', 'atcf' ); ?></label>
+				<input class="name" type="text" name="rewards[<?php echo esc_attr( $k ); ?>][name]" id="rewards[<?php echo esc_attr( $k ); ?>][name]" rows="3" value="<?php echo esc_attr( $reward[ 'name' ] ); ?>" <?php if ( $disabled ) : ?>readonly="readonly"<?php endif; ?> />
 			</p>
 
 			<p class="atcf-submit-campaign-reward-limit">
@@ -542,7 +538,7 @@ function atcf_shortcode_submit_process() {
 		$fields[ $key ][ 'value' ] = apply_filters( 'atcf_shortcode_submit_validate_' . $key, $fields[ $key ][ 'value' ] );
 
 		if ( ! $fields[ $key ][ 'value' ] && isset( $field[ 'required' ] ) )
-			edd_set_error( 'required-' . $key, sprintf( __( 'The <strong>&quot;%s&quot;</strong> field is required.', 'atcf' ), $field[ 'label' ] ) );
+			edd_set_error( 'required-' . $key, sprintf( __( 'The <strong>%s</strong> field is required.', 'atcf' ), $field[ 'label' ] ) );
 	}
 
 	do_action( 'atcf_campaign_submit_validate', $fields, $_POST );
@@ -606,6 +602,7 @@ function atcf_shortcode_submit_process() {
 		$url = isset ( $edd_options[ 'submit_success_page' ] ) ? get_permalink( $edd_options[ 'submit_success_page' ] ) : get_permalink();
 
 		$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', $url );
+
 		wp_safe_redirect( $redirect );
 		exit();
 	} else {
@@ -689,8 +686,8 @@ function atcf_submit_process_after( $campaign, $postdata, $status, $fields ) {
 							continue;
 
 						$prices[] = array(
-							'name'   => sanitize_text_field( $reward[ 'description' ] ),
-							'amount' => edd_sanitize_amount( $reward[ 'price' ] ),
+							'name'   => sanitize_text_field( $reward[ 'name' ] ),
+							'amount' => edd_sanitize_amount( $reward[ 'amount' ] ),
 							'limit'  => sanitize_text_field( $reward[ 'limit' ] ),
 							'bought' => isset ( $reward[ 'bought' ] ) ? sanitize_text_field( $reward[ 'bought' ] ) : 0
 						);

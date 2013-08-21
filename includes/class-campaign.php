@@ -32,6 +32,52 @@ class ATCF_Campaign {
 	}
 
 	/**
+	 * Submit field helper.
+	 *
+	 * Try and gather the correct piece of information when editing/previewing a campaign
+	 *
+	 * @since Atoundify Crowdfunding 1.6
+	 */
+	public function submit_field_data( $key ) {
+		$data = null;
+
+		switch ( $key ) {
+			case 'length' :
+				$data = $this->days_remaining();
+			break;
+
+			case 'description' :
+				$data = wp_richedit_pre( $this->data->post_content );
+			break;
+
+			case 'excerpt' :
+				$data = apply_filters( 'get_the_excerpt', $this->data->post_excerpt );
+			break;
+
+			case 'norewards' :
+				$data = $this->is_donations_only();
+			break;
+
+			case 'rewards' :
+				$data = edd_get_variable_prices( $this->ID );
+			break;
+
+			case 'physical' :
+				$data = $this->needs_shipping();
+			break;
+			
+			default :
+				
+			break;
+		}
+
+		if ( ! $data && method_exists( __CLASS__, $key ) )
+			$data = $this->$key();
+
+		return $data;
+	}
+
+	/**
 	 * Campaign Featured
 	 *
 	 * @since Astoundify Crowdfunding 0.1-alpha
