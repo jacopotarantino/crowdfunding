@@ -292,10 +292,6 @@ final class ATCF_CrowdFunding {
 		if ( ! ( $is_submission || $is_campaign ) )
 			return;
 
-		if ( $is_submission ) {
-			wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'assets/js/jquery.validate.min.js', array( 'jquery' ) );
-		}
-
 		if ( $is_campaign ) {
 			wp_enqueue_script( 'formatCurrency', $this->plugin_url . 'assets/js/jquery.formatCurrency-1.4.0.pack.js', array( 'jquery' ) );
 		}
