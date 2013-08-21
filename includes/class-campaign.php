@@ -42,6 +42,10 @@ class ATCF_Campaign {
 		$data = null;
 
 		switch ( $key ) {
+			case 'title' : 
+				$data = $this->data->post_title;
+			break;
+
 			case 'length' :
 				$data = $this->days_remaining();
 			break;

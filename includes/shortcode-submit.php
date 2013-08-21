@@ -16,6 +16,12 @@ function atcf_shortcode_submit_field() {
 	global $edd_options;
 
 	$fields = array(
+		'campaign_heading' => array(
+			'label'       => __( 'Campaign Information', 'atcf' ),
+			'type'        => 'heading',
+			'default'     => null,
+			'editable'    => true
+		),
 		'title' => array(
 			'label'       => __( 'Title', 'atcf' ),
 			'default'     => null,
@@ -42,7 +48,7 @@ function atcf_shortcode_submit_field() {
 			'max'         => isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 48,
 			'step'        => 1
 		),
-		'funding_type' => array(
+		'type' => array(
 			'label'       => __( 'Funding Type', 'atcf' ),
 			'default'     => atcf_campaign_type_default(),
 			'type'        => 'radio',
@@ -95,7 +101,7 @@ function atcf_shortcode_submit_field() {
 			'placeholder' => null,
 		),
 		'video' => array(
-			'label'       => __( 'Video', 'atcf' ),
+			'label'       => __( 'Featured Video URL', 'atcf' ),
 			'default'     => null,
 			'type'        => 'text',
 			'editable'    => true,
@@ -157,7 +163,7 @@ function atcf_shortcode_submit_field() {
 		)
 	);
 
-	return $fields;
+	return apply_filters( 'atcf_shortcode_submit_fields', $fields );
 }
 
 /**
@@ -202,17 +208,22 @@ function atcf_shortcode_submit( $atts ) {
 		
 		<?php
 			foreach ( atcf_shortcode_submit_field() as $key => $field ) :
+				/** If we _aren't_ editing, and the field should only be shown on edit, skip... */
 				if ( ! $atts[ 'editing' ] && 'only' === $field[ 'editable' ] )
 					continue;
 
+				/** If we _are_ editing, and the field is not editable, skip... */
 				if ( $atts[ 'editing' ] && ! $field[ 'editable' ] )
 					continue;
 
+				/** If we are previewing/editing, get the saved value */
 				if ( $atts[ 'previewing' ] || $atts[ 'editing' ] )
 					$field[ 'value' ] = $campaign->submit_field_data( $key );
+				/** Otherwise try to get a posted value, or the defau.t */
 				else
 					$field[ 'value' ] = isset ( $_POST[ $key ] ) ? $_POST[ $key ] : $field[ 'default' ];
 
+				/** One last chance to filter the output */
 				$field = apply_filters( 'atcf_shortcode_submit_field_before_render_' . $key, $field );
 
 				do_action( 'atcf_shortcode_submit_field_' . $field[ 'type' ], $key, $field, $atts, $campaign );
@@ -248,6 +259,11 @@ function atcf_shortcode_submit( $atts ) {
 }
 add_shortcode( 'appthemer_crowdfunding_submit', 'atcf_shortcode_submit' );
 
+/**
+ * Heading
+ *
+ * @since Astoundify Crowdfunding 1.6
+ */
 function atcf_shortcode_submit_heading( $key, $field, $atts, $campaign ) {
 ?>
 	<h3 class="atcf-submit-section <?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $field[ 'label' ] ); ?></h3>
@@ -613,6 +629,7 @@ function atcf_shortcode_submit_process() {
 add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
 
 function atcf_submit_process_after( $campaign, $postdata, $status, $fields ) {
+	global $edd_options;
 	/**
 	 * Save the fields
 	 */
@@ -726,6 +743,12 @@ function atcf_submit_process_after( $campaign, $postdata, $status, $fields ) {
 
 					update_post_meta( $campaign, '_thumbnail_id', absint( $attach_id ) );
 				}
+
+			break;
+			/** Sanitize the Goal */
+			case 'goal' :
+
+				update_post_meta( $campaign, 'campaign_' . $key, edd_sanitize_amount( $field[ 'value' ] ) );
 
 			break;
 			/** Save default text fields */
