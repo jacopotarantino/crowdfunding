@@ -101,6 +101,7 @@ class ATCF_Submit_Campaign {
 		add_action( 'atcf_shortcode_submit_field_hidden', 'atcf_shortcode_submit_field_hidden', 10, 4 );
 		add_action( 'atcf_shortcode_submit_field_text', 'atcf_shortcode_submit_field_text', 10, 4 );
 		add_action( 'atcf_shortcode_submit_field_textarea', 'atcf_shortcode_submit_field_textarea', 10, 4 );
+		add_action( 'atcf_shortcode_submit_field_select', 'atcf_shortcode_submit_field_select', 10, 4 );
 		add_action( 'atcf_shortcode_submit_field_number', 'atcf_shortcode_submit_field_number', 10, 4 );
 		add_action( 'atcf_shortcode_submit_field_checkbox', 'atcf_shortcode_submit_field_checkbox', 10, 4 );
 		add_action( 'atcf_shortcode_submit_field_radio', 'atcf_shortcode_submit_field_radio', 10, 4 );
@@ -124,11 +125,9 @@ class ATCF_Submit_Campaign {
 	 * - textarea
 	 * - number
 	 * - radio
+	 * - select
 	 * - checkbox
 	 * - term_checklist
-	 *
-	 * You should filter this via `atcf_shortcode_submit_fields` (called in atcf_shortcode_submit_fields()`)and not edit this array directly.
-	 * Either add a filter via a child theme or plugin.
 	 *
 	 * @since Astoundify Crowdfunding 1.7
 	 *
@@ -819,7 +818,7 @@ function atcf_shortcode_submit_field_checkbox( $key, $field, $atts, $campaign ) 
 }
 
 /**
- * Number
+ * Radio
  *
  * @since Astoundify Crowdfunding 1.7
  *
@@ -844,6 +843,31 @@ function atcf_shortcode_submit_field_radio( $key, $field, $atts, $campaign ) {
 			<input type="radio" name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>[<?php echo esc_attr( $k ); ?>]" value="<?php echo esc_attr( $k ); ?>" <?php checked( $k, $field[ 'value' ] ); ?> /><?php echo $desc; ?>
 		</label><br />
 		<?php endforeach; ?>
+	</p>
+<?php
+}
+
+/**
+ * Select
+ *
+ * @since Astoundify Crowdfunding 1.7
+ *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $atts The shortcoe attribtues.
+ * @param $campaign The current campaign (if editing/previewing).
+ * @return void
+ */
+function atcf_shortcode_submit_field_select( $key, $field, $atts, $campaign ) {
+?>
+	<p class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
+		<label for="<?php echo esc_attr( $key ); ?>"><?php echo apply_filters( 'atcf_shortcode_submit_field_label_' . $key, esc_attr( $field[ 'label' ] ) ); ?></label>
+
+		<select name="<?php echo esc_attr( $key ); ?>">
+		<?php foreach ( $field[ 'options' ] as $k => $desc ) : ?>
+			<option value="<?php echo esc_attr( $k ); ?>" <?php selected( $field[ 'value' ], $k ); ?>><?php echo esc_attr( $desc ); ?></option>
+		<?php endforeach; ?>
+		</select>
 	</p>
 <?php
 }
@@ -1030,7 +1054,7 @@ function atcf_shortcode_submit_process() {
 		$fields[ $key ][ 'value' ] = isset ( $_POST[ $key ] ) ? $_POST[ $key ] : null;
 		$fields[ $key ][ 'value' ] = apply_filters( 'atcf_shortcode_submit_validate_' . $key, $fields[ $key ][ 'value' ] );
 
-		if ( ! $fields[ $key ][ 'value' ] && isset( $field[ 'required' ] ) && ! $existing_campaign )
+		if ( ( ! $fields[ $key ][ 'value' ] && isset( $fields[ $key ][ 'required' ] ) ) && ! $existing_campaign )
 			edd_set_error( 'required-' . $key, sprintf( __( 'The <strong>%s</strong> field is required.', 'atcf' ), $field[ 'label' ] ) );
 	}
 
@@ -1038,10 +1062,6 @@ function atcf_shortcode_submit_process() {
 	
 	if ( edd_get_errors() )
 		return;
-
-	/**
-	 * All required fields are there. We are clear to continue processing.
-	 */
 
 	/** Register a new user, or get the current user */
 	$user = get_user_by( 'email', $fields[ 'contact_email' ][ 'value' ] );
