@@ -200,7 +200,7 @@ class ATCF_Submit_Campaign {
 				'placeholder' => null,
 				'required'    => true
 			),
-			'name' => array(
+			'author' => array(
 				'label'       => __( 'Name/Organization', 'atcf' ),
 				'default'     => null,
 				'type'        => 'text',
@@ -357,7 +357,7 @@ class ATCF_Submit_Campaign {
 			update_post_meta( $campaign, 'campaign_norewards', 1 );
 		} else {
 			foreach ( $field[ 'value' ] as $key => $reward ) {
-				if ( '' == $reward[ 'price' ] )
+				if ( '' == $reward[ 'amount' ] )
 					continue;
 
 				$prices[] = array(
@@ -379,8 +379,8 @@ class ATCF_Submit_Campaign {
 
 		$upload_overrides = array( 'test_form' => false );
 
-		if ( '' != $field[ 'value' ][ 'name' ] ) {
-			$upload = wp_handle_upload( $field[ 'value' ], $upload_overrides );
+		if ( '' != $_FILES[ $key ][ 'name' ] ) {
+			$upload = wp_handle_upload( $_FILES[ $key ], $upload_overrides );
 			$attachment = array(
 				'guid'           => $upload[ 'url' ], 
 				'post_mime_type' => $upload[ 'type' ],
@@ -402,7 +402,14 @@ class ATCF_Submit_Campaign {
 	}
 
 	public function save_goal( $key, $field, $campaign, $fields ) {
+		if ( '' == $field[ 'value' ] )
+			return;
+		
 		update_post_meta( $campaign, 'campaign_' . $key, edd_sanitize_amount( $field[ 'value' ] ) );
+	}
+
+	public function save_physical( $key, $field, $campaign, $fields ) {
+		update_post_meta( $campaign, '_campaign_' . $key, sanitize_text_field( $field[ 'value' ] ) );
 	}
 
 	public function save_field( $key, $field, $campaign, $fields ) {
@@ -458,7 +465,7 @@ function atcf_shortcode_submit( $atts ) {
 					continue;
 
 				/** If we _are_ editing, and the field is not editable, skip... */
-				if ( $atts[ 'editing' ] && ! $field[ 'editable' ] )
+				if ( $atts[ 'editing' ] && $field[ 'editable' ] === false )
 					continue;
 
 				$field = apply_filters( 'atcf_shortcode_submit_field', $key, $field, $atts, $campaign );
@@ -561,7 +568,7 @@ function atcf_shortcode_submit_field_textarea( $key, $field, $atts, $campaign ) 
 ?>
 	<p class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
 		<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $field[ 'label' ] ); ?></label>
-		<textarea name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>"><?php esc_html( $field[ 'value' ] ); ?></textarea>
+		<textarea name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field[ 'value' ] ); ?></textarea>
 	</p>
 <?php
 }
@@ -787,7 +794,7 @@ function atcf_shortcode_submit_process() {
 		$fields[ $key ][ 'value' ] = isset ( $_POST[ $key ] ) ? $_POST[ $key ] : null;
 		$fields[ $key ][ 'value' ] = apply_filters( 'atcf_shortcode_submit_validate_' . $key, $fields[ $key ][ 'value' ] );
 
-		if ( ! $fields[ $key ][ 'value' ] && isset( $field[ 'required' ] ) )
+		if ( ! $fields[ $key ][ 'value' ] && isset( $field[ 'required' ] ) && ! $existing_campaign )
 			edd_set_error( 'required-' . $key, sprintf( __( 'The <strong>%s</strong> field is required.', 'atcf' ), $field[ 'label' ] ) );
 	}
 
@@ -852,7 +859,7 @@ function atcf_shortcode_submit_process() {
 		$url = isset ( $edd_options[ 'submit_success_page' ] ) ? get_permalink( $edd_options[ 'submit_success_page' ] ) : get_permalink();
 
 		$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', $url );
-
+		
 		wp_safe_redirect( $redirect );
 		exit();
 	} else {
@@ -878,6 +885,7 @@ function atcf_submit_process_after( $campaign, $postdata, $status, $fields ) {
 			case 'rewards' :
 			case 'image' :
 			case 'goal' :
+			case 'physical' :
 				$method = 'save_' . $key;
 
 				$submit_campaign->$method( $key, $field, $campaign, $fields );

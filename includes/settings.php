@@ -54,7 +54,7 @@ function atcf_settings_general_pages( $settings ) {
 	);
 
 	$vals[] =  array(
-		'id'      => 'submit_succes_page',
+		'id'      => 'submit_success_page',
 		'name'    => __( 'Submit Success Page', 'atcf' ),
 		'desc'    => __( 'The page that users are redirected to after a success campaign subimssion.', 'atcf' ),
 		'type'    => 'select',
