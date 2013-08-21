@@ -52,7 +52,8 @@ function atcf_shortcode_submit_field_paypal_adaptive_payments_email( $fields ) {
 		'type'        => 'text',
 		'editable'    => true,
 		'placeholder' => null,
-		'required'    => true
+		'required'    => true,
+		'priority'    => 35
 	);
 
 	return $fields;

@@ -38,7 +38,7 @@ add_action( 'init', 'atcf_submit_campaign' );
 function atcf_shortcode_submit_fields() {
 	$submit_campaign = atcf_submit_campaign();
 
-	$fields = apply_filters( 'atcf_shortcode_submit_fields', $submit_campaign->register_fields() );
+	$fields = $submit_campaign->register_fields();
 
 	return $fields;
 }
@@ -144,7 +144,8 @@ class ATCF_Submit_Campaign {
 				'label'       => __( 'Campaign Information', 'atcf' ),
 				'type'        => 'heading',
 				'default'     => null,
-				'editable'    => true
+				'editable'    => true,
+				'priority'    => 2
 			),
 			'title' => array(
 				'label'       => __( 'Title', 'atcf' ),
@@ -152,7 +153,8 @@ class ATCF_Submit_Campaign {
 				'type'        => 'text',
 				'editable'    => false,
 				'placeholder' => null,
-				'required'    => true
+				'required'    => true,
+				'priority'    => 4
 			),
 			'goal' => array(
 				'label'       => sprintf( __( 'Goal (%s)', 'atcf' ), edd_currency_filter( '' ) ),
@@ -160,7 +162,8 @@ class ATCF_Submit_Campaign {
 				'type'        => 'text',
 				'editable'    => false,
 				'placeholder' => edd_format_amount( 800 ),
-				'required'    => true
+				'required'    => true,
+				'priority'    => 6
 			),
 			'length' => array(
 				'label'       => __( 'Length', 'atcf' ),
@@ -170,7 +173,8 @@ class ATCF_Submit_Campaign {
 				'placeholder' => null,
 				'min'         => isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14,
 				'max'         => isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 48,
-				'step'        => 1
+				'step'        => 1,
+				'priority'    => 8
 			),
 			'type' => array(
 				'label'       => __( 'Funding Type', 'atcf' ),
@@ -179,7 +183,8 @@ class ATCF_Submit_Campaign {
 				'options'     => atcf_campaign_types_active(),
 				'editable'    => false,
 				'placeholder' => null,
-				'required'    => true
+				'required'    => true,
+				'priority'    => 10
 			),
 			'category' => array(
 				'label'       => __( 'Categories', 'atcf' ),
@@ -187,6 +192,7 @@ class ATCF_Submit_Campaign {
 				'type'        => 'term_checklist',
 				'editable'    => true,
 				'placeholder' => null,
+				'priority'    => 12
 			),
 			'tag' => array(
 				'label'       => __( 'Tags', 'atcf' ),
@@ -194,6 +200,7 @@ class ATCF_Submit_Campaign {
 				'type'        => 'term_checklist',
 				'editable'    => true,
 				'placeholder' => null,
+				'priority'    => 14
 			),
 			'description' => array(
 				'label'       => __( 'Description', 'atcf' ),
@@ -201,7 +208,8 @@ class ATCF_Submit_Campaign {
 				'type'        => 'wp_editor',
 				'editable'    => true,
 				'placeholder' => null,
-				'required'    => true
+				'required'    => true,
+				'priority'    => 16
 			),
 			'updates' => array(
 				'label'       => __( 'Updates', 'atcf' ),
@@ -209,6 +217,7 @@ class ATCF_Submit_Campaign {
 				'type'        => 'wp_editor',
 				'editable'    => 'only',
 				'placeholder' => null,
+				'priority'    => 18
 			),
 			'excerpt' => array(
 				'label'       => __( 'Excerpt', 'atcf' ),
@@ -216,6 +225,7 @@ class ATCF_Submit_Campaign {
 				'type'        => 'textarea',
 				'editable'    => true,
 				'placeholder' => null,
+				'priority'    => 20
 			),
 			'image' => array(
 				'label'       => __( 'Featured Image', 'atcf' ),
@@ -223,45 +233,52 @@ class ATCF_Submit_Campaign {
 				'type'        => 'featured_image',
 				'editable'    => true,
 				'placeholder' => null,
+				'priority'    => 22
 			),
 			'video' => array(
 				'label'       => __( 'Featured Video URL', 'atcf' ),
 				'default'     => null,
 				'type'        => 'text',
 				'editable'    => true,
-				'placeholder' => null
+				'placeholder' => null,
+				'priority'    => 24
 			),
 			'backer_rewards_heading' => array(
 				'label'       => __( 'Backer Rewards', 'atcf' ),
 				'type'        => 'heading',
 				'default'     => null,
-				'editable'    => true
+				'editable'    => true,
+				'priority'    => 26
 			),
 			'physical' => array(
 				'label'       => __( 'Collect shipping information on checkout.', 'atcf' ),
 				'default'     => null,
 				'type'        => 'checkbox',
 				'editable'    => true,
-				'placeholder' => null
+				'placeholder' => null,
+				'priority'    => 28
 			),
 			'norewards' => array(
 				'label'       => __( 'No rewards, donations only.', 'atcf' ),
 				'default'     => null,
 				'type'        => 'checkbox',
 				'editable'    => true,
-				'placeholder' => null
+				'placeholder' => null,
+				'priority'    => 30
 			),
 			'rewards' => array(
 				'label'       => null,
 				'type'        => 'rewards',
 				'default'     => null,
-				'editable'    => true
+				'editable'    => true,
+				'priority'    => 32
 			),
 			'info_heading' => array(
 				'label'       => __( 'Your Information', 'atcf' ),
 				'type'        => 'heading',
 				'default'     => null,
-				'editable'    => true
+				'editable'    => true,
+				'priority'    => 34
 			),
 			'contact_email' => array(
 				'label'       => __( 'Contact Email', 'atcf' ),
@@ -269,25 +286,39 @@ class ATCF_Submit_Campaign {
 				'type'        => 'text',
 				'editable'    => true,
 				'placeholder' => null,
-				'required'    => true
+				'required'    => true,
+				'priority'    => 36
 			),
 			'author' => array(
 				'label'       => __( 'Name/Organization', 'atcf' ),
 				'default'     => null,
 				'type'        => 'text',
 				'editable'    => true,
-				'placeholder' => null
+				'placeholder' => null,
+				'priority'    => 38
 			),
 			'location' => array(
 				'label'       => __( 'Location', 'atcf' ),
 				'default'     => null,
 				'type'        => 'text',
 				'editable'    => true,
-				'placeholder' => null
+				'placeholder' => null,
+				'priority'    => 40
 			)
 		);
 
+		$fields = apply_filters( 'atcf_shortcode_submit_fields', $fields );
+
+		uasort( $fields, __CLASS__ . '::sort_by_priority' );
+
 		return $fields;
+	}
+
+	private static function sort_by_priority( $a, $b ) {
+		if ( $a[ 'priority' ] == $b[ 'priority' ] )
+	        return 0;
+
+	    return ( $a[ 'priority' ] < $b[ 'priority' ] ) ? -1 : 1;
 	}
 
 	/**
