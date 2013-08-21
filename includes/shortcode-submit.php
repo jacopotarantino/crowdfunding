@@ -197,7 +197,9 @@ function atcf_shortcode_submit( $atts ) {
 	}
 ?>
 	<?php do_action( 'atcf_shortcode_submit_before', $atts, $campaign ); ?>
+
 	<form action="" method="post" class="atcf-submit-campaign" enctype="multipart/form-data">
+		
 		<?php
 			foreach ( atcf_shortcode_submit_field() as $key => $field ) :
 				if ( ! $atts[ 'editing' ] && 'only' === $field[ 'editable' ] )
@@ -233,7 +235,9 @@ function atcf_shortcode_submit( $atts ) {
 			<?php endif; ?>
 		</p>
 	</form>
+
 	<?php do_action( 'atcf_shortcode_submit_after', $atts, $campaign ); ?>
+
 <?php
 	$form = ob_get_clean();
 
@@ -247,6 +251,26 @@ function atcf_shortcode_submit_heading( $key, $field, $atts, $campaign ) {
 <?php
 }
 add_action( 'atcf_shortcode_submit_field_heading', 'atcf_shortcode_submit_heading', 10, 4 );
+
+/**
+ * Hidden Field
+ *
+ * @since Astoundify Crowdfunding 1.6
+ *
+ * @return void
+ */
+function atcf_shortcode_submit_field_hidden( $key, $field, $atts, $campaign ) {
+?>
+	<input type="hidden" name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $field[ 'value' ] ); ?>">
+	
+	<?php if ( $field[ 'label' ] ) : ?>
+	<p class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
+		<?php echo wp_kses_data( $field[ 'label' ] ); ?>
+	</p>
+	<?php endif; ?>
+<?php
+}
+add_action( 'atcf_shortcode_submit_field_hidden', 'atcf_shortcode_submit_field_hidden', 10, 4 );
 
 /**
  * Text Field
@@ -555,15 +579,15 @@ function atcf_shortcode_submit_process() {
 	$args = apply_filters( 'atcf_campaign_submit_data', array(
 		'post_type'    => 'download',
 		'post_status'  => $status,
-		'post_content' => $content,
+		'post_content' => $fields[ 'description' ][ 'value' ],
 		'post_author'  => $user_id
 	), $_POST );
 
 	if ( $fields[ 'title' ][ 'value' ] )
-		$args[ 'post_title' ] = $title;
+		$args[ 'post_title' ] = $fields[ 'title' ][ 'value' ];
 
 	if ( $fields[ 'excerpt' ][ 'value' ] )
-		$args[ 'post_excerpt' ] = $excerpt;
+		$args[ 'post_excerpt' ] = $fields[ 'excerpt' ][ 'value' ];
 
 	if ( ! $existing_campaign ) {
 		$campaign = wp_insert_post( $args, true );
@@ -579,9 +603,9 @@ function atcf_shortcode_submit_process() {
 		wp_safe_redirect( add_query_arg( 'updated', 'true', get_permalink( $campaign ) ) );
 		exit();
 	} elseif ( 'submit' == $action ) {
-		$url = isset ( $edd_options[ 'submit_page' ] ) ? get_permalink( $edd_options[ 'submit_page' ] ) : get_permalink();
+		$url = isset ( $edd_options[ 'submit_success_page' ] ) ? get_permalink( $edd_options[ 'submit_success_page' ] ) : get_permalink();
 
-		$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', add_query_arg( array( 'success' => 'true' ), $url ) );
+		$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', $url );
 		wp_safe_redirect( $redirect );
 		exit();
 	} else {
@@ -602,12 +626,14 @@ function atcf_submit_process_after( $campaign, $postdata, $status, $fields ) {
 
 				$_tags = array();
 
-				foreach ( $tags as $key => $term ) { 
-					$obj = get_term_by( 'id', $term, 'download_tag' );
-					$_tags[] = $obj->name;
-				}
+				if ( $field[ 'value' ] ) {
+					foreach ( $field[ 'value' ] as $key => $term ) { 
+						$obj = get_term_by( 'id', $term, 'download_tag' );
+						$_tags[] = $obj->name;
+					}
 
-				wp_set_post_terms( $campaign, $_tags, 'download_tag' );
+					wp_set_post_terms( $campaign, $_tags, 'download_tag' );
+				}
 
 			break;
 			/** Save category term names (hierarchical) */
@@ -619,8 +645,8 @@ function atcf_submit_process_after( $campaign, $postdata, $status, $fields ) {
 			/** Calculate the length, or lack there of */
 			case 'length' :
 
-				if ( $fields[ 'length' ][ 'value' ] ) {
-					$length = absint( $length );
+				if ( $field[ 'value' ] ) {
+					$length = absint( $fields[ 'length' ][ 'value' ] );
 
 					$min = isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14;
 					$max = isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 42;
@@ -638,7 +664,7 @@ function atcf_submit_process_after( $campaign, $postdata, $status, $fields ) {
 
 				if ( $end_date ) {
 					update_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
-					update_post_meta( $campaign, 'campaign_length', $fields[ 'length' ][ 'value' ] );
+					update_post_meta( $campaign, 'campaign_length', $field[ 'value' ] );
 				} else
 					update_post_meta( $campaign, 'campaign_endless', 1 );
 
@@ -658,7 +684,7 @@ function atcf_submit_process_after( $campaign, $postdata, $status, $fields ) {
 
 					update_post_meta( $campaign, 'campaign_norewards', 1 );
 				} else {
-					foreach ( $fields[ 'rewards' ][ 'value' ] as $key => $reward ) {
+					foreach ( $field[ 'value' ] as $key => $reward ) {
 						if ( '' == $reward[ 'price' ] )
 							continue;
 
@@ -683,8 +709,8 @@ function atcf_submit_process_after( $campaign, $postdata, $status, $fields ) {
 
 				$upload_overrides = array( 'test_form' => false );
 
-				if ( '' != $fields[ 'image' ][ 'value' ][ 'name' ] ) {
-					$upload = wp_handle_upload( $fields[ 'image' ][ 'value' ], $upload_overrides );
+				if ( '' != $field[ 'value' ][ 'name' ] ) {
+					$upload = wp_handle_upload( $field[ 'value' ], $upload_overrides );
 					$attachment = array(
 						'guid'           => $upload[ 'url' ], 
 						'post_mime_type' => $upload[ 'type' ],
@@ -745,6 +771,20 @@ function atcf_shortcode_submit_redirect() {
 	}
 }
 add_action( 'template_redirect', 'atcf_shortcode_submit_redirect', 1 );
+
+function atcf_shortcode_submit_field_before_render_contact_email( $field ) {
+	if ( ! is_user_logged_in() )
+		return $field;
+
+	$current_user = wp_get_current_user();
+
+	$field[ 'type' ]  = 'hidden';
+	$field[ 'value' ] = $current_user->user_email;
+	$field[ 'label' ] =  sprintf( __( '<strong>Note</strong>: You are currently logged in as %1$s. This %2$s will be associated with that account. Please <a href="%3$s">log out</a> if you would like to make a %2$s under a new account.', 'atcf' ), $current_user->user_email, strtolower( edd_get_label_singular() ), wp_logout_url( get_permalink() ) );
+
+	return $field;
+}
+add_filter( 'atcf_shortcode_submit_field_before_render_contact_email', 'atcf_shortcode_submit_field_before_render_contact_email' );
 
 /**
  * Walker to output an unordered list of category checkbox <input> elements.
