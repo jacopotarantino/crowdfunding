@@ -10,11 +10,55 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * Submission Process.
+ *
+ * If we are on the submission page, start things up. Register fieflds,
+ * set up validation methods, etc.
+ *
+ * @since Astoundify Crowdfunding 1.7
+ *
+ * @return mixed none|object
+ */
 function atcf_submit_campaign() {
+	global $edd_options;
+
+	if ( ! is_page( $edd_options[ 'submit_page' ] ) )
+		return;
+
 	return ATCF_Submit_Campaign::instance();
 }
-add_action( 'init', 'atcf_submit_campaign' );
+add_action( 'template_redirect', 'atcf_submit_campaign' );
 
+/**
+ * Submission fields.
+ *
+ * A helper function for getting the registered fields. This should be called
+ * instead of the private method, so the filter is run all the time.
+ *
+ * @since Astoundify Crowdfunding 1.7
+ *
+ * @return array $fields
+ */
+function atcf_shortcode_submit_fields() {
+	$submit_campaign = atcf_submit_campaign();
+
+	$fields = apply_filters( 'atcf_shortcode_submit_fields', $submit_campaign->register_fields() );
+
+	return $fields;
+}
+
+/**
+ * Submit a campaign.
+ *
+ * Handles creating the shortcode, registering fields, adding hooks for fields,
+ * saving data, populating data, etc.
+ *
+ * The majority of the HTML output, etc is outside of this class. This serves mainly
+ * as a container for the behind the scenes stuff.
+ *
+ * @since Astoundify Crowdfunding 1.7
+ */
 class ATCF_Submit_Campaign {
 
 	/**
@@ -23,9 +67,9 @@ class ATCF_Submit_Campaign {
 	private static $instance;
 
 	/**
-	 * 
+	 * Don't create more than once instance of the class.
 	 *
-	 * @since Astoundify Crowdfunding 1.6
+	 * @since Astoundify Crowdfunding 1.7
 	 *
 	 * @return self
 	 */
@@ -37,6 +81,15 @@ class ATCF_Submit_Campaign {
 		return self::$instance;
 	}
 
+	/**
+	 * Actions and Filters
+	 *
+	 * Shortcodes, field callbacks, saving, etc.
+	 *
+	 * @since Astoundify Crowdfunding 1.7
+	 *
+	 * @return void
+	 */
 	private function __construct() {
 		$this->register_fields();
 
@@ -65,6 +118,29 @@ class ATCF_Submit_Campaign {
 		add_action( 'atcf_submit_process_after', 'atcf_submit_process_after', 10, 4 );
 	}
 
+	/**
+	 * Register submission form fields.
+	 *
+	 * There are some reusable field types to be chosen from, and some unique ones
+	 * that are only meant to be used once. Some reusable ones are:
+	 *
+	 * - heading
+	 * - text
+	 * - textarea
+	 * - number
+	 * - radio
+	 * - checkbox
+	 * - term_checklist
+	 *
+	 * You should filter this via `atcf_shortcode_submit_fields` (called in atcf_shortcode_submit_fields()`)and not edit this array directly.
+	 * Either add a filter via a child theme or plugin.
+	 *
+	 * @since Astoundify Crowdfunding 1.7
+	 *
+	 * @see atcf_shortcode_sumbmit_fields()
+	 *
+	 * @return array $fields;
+	 */
 	function register_fields() {
 		global $edd_options;
 
@@ -225,13 +301,13 @@ class ATCF_Submit_Campaign {
 	 * If we are previewing/editing, then get the saved value. If we are on a
 	 * new submission, get a previously posted value, or the default.
 	 *
-	 * @since Astoundify Crowdfunding 1.6
+	 * @since Astoundify Crowdfunding 1.7
 	 *
-	 * @param $key
-	 * @param $field
-	 * @param $atts
-	 * @param $campaign
-	 * @return $field
+	 * @param $key The key of the current field.
+	 * @param $field The array of field arguments.
+	 * @param $atts The shortcoe attribtues.
+	 * @param $campaign The current campaign (if editing/previewing).
+	 * @return $field The array of modified form arguments.
 	 */
 	public function get_field_value( $key, $field, $atts, $campaign ) {
 		if ( $atts[ 'previewing' ] || $atts[ 'editing' ] )
@@ -245,11 +321,11 @@ class ATCF_Submit_Campaign {
 	/**
 	 * Retrieve saved campaign data to populate fields.
 	 *
-	 * @since Astoundify Crowdfunding 1.6
+	 * @since Astoundify Crowdfunding 1.7
 	 *
-	 * @param $key
-	 * @param $campaign
-	 * @return $data
+	 * @param $key The key of the current field.
+	 * @param $atts The shortcoe attribtues.
+	 * @return $data The correct form value for the field.
 	 */
 	private function saved_data( $key, $campaign ) {
 		switch ( $key ) {
@@ -267,6 +343,10 @@ class ATCF_Submit_Campaign {
 
 			case 'excerpt' :
 				$data = apply_filters( 'get_the_excerpt', $campaign->data->post_excerpt );
+			break;
+
+			case 'updates' :
+				$data = wp_richedit_pre( $campaign->updates() );
 			break;
 
 			case 'norewards' :
@@ -296,6 +376,17 @@ class ATCF_Submit_Campaign {
 		return $data;
 	}
 
+	/**
+	 * Save tags.
+	 *
+	 * @since Astoundify Crowdfunding 1.7
+	 *
+	 * @param $key The key of the current field.
+	 * @param $field The array of field arguments.
+	 * @param $atts The shortcoe attribtues.
+	 * @param $campaign The current campaign (if editing/previewing).
+	 * @return void
+	 */
 	public function save_tag( $key, $field, $campaign, $fields ) {
 		$_tags = array();
 
@@ -309,6 +400,17 @@ class ATCF_Submit_Campaign {
 		}
 	}
 
+	/**
+	 * Save categories.
+	 *
+	 * @since Astoundify Crowdfunding 1.7
+	 *
+	 * @param $key The key of the current field.
+	 * @param $field The array of field arguments.
+	 * @param $atts The shortcoe attribtues.
+	 * @param $campaign The current campaign (if editing/previewing).
+	 * @return void
+	 */
 	public function save_category( $key, $field, $campaign, $fields ) {
 		if ( ! isset ( $_POST[ 'tax_input' ][ 'download_category' ] ) )
 			return;
@@ -316,6 +418,17 @@ class ATCF_Submit_Campaign {
 		wp_set_post_terms( $campaign, $_POST[ 'tax_input' ][ 'download_category' ], 'download_category' );
 	}
 
+	/**
+	 * Save length.
+	 *
+	 * @since Astoundify Crowdfunding 1.7
+	 *
+	 * @param $key The key of the current field.
+	 * @param $field The array of field arguments.
+	 * @param $atts The shortcoe attribtues.
+	 * @param $campaign The current campaign (if editing/previewing).
+	 * @return void
+	 */
 	public function save_length( $key, $field, $campaign, $fields ) {
 		global $edd_options;
 
@@ -343,6 +456,17 @@ class ATCF_Submit_Campaign {
 			update_post_meta( $campaign, 'campaign_endless', 1 );
 	}
 
+	/**
+	 * Save rewards.
+	 *
+	 * @since Astoundify Crowdfunding 1.7
+	 *
+	 * @param $key The key of the current field.
+	 * @param $field The array of field arguments.
+	 * @param $atts The shortcoe attribtues.
+	 * @param $campaign The current campaign (if editing/previewing).
+	 * @return void
+	 */
 	public function save_rewards( $key, $field, $campaign, $fields ) {
 		$prices = array();
 
@@ -372,6 +496,17 @@ class ATCF_Submit_Campaign {
 		update_post_meta( $campaign, 'edd_variable_prices', $prices );
 	}
 
+	/**
+	 * Save featured image.
+	 *
+	 * @since Astoundify Crowdfunding 1.7
+	 *
+	 * @param $key The key of the current field.
+	 * @param $field The array of field arguments.
+	 * @param $atts The shortcoe attribtues.
+	 * @param $campaign The current campaign (if editing/previewing).
+	 * @return void
+	 */
 	public function save_image( $key, $field, $campaign, $fields ) {
 		if ( ! function_exists( 'wp_handle_upload' ) ) {
 			require_once( ABSPATH . 'wp-admin/includes/admin.php' );
@@ -401,21 +536,53 @@ class ATCF_Submit_Campaign {
 		}
 	}
 
+	/**
+	 * Save goal.
+	 *
+	 * @since Astoundify Crowdfunding 1.7
+	 *
+	 * @param $key The key of the current field.
+	 * @param $field The array of field arguments.
+	 * @param $atts The shortcoe attribtues.
+	 * @param $campaign The current campaign (if editing/previewing).
+	 * @return void
+	 */
 	public function save_goal( $key, $field, $campaign, $fields ) {
 		if ( '' == $field[ 'value' ] )
 			return;
-		
+
 		update_post_meta( $campaign, 'campaign_' . $key, edd_sanitize_amount( $field[ 'value' ] ) );
 	}
 
+	/**
+	 * Save shipping.
+	 *
+	 * @since Astoundify Crowdfunding 1.7
+	 *
+	 * @param $key The key of the current field.
+	 * @param $field The array of field arguments.
+	 * @param $atts The shortcoe attribtues.
+	 * @param $campaign The current campaign (if editing/previewing).
+	 * @return void
+	 */
 	public function save_physical( $key, $field, $campaign, $fields ) {
 		update_post_meta( $campaign, '_campaign_' . $key, sanitize_text_field( $field[ 'value' ] ) );
 	}
 
+	/**
+	 * Save a generic field.
+	 *
+	 * @since Astoundify Crowdfunding 1.7
+	 *
+	 * @param $key The key of the current field.
+	 * @param $field The array of field arguments.
+	 * @param $atts The shortcoe attribtues.
+	 * @param $campaign The current campaign (if editing/previewing).
+	 * @return void
+	 */
 	public function save_field( $key, $field, $campaign, $fields ) {
 		update_post_meta( $campaign, 'campaign_' . $key, sanitize_text_field( $field[ 'value' ] ) );
 	}
-
 }
 
 /**
@@ -424,6 +591,7 @@ class ATCF_Submit_Campaign {
  *
  * @since Astoundify Crowdfunding 0.1-alpha
  *
+ * @param $atts
  * @return $form
  */
 function atcf_shortcode_submit( $atts ) {
@@ -503,18 +671,16 @@ function atcf_shortcode_submit( $atts ) {
 	return $form;
 }
 
-function atcf_shortcode_submit_fields() {
-	$submit_campaign = atcf_submit_campaign();
-
-	$fields = apply_filters( 'atcf_shortcode_submit_fields', $submit_campaign->register_fields() );
-
-	return $fields;
-}
-
 /**
  * Heading
  *
- * @since Astoundify Crowdfunding 1.6
+ * @since Astoundify Crowdfunding 1.7
+ *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $atts The shortcoe attribtues.
+ * @param $campaign The current campaign (if editing/previewing).
+ * @return void
  */
 function atcf_shortcode_submit_heading( $key, $field, $atts, $campaign ) {
 ?>
@@ -525,8 +691,12 @@ function atcf_shortcode_submit_heading( $key, $field, $atts, $campaign ) {
 /**
  * Hidden Field
  *
- * @since Astoundify Crowdfunding 1.6
+ * @since Astoundify Crowdfunding 1.7
  *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $atts The shortcoe attribtues.
+ * @param $campaign The current campaign (if editing/previewing).
  * @return void
  */
 function atcf_shortcode_submit_field_hidden( $key, $field, $atts, $campaign ) {
@@ -544,8 +714,12 @@ function atcf_shortcode_submit_field_hidden( $key, $field, $atts, $campaign ) {
 /**
  * Text Field
  *
- * @since Astoundify Crowdfunding 1.6
+ * @since Astoundify Crowdfunding 1.7
  *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $atts The shortcoe attribtues.
+ * @param $campaign The current campaign (if editing/previewing).
  * @return void
  */
 function atcf_shortcode_submit_field_text( $key, $field, $atts, $campaign ) {
@@ -560,8 +734,12 @@ function atcf_shortcode_submit_field_text( $key, $field, $atts, $campaign ) {
 /**
  * Textarea
  *
- * @since Astoundify Crowdfunding 1.6
+ * @since Astoundify Crowdfunding 1.7
  *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $atts The shortcoe attribtues.
+ * @param $campaign The current campaign (if editing/previewing).
  * @return void
  */
 function atcf_shortcode_submit_field_textarea( $key, $field, $atts, $campaign ) {
@@ -576,8 +754,12 @@ function atcf_shortcode_submit_field_textarea( $key, $field, $atts, $campaign ) 
 /**
  * Number
  *
- * @since Astoundify Crowdfunding 1.6
+ * @since Astoundify Crowdfunding 1.7
  *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $atts The shortcoe attribtues.
+ * @param $campaign The current campaign (if editing/previewing).
  * @return void
  */
 function atcf_shortcode_submit_field_number( $key, $field, $atts, $campaign ) {
@@ -592,8 +774,12 @@ function atcf_shortcode_submit_field_number( $key, $field, $atts, $campaign ) {
 /**
  * Checkbox
  *
- * @since Astoundify Crowdfunding 1.6
+ * @since Astoundify Crowdfunding 1.7
  *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $atts The shortcoe attribtues.
+ * @param $campaign The current campaign (if editing/previewing).
  * @return void
  */
 function atcf_shortcode_submit_field_checkbox( $key, $field, $atts, $campaign ) {
@@ -609,8 +795,12 @@ function atcf_shortcode_submit_field_checkbox( $key, $field, $atts, $campaign ) 
 /**
  * Number
  *
- * @since Astoundify Crowdfunding 1.6
+ * @since Astoundify Crowdfunding 1.7
  *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $atts The shortcoe attribtues.
+ * @param $campaign The current campaign (if editing/previewing).
  * @return void
  */
 function atcf_shortcode_submit_field_radio( $key, $field, $atts, $campaign ) {
@@ -635,8 +825,12 @@ function atcf_shortcode_submit_field_radio( $key, $field, $atts, $campaign ) {
 /**
  * Term Checklist
  *
- * @since Astoundify Crowdfunding 1.6
+ * @since Astoundify Crowdfunding 1.7
  *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $atts The shortcoe attribtues.
+ * @param $campaign The current campaign (if editing/previewing).
  * @return void
  */
 function atcf_shortcode_submit_field_term_checklist( $key, $field, $atts, $campaign ) {
@@ -665,8 +859,12 @@ function atcf_shortcode_submit_field_term_checklist( $key, $field, $atts, $campa
 /**
  * WP Editor
  *
- * @since Astoundify Crowdfunding 1.6
+ * @since Astoundify Crowdfunding 1.7
  *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $atts The shortcoe attribtues.
+ * @param $campaign The current campaign (if editing/previewing).
  * @return void
  */
 function atcf_shortcode_submit_field_wp_editor( $key, $field, $atts, $campaign ) {
@@ -694,8 +892,12 @@ function atcf_shortcode_submit_field_wp_editor( $key, $field, $atts, $campaign )
 /**
  * Image
  *
- * @since Astoundify Crowdfunding 1.6
+ * @since Astoundify Crowdfunding 1.7
  *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $atts The shortcoe attribtues.
+ * @param $campaign The current campaign (if editing/previewing).
  * @return void
  */
 function atcf_shortcode_submit_field_featured_image( $key, $field, $atts, $campaign ) {
@@ -718,6 +920,10 @@ function atcf_shortcode_submit_field_featured_image( $key, $field, $atts, $campa
  *
  * @since Astoundify Crowdfunding 0.1-alpha
  *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $atts The shortcoe attribtues.
+ * @param $campaign The current campaign (if editing/previewing).
  * @return void
  */
 function atcf_shortcode_submit_field_rewards( $key, $field, $atts, $campaign ) {
@@ -772,6 +978,10 @@ function atcf_shortcode_submit_field_rewards( $key, $field, $atts, $campaign ) {
  *
  * @since Astoundify Crowdfunding 0.1-alpha
  *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $atts The shortcoe attribtues.
+ * @param $campaign The current campaign (if editing/previewing).
  * @return void
  */
 function atcf_shortcode_submit_process() {
@@ -869,6 +1079,21 @@ function atcf_shortcode_submit_process() {
 }
 add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
 
+/**
+ * Save extra campaign data. This includes default registered fields.
+ *
+ * Themes and plugins should also hook into this action and save their
+ * data as well. Some special fields have a special callback in the main 
+ * class, while default text fields and the like are just saved as standard meta.
+ *
+ * @since Astoundify Crowdfunding 1.7
+ *
+ * @param $campaign The current campaign (if editing/previewing).
+ * @param $postdata The $_POST data.
+ * @param $status The status of the submission.
+ * @param $fields The array of registered fields.
+ * @return void
+ */
 function atcf_submit_process_after( $campaign, $postdata, $status, $fields ) {
 	global $edd_options;
 
@@ -929,6 +1154,15 @@ function atcf_shortcode_submit_redirect() {
 }
 add_action( 'template_redirect', 'atcf_shortcode_submit_redirect', 1 );
 
+/**
+ * If the user is logged in, change the contact form email field
+ * to a hidden field with their email address.
+ *
+ * @since Astoundify Crowdfunding 1.7
+ *
+ * @param array $field
+ * @return void
+ */
 function atcf_shortcode_submit_field_before_render_contact_email( $field ) {
 	if ( ! is_user_logged_in() )
 		return $field;
