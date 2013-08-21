@@ -215,7 +215,7 @@ Crowdfunding.SubmitCampaign = ( function($) {
 		init : function() {
 			addReward();
 			removeReward();
-			validate();
+			//validate();
 			endDate();
 
 			$( '#norewards' ).click(function() {
