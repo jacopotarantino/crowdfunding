@@ -21,14 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return mixed none|object
  */
 function atcf_submit_campaign() {
-	global $edd_options;
-
-	if ( ! is_page( $edd_options[ 'submit_page' ] ) )
-		return;
-
 	return ATCF_Submit_Campaign::instance();
 }
-add_action( 'template_redirect', 'atcf_submit_campaign' );
+add_action( 'init', 'atcf_submit_campaign' );
 
 /**
  * Submission fields.
@@ -141,7 +136,7 @@ class ATCF_Submit_Campaign {
 	 *
 	 * @return array $fields;
 	 */
-	function register_fields() {
+	public function register_fields() {
 		global $edd_options;
 
 		$fields = array(
@@ -366,7 +361,7 @@ class ATCF_Submit_Campaign {
 			break;
 			
 			default :
-				$data = null;
+				$data = apply_filters( 'atcf_shortcode_submit_saved_data_' . $key, $key, $campaign );
 			break;
 		}
 
