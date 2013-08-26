@@ -268,6 +268,7 @@ class ATCF_Submit_Campaign {
 			'rewards' => array(
 				'label'       => null,
 				'type'        => 'rewards',
+				'required'    => false,
 				'default'     => null,
 				'editable'    => true,
 				'priority'    => 32
@@ -389,9 +390,13 @@ class ATCF_Submit_Campaign {
 			case 'goal' :
 				$data = edd_format_amount( $campaign->goal(false) );
 			break;
+
+			case 'tos' :
+				$data = 1;
+			break;
 			
 			default :
-				$data = apply_filters( 'atcf_shortcode_submit_saved_data_' . $key, $key, $campaign );
+				$data = apply_filters( 'atcf_shortcode_submit_saved_data_' . $key, '', $key, $campaign );
 			break;
 		}
 
@@ -456,6 +461,9 @@ class ATCF_Submit_Campaign {
 	 */
 	public function save_length( $key, $field, $campaign, $fields ) {
 		global $edd_options;
+
+		if ( ! isset ( $_POST[ $key ] ) )
+			return;
 
 		if ( $field[ 'value' ] ) {
 			$length = absint( $field[ 'value' ] );
@@ -606,6 +614,9 @@ class ATCF_Submit_Campaign {
 	 * @return void
 	 */
 	public function save_field( $key, $field, $campaign, $fields ) {
+		if ( '' == $_POST[ $key ] )
+			return;
+
 		update_post_meta( $campaign, 'campaign_' . $key, sanitize_text_field( $field[ 'value' ] ) );
 	}
 }
@@ -695,6 +706,34 @@ function atcf_shortcode_submit( $atts ) {
 
 	return $form;
 }
+
+/**
+ * Terms of Service
+ *
+ * @since Astoundify Crowdfunding 1.7
+ *
+ * @param $fields
+ * @return $fields
+ */
+function atcf_shortcode_submit_field_tos( $fields ) {
+	global $edd_options;
+
+	if ( ! isset ( $edd_options[ 'show_agree_to_terms' ] ) )
+		return $fields;
+
+	$fields[ 'tos' ] = array(
+		'label' => isset( $edd_options[ 'agree_label' ] ) ? $edd_options[ 'agree_label' ] : __( 'Agree to Terms?', 'atcf' ),
+		'default'     => 0,
+		'required'    => true,
+		'type'        => 'checkbox',
+		'editable'    => false,
+		'placeholder' => null,
+		'priority'    => 60
+	);
+
+	return $fields;
+}
+add_filter( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_tos' );
 
 /**
  * Heading
@@ -1050,11 +1089,17 @@ function atcf_shortcode_submit_process() {
 	$existing_campaign = isset ( $_POST[ 'campaign_id' ] ) ? esc_attr( $_POST[ 'campaign_id' ] ) : null;
 	$fields            = atcf_shortcode_submit_fields();
 
+	$status = 'submit' == $action ? 'pending' : 'draft';
+
+	/** If we are submitting, but this is a live campaign, keep published */
+	if ( $existing_campaign && ( 'pending' == $status && get_post( $existing_campaign )->post_status == 'publish' ) )
+		$status = 'publish';
+
 	foreach ( $fields as $key => $field ) {
 		$fields[ $key ][ 'value' ] = isset ( $_POST[ $key ] ) ? $_POST[ $key ] : null;
 		$fields[ $key ][ 'value' ] = apply_filters( 'atcf_shortcode_submit_validate_' . $key, $fields[ $key ][ 'value' ] );
 
-		if ( ( ! $fields[ $key ][ 'value' ] && isset( $fields[ $key ][ 'required' ] ) ) && ! $existing_campaign )
+		if ( ( true === $field[ 'required' ] && ! $fields[ $key ][ 'value' ] ) && ( 'publish' == $status && $field[ 'editable' ] === true ) )
 			edd_set_error( 'required-' . $key, sprintf( __( 'The <strong>%s</strong> field is required.', 'atcf' ), $field[ 'label' ] ) );
 	}
 
@@ -1075,12 +1120,6 @@ function atcf_shortcode_submit_process() {
 	} else {
 		$user_id = $user->ID;
 	}
-
-	$status = 'submit' == $action ? 'pending' : 'draft';
-
-	/** If we are submitting, but this is a live campaign, keep published */
-	if ( $existing_campaign && ( 'pending' == $status && get_post( $existing_campaign )->post_status == 'publish' ) )
-		$status = 'publish';
 
 	/** 
 	 * Create or update a campaign 
