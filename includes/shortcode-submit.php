@@ -1019,7 +1019,7 @@ function atcf_shortcode_submit_field_featured_image( $key, $field, $atts, $campa
  * @return void
  */
 function atcf_shortcode_submit_field_rewards( $key, $field, $atts, $campaign ) {
-	if ( $campaign->is_donations_only() )
+	if ( isset ( $campaign ) && $campaign->is_donations_only() )
 		return;
 
 	$rewards = isset ( $field[ 'value' ] ) ? $field[ 'value' ] : array( 0 => array( 'amount' => null, 'name' => null, 'limit' => null ) );
