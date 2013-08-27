@@ -182,27 +182,6 @@ Crowdfunding.SubmitCampaign = ( function($) {
 		});
 	}
 
-	function validate() {
-		$( '.atcf-submit-campaign' ).validate({
-			errorPlacement: function(error, element) {},
-			rules: {
-				"title" : {
-					required : true
-				},
-				"goal" : {
-					required : true
-				},
-				"contact-email" : {
-					required : true,
-					email    : true
-				}
-			},
-			submitHandler: function(form) {
-				form.submit();
-			}
-		});
-	}
-
 	function endDate() {
 		$( '.atcf-toggle-neverending' ).click(function(e) {
 			e.preventDefault();
@@ -215,7 +194,6 @@ Crowdfunding.SubmitCampaign = ( function($) {
 		init : function() {
 			addReward();
 			removeReward();
-			validate();
 			endDate();
 
 			$( '#norewards' ).click(function() {

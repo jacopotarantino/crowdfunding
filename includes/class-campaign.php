@@ -66,9 +66,6 @@ class ATCF_Campaign {
 	public function goal( $formatted = true ) {
 		$goal = $this->__get( 'campaign_goal' );
 
-		if ( ! is_numeric( $goal ) )
-			return 0;
-
 		if ( $formatted )
 			return edd_currency_filter( edd_format_amount( $goal ) );
 

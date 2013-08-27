@@ -45,19 +45,27 @@ function atcf_gateway_paypal_adaptive_payments_version_notice() {
  *
  * @return void
  */
-function atcf_shortcode_submit_field_paypal_adaptive_payments_email( $atts, $campaign ) {
-	$paypal_email = null;
+function atcf_shortcode_submit_field_paypal_adaptive_payments_email( $fields ) {
+	$fields[ 'email' ] = array(
+		'label'       => __( 'PayPal Email', 'atcf' ),
+		'default'     => null,
+		'type'        => 'text',
+		'editable'    => true,
+		'placeholder' => null,
+		'required'    => true,
+		'priority'    => 35
+	);
 
-	if ( $atts[ 'editing' ] || $atts[ 'previewing' ] )
-		$paypal_email = $campaign->__get( 'campaign_email' );
-?>
-	<p class="atcf-submit-campaign-paypal-email">
-		<label for="email"><?php _e( 'PayPal Email', 'atcf' ); ?></label>
-		<input type="text" name="email" id="email" value="<?php echo $paypal_email; ?>" />
-	</p>
-<?php
+	return $fields;
 }
-add_action( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_adaptive_payments_email', 105, 2 );
+add_filter( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_adaptive_payments_email' );
+
+function atcf_shortcode_submit_saved_data_email( $key, $campaign ) {
+	$paypal_email = $campaign->__get( 'campaign_email' );
+
+	return $paypal_email;
+}
+add_filter( 'atcf_shortcode_submit_saved_data_email', 'atcf_shortcode_submit_saved_data_email', 10, 2 );
 
 /**
  * PayPal Adaptive Payments field on backend.
@@ -76,37 +84,6 @@ function atcf_metabox_campaign_info_after_paypal_adaptive_payments( $campaign ) 
 <?php
 }
 add_action( 'atcf_metabox_campaign_info_after', 'atcf_metabox_campaign_info_after_paypal_adaptive_payments' );
-
-/**
- * Validate PayPal Adaptive Payments on the frontend submission (or edit).
- *
- * @since Astoundify Crowdfunding 1.1
- *
- * @return void
- */
-function atcf_campaign_submit_validate_paypal_adaptive_payments( $postdata, $errors ) {
-	$email = $postdata[ 'email' ];
-
-	if ( ! isset ( $email ) || ! is_email( $email ) )
-		$errors->add( 'invalid-paypal-adaptive-email', __( 'Please make sure your PayPal email address is valid.', 'atcf' ) ); 
-}
-add_action( 'atcf_campaign_submit_validate', 'atcf_campaign_submit_validate_paypal_adaptive_payments', 10, 2 );
-add_action( 'atcf_edit_campaign_validate', 'atcf_campaign_submit_validate_paypal_adaptive_payments', 10, 2 );
-
-/**
- * Save PayPal Adaptive Payments on the frontend submission (or edit).
- *
- * @since Astoundify Crowdfunding 1.1
- *
- * @return void
- */
-function atcf_submit_process_after_paypal_adaptive_payments_save( $campaign, $postdata ) {
-	$email = $postdata[ 'email' ];
-
-	update_post_meta( $campaign, 'campaign_email', sanitize_text_field( $email ) );
-}
-add_action( 'atcf_submit_process_after', 'atcf_submit_process_after_paypal_adaptive_payments_save', 10, 2 );
-add_action( 'atcf_edit_campaign_after', 'atcf_submit_process_after_paypal_adaptive_payments_save', 10, 2 );
 
 /**
  * Save PayPal Adaptive Payments on the backend.
