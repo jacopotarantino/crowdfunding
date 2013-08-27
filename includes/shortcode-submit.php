@@ -261,7 +261,7 @@ class ATCF_Submit_Campaign {
 				'label'       => __( 'No rewards, donations only.', 'atcf' ),
 				'default'     => null,
 				'type'        => 'checkbox',
-				'editable'    => true,
+				'editable'    => false,
 				'placeholder' => null,
 				'priority'    => 30
 			),
@@ -502,6 +502,9 @@ class ATCF_Submit_Campaign {
 	 */
 	public function save_rewards( $key, $field, $campaign, $fields ) {
 		$prices = array();
+
+		if ( ! isset( $_POST[ 'norewards' ] ) && ! isset( $_POST[ 'rewards' ] ) )
+			return;
 
 		if ( $fields[ 'norewards' ][ 'value' ] ) {
 			$prices[0] = array(
@@ -1016,6 +1019,9 @@ function atcf_shortcode_submit_field_featured_image( $key, $field, $atts, $campa
  * @return void
  */
 function atcf_shortcode_submit_field_rewards( $key, $field, $atts, $campaign ) {
+	if ( $campaign->is_donations_only() )
+		return;
+
 	$rewards = isset ( $field[ 'value' ] ) ? $field[ 'value' ] : array( 0 => array( 'amount' => null, 'name' => null, 'limit' => null ) );
 ?>
 	<?php do_action( 'atcf_shortcode_submit_field_rewards_list_before' ); ?>
