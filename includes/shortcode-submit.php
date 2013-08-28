@@ -587,7 +587,12 @@ class ATCF_Submit_Campaign {
 		if ( '' == $field[ 'value' ] )
 			return;
 
-		update_post_meta( $campaign, 'campaign_' . $key, edd_sanitize_amount( $field[ 'value' ] ) );
+		$goal = edd_sanitize_amount( $field[ 'value' ] );
+
+		if ( ! is_numeric( $goal ) )
+			$goal = 0;
+
+		update_post_meta( $campaign, 'campaign_' . $key, $goal );
 	}
 
 	/**
