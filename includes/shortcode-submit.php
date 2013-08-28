@@ -617,7 +617,7 @@ class ATCF_Submit_Campaign {
 	 * @return void
 	 */
 	public function save_field( $key, $field, $campaign, $fields ) {
-		if ( '' == $_POST[ $key ] )
+		if ( isset ( $_POST[ $key ] ) && '' == $_POST[ $key ] )
 			return;
 
 		update_post_meta( $campaign, 'campaign_' . $key, sanitize_text_field( $field[ 'value' ] ) );
@@ -1105,7 +1105,7 @@ function atcf_shortcode_submit_process() {
 		$fields[ $key ][ 'value' ] = isset ( $_POST[ $key ] ) ? $_POST[ $key ] : null;
 		$fields[ $key ][ 'value' ] = apply_filters( 'atcf_shortcode_submit_validate_' . $key, $fields[ $key ][ 'value' ] );
 
-		if ( ( true === $field[ 'required' ] && ! $fields[ $key ][ 'value' ] ) && ( 'publish' == $status && $field[ 'editable' ] === true ) )
+		if ( ( isset ( $field[ 'required' ] ) && true === $field[ 'required' ] && ! $fields[ $key ][ 'value' ] ) && 'publish' != $status )
 			edd_set_error( 'required-' . $key, sprintf( __( 'The <strong>%s</strong> field is required.', 'atcf' ), $field[ 'label' ] ) );
 	}
 
@@ -1121,7 +1121,7 @@ function atcf_shortcode_submit_process() {
 		$user_id = atcf_register_user( array(
 			'user_login'           => $fields[ 'contact_email' ][ 'value' ], 
 			'user_email'           => $fields[ 'contact_email' ][ 'value' ],
-			'display_name'         => $fields[ 'name' ][ 'value' ],
+			'display_name'         => isset ( $fields[ 'name' ][ 'value' ] ) ? $fields[ 'name' ][ 'value' ] : $fields[ 'contact_email' ][ 'value' ],
 		) );
 	} else {
 		$user_id = $user->ID;
@@ -1157,11 +1157,11 @@ function atcf_shortcode_submit_process() {
 		wp_safe_redirect( add_query_arg( 'updated', 'true', get_permalink( $campaign ) ) );
 		exit();
 	} elseif ( 'submit' == $action ) {
-		$url = isset ( $edd_options[ 'submit_success_page' ] ) ? get_permalink( $edd_options[ 'submit_success_page' ] ) : get_permalink();
+		$url = isset ( $edd_options[ 'submit_success_page' ] ) ? get_permalink( $edd_options[ 'submit_success_page' ] ) : home_url();
 
 		$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', $url );
 		
-		wp_safe_redirect( $redirect );
+		wp_safe_redirect( add_query_arg( 'success', true, $redirect ) );
 		exit();
 	} else {
 		wp_safe_redirect( add_query_arg( 'preview', 'true', get_permalink( $campaign ) ) );

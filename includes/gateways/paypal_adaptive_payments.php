@@ -60,12 +60,12 @@ function atcf_shortcode_submit_field_paypal_adaptive_payments_email( $fields ) {
 }
 add_filter( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_paypal_adaptive_payments_email' );
 
-function atcf_shortcode_submit_saved_data_email( $key, $campaign ) {
+function atcf_shortcode_submit_saved_data_email( $data, $key, $campaign ) {
 	$paypal_email = $campaign->__get( 'campaign_email' );
 
 	return $paypal_email;
 }
-add_filter( 'atcf_shortcode_submit_saved_data_email', 'atcf_shortcode_submit_saved_data_email', 10, 2 );
+add_filter( 'atcf_shortcode_submit_saved_data_email', 'atcf_shortcode_submit_saved_data_email', 10, 3 );
 
 /**
  * PayPal Adaptive Payments field on backend.
