@@ -396,7 +396,7 @@ class ATCF_Submit_Campaign {
 			break;
 			
 			default :
-				$data = apply_filters( 'atcf_shortcode_submit_saved_data_' . $key, '', $key, $campaign );
+				$data = apply_filters( 'atcf_shortcode_submit_saved_data_' . $key, null, $key, $campaign );
 			break;
 		}
 
