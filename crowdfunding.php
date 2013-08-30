@@ -322,15 +322,10 @@ final class ATCF_CrowdFunding {
 		$mofile_global = WP_LANG_DIR . '/' . $this->domain . '/' . $mofile;
 
 		// Look in global /wp-content/languages/atcf folder
-		if ( file_exists( $mofile_global ) ) {
-			return load_plugin_textdomain( $this->domain, false, $mofile_global );
+		load_textdomain( $this->domain, $mofile_global );
 
 		// Look in local /wp-content/plugins/appthemer-crowdfunding/languages/ folder
-		} elseif ( file_exists( $mofile_local ) ) {
-			return load_plugin_textdomain( $this->domain, false, $mofile_local );
-		}
-
-		return false;
+		load_textdomain( $this->domain, $mofile_local );
 	}
 }
 
