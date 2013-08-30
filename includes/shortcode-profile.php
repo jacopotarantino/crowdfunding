@@ -234,11 +234,13 @@ function atcf_shortcode_profile_contributions( $user ) {
 			$cart         = edd_get_payment_meta_cart_details( $contribution->ID );
 			$key          = edd_get_payment_key( $contribution->ID );
 		?>
+		<?php if ( $cart ) : ?>
 		<li>
-			<?php if ( $cart ) : foreach ( $cart as $download ) : ?>
+			<?php foreach ( $cart as $download ) : ?>
 			<?php printf( _x( '<a href="%s">%s</a> pledge to <a href="%s">%s</a>', 'price for download (payment history)', 'atcf' ), add_query_arg( 'payment_key', $key, get_permalink( $edd_options[ 'success_page' ] ) ), edd_currency_filter( edd_format_amount( $download[ 'price' ] ) ), get_permalink( $download[ 'id' ] ), $download[ 'name' ] ); ?>
-			<?php endforeach; endif; ?>
+			<?php endforeach; ?>
 		</li>
+		<?php endif; ?>
 		<?php endforeach; ?>
 	</ul>
 <?php
