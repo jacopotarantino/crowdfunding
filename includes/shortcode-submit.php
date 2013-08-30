@@ -138,6 +138,9 @@ class ATCF_Submit_Campaign {
 	public function register_fields() {
 		global $edd_options;
 
+		$min = isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14;
+		$max = isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 48
+
 		$fields = array(
 			'campaign_heading' => array(
 				'label'       => __( 'Campaign Information', 'atcf' ),
@@ -166,12 +169,12 @@ class ATCF_Submit_Campaign {
 			),
 			'length' => array(
 				'label'       => __( 'Length', 'atcf' ),
-				'default'     => 57,
+				'default'     => ( $min + $max ) / 2,
 				'type'        => 'number',
 				'editable'    => false,
 				'placeholder' => null,
-				'min'         => isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14,
-				'max'         => isset ( $edd_options[ 'atcf_campaign_length_max' ] ) ? $edd_options[ 'atcf_campaign_length_max' ] : 48,
+				'min'         => $min,
+				'max'         => $max,
 				'step'        => 1,
 				'priority'    => 8
 			),
