@@ -941,7 +941,7 @@ function atcf_shortcode_submit_field_term_checklist( $key, $field, $atts, $campa
 		require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 	}
 ?>
-	<p class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
+	<div class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
 		<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $field[ 'label' ] ); ?></label>
 
 		<ul class="atcf-multi-select">			
@@ -952,7 +952,7 @@ function atcf_shortcode_submit_field_term_checklist( $key, $field, $atts, $campa
 			) );
 		?>
 	</ul>
-	</p>
+	</div>
 <?php
 }
 
