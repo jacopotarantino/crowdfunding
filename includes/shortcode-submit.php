@@ -689,7 +689,9 @@ function atcf_shortcode_submit( $atts ) {
 				$field = apply_filters( 'atcf_shortcode_submit_field', $key, $field, $atts, $campaign );
 				$field = apply_filters( 'atcf_shortcode_submit_field_before_render_' . $key, $field );
 
+				do_action( 'atcf_shortcode_submit_field_before_' . $key, $key, $field, $atts, $campaign );
 				do_action( 'atcf_shortcode_submit_field_' . $field[ 'type' ], $key, $field, $atts, $campaign );
+				do_action( 'atcf_shortcode_submit_field_after_' . $key, $key, $field, $atts, $campaign );
 			endforeach;
 		?>
 
@@ -748,6 +750,31 @@ function atcf_shortcode_submit_field_tos( $fields ) {
 	return $fields;
 }
 add_filter( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_tos' );
+
+function atcf_shortcode_submit_field_before_tos( $key, $field, $atts, $campaign ) {
+	global $edd_options;
+?>
+	<div class="atcf-edd-terms-wrap">
+		<div id="edd_terms" style="display:none;">
+			<?php
+				do_action( 'edd_before_terms' );
+				echo wpautop( $edd_options['agree_text'] );
+				do_action( 'edd_after_terms' );
+			?>
+		</div>
+		<div id="edd_show_terms">
+			<a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'edd' ); ?></a>
+			<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'edd' ); ?></a>
+		</div>
+<?php
+	edd_agree_to_terms_js();
+}
+add_action( 'atcf_shortcode_submit_field_before_tos', 'atcf_shortcode_submit_field_before_tos', 10, 4 );
+
+function atcf_shortcode_submit_field_after_tos( $key, $field, $atts, $campaign ) {
+	echo '</div>';
+}
+add_action( 'atcf_shortcode_submit_field_after_tos', 'atcf_shortcode_submit_field_after_tos', 10, 4 );
 
 /**
  * Heading
