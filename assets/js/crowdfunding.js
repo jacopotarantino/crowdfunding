@@ -127,7 +127,8 @@ Crowdfunding.Campaign = ( function($) {
 		parsePrice : function( el ) {
 			var price = el.data( 'price' );
 
-			price = price.substring( 0, price.length - 2 );
+			price = price.split( '-' );
+			price = price[0];
 
 			return price;
 		}

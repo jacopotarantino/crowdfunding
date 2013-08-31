@@ -628,7 +628,10 @@ class ATCF_Submit_Campaign {
 		if ( isset ( $_POST[ $key ] ) && '' == $_POST[ $key ] )
 			return;
 
-		update_post_meta( $campaign, 'campaign_' . $key, sanitize_text_field( $field[ 'value' ] ) );
+		do_action( 'atcf_shortcode_submit_save_field_' . $key, $key, $field, $campaign, $fields );
+
+		if ( ! did_action( 'atcf_shortcode_submit_save_field_' . $key ) )
+			update_post_meta( $campaign, 'campaign_' . $key, sanitize_text_field( $field[ 'value' ] ) );
 	}
 }
 
