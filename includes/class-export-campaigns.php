@@ -70,7 +70,7 @@ class ATCF_Campaign_Export extends EDD_Export {
 			$payment_meta 	= edd_get_payment_meta( $payment_id );
 			$user_info 		= edd_get_payment_meta_user_info( $payment_id );
 			$downloads      = edd_get_payment_meta_cart_details( $payment_id );
-			$total          = isset( $payment_meta['amount'] ) ? $payment_meta['amount'] : 0.00;
+			$total          = edd_get_payment_amount( $payment_id );
 			$user_id        = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
 			$products       = '';
 

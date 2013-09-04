@@ -399,7 +399,7 @@ function atcf_shortcode_profile_request_data() {
 
 	if ( 0 != $campaign->ID ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
-		require( $crowdfunding->includes_dir . 'export-campaigns.php' );
+		require( $crowdfunding->includes_dir . 'class-export-campaigns.php' );
 
 		$campaign_export = new ATCF_Campaign_Export( $campaign->ID );
 
