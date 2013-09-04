@@ -19,11 +19,18 @@ class ATCF_Roles {
 	 * @return void
 	 */
 	public function add_roles() {
+		remove_role( 'campaign_contributor' );
+
 		add_role( 'campaign_contributor', __( 'Campaign Contributor', 'atcf' ), apply_filters( 'atcf_campaign_contributor_role', array(
-			'read'                 => true,
-			'upload_files'         => true,
-			'edit_others_pages'    => true,
-			'edit_published_pages' => true
+			'read'                   => true,
+			'upload_files'           => true,
+			'edit_others_pages'      => true,
+			'edit_published_pages'   => true,
+			'edit_posts'             => true,
+			'publish_posts'          => true,
+			'delete_posts'           => true,
+			'delete_published_posts' => true,
+			'edit_published_posts'   => true
 		) ) );
 	}
 
@@ -42,6 +49,7 @@ class ATCF_Roles {
 				$wp_roles = new WP_Roles();
 
 		if ( is_object( $wp_roles ) ) {
+			$wp_roles->add_cap( 'campaign_contributor', 'level_1' );
 			$wp_roles->add_cap( 'campaign_contributor', 'submit_campaigns' );
 			$wp_roles->add_cap( 'campaign_contributor', 'edit_product' );
 			$wp_roles->add_cap( 'campaign_contributor', 'edit_products' );
