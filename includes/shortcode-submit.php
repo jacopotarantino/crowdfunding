@@ -465,10 +465,7 @@ class ATCF_Submit_Campaign {
 	public function save_length( $key, $field, $campaign, $fields ) {
 		global $edd_options;
 
-		if ( ! isset ( $_POST[ $key ] ) )
-			return;
-
-		if ( $field[ 'value' ] ) {
+		if ( '' != $field[ 'value' ] ) {
 			$length = absint( $field[ 'value' ] );
 
 			$min = isset ( $edd_options[ 'atcf_campaign_length_min' ] ) ? $edd_options[ 'atcf_campaign_length_min' ] : 14;
@@ -488,8 +485,9 @@ class ATCF_Submit_Campaign {
 		if ( $end_date ) {
 			update_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
 			update_post_meta( $campaign, 'campaign_length', $field[ 'value' ] );
-		} else
+		} else {
 			update_post_meta( $campaign, 'campaign_endless', 1 );
+		}
 	}
 
 	/**
@@ -775,6 +773,14 @@ function atcf_shortcode_submit_field_after_tos( $key, $field, $atts, $campaign )
 	echo '</div>';
 }
 add_action( 'atcf_shortcode_submit_field_after_tos', 'atcf_shortcode_submit_field_after_tos', 10, 4 );
+
+function atcf_shortcode_submit_field_label_length( $label ) {
+	if ( atcf_has_preapproval_gateway() )
+		return $label;
+
+	return $label . '<a href="#" class="atcf-toggle-neverending">' . __( 'No End Date', 'atcf' ) . '</a>';
+}
+add_filter( 'atcf_shortcode_submit_field_label_length', 'atcf_shortcode_submit_field_label_length' );
 
 /**
  * Heading
