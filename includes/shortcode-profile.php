@@ -219,7 +219,8 @@ function atcf_shortcode_profile_contributions( $user ) {
 	global $edd_options;
 
 	$contributions = edd_get_payments( array(
-		'user' => $user->ID
+		'user'   => $user->ID,
+		'status' => atcf_has_preapproval_gateway() ? array( 'preapproval', 'publish' ) : 'publish'
 	) );
 
 	if ( empty( $contributions ) )
