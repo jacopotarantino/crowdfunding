@@ -292,7 +292,7 @@ class ATCF_Submit_Campaign {
 				'required'    => true,
 				'priority'    => 36
 			),
-			'name' => array(
+			'organization' => array(
 				'label'       => __( 'Name/Organization', 'atcf' ),
 				'default'     => null,
 				'type'        => 'text',
@@ -622,7 +622,7 @@ class ATCF_Submit_Campaign {
 	 * @param $campaign The current campaign (if editing/previewing).
 	 * @return void
 	 */
-	public function save_name( $key, $field, $campaign, $fields ) {
+	public function save_organization( $key, $field, $campaign, $fields ) {
 		update_post_meta( $campaign, 'campaign_author', sanitize_text_field( $field[ 'value' ] ) );
 	}
 
@@ -1245,7 +1245,7 @@ add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
  * @return void
  */
 function atcf_submit_process_after( $campaign, $postdata, $status, $fields ) {
-	global $edd_options;
+	global $edd_options, $wp_query;
 
 	$submit_campaign = atcf_submit_campaign();
 	
