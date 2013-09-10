@@ -292,7 +292,7 @@ class ATCF_Submit_Campaign {
 				'required'    => true,
 				'priority'    => 36
 			),
-			'author' => array(
+			'cauthor' => array(
 				'label'       => __( 'Name/Organization', 'atcf' ),
 				'default'     => null,
 				'type'        => 'text',
