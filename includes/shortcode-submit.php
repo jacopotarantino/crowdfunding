@@ -292,7 +292,7 @@ class ATCF_Submit_Campaign {
 				'required'    => true,
 				'priority'    => 36
 			),
-			'cauthor' => array(
+			'name' => array(
 				'label'       => __( 'Name/Organization', 'atcf' ),
 				'default'     => null,
 				'type'        => 'text',
@@ -609,6 +609,21 @@ class ATCF_Submit_Campaign {
 	 */
 	public function save_physical( $key, $field, $campaign, $fields ) {
 		update_post_meta( $campaign, '_campaign_' . $key, sanitize_text_field( $field[ 'value' ] ) );
+	}
+
+	/**
+	 * Save Name
+	 *
+	 * @since Astoundify Crowdfunding 1.7
+	 *
+	 * @param $key The key of the current field.
+	 * @param $field The array of field arguments.
+	 * @param $atts The shortcoe attribtues.
+	 * @param $campaign The current campaign (if editing/previewing).
+	 * @return void
+	 */
+	public function save_name( $key, $field, $campaign, $fields ) {
+		update_post_meta( $campaign, 'campaign_author', sanitize_text_field( $field[ 'value' ] ) );
 	}
 
 	/**
