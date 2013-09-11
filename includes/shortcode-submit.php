@@ -1220,7 +1220,7 @@ function atcf_shortcode_submit_process() {
 
 		$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', $url );
 		
-		wp_safe_redirect( add_query_arg( 'success', true, $redirect ) );
+		wp_safe_redirect( add_query_arg( array( 'success' => true, 'campaign' => $campaign->ID ), $redirect ) );
 		exit();
 	} else {
 		wp_safe_redirect( add_query_arg( 'preview', 'true', get_permalink( $campaign ) ) );
