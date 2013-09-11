@@ -142,3 +142,20 @@ function atcf_edd_cart_item_price( $price, $item_id, $options = array() ) {
 	return $price;
 }
 add_filter( 'edd_cart_item_price', 'atcf_edd_cart_item_price', 10, 3 );
+
+/**
+ * Don't allow multiple pledges to be made at once if
+ * it is not set to allow them to. When a single campaign page
+ * is loaded (they are browsing again), clear their cart.
+ *
+ * @since Appthemer CrowdFunding 1.8
+ *
+ * @return void
+ */
+function atcf_clear_cart() {
+	if ( is_admin() || defined( 'DOING_AJAX' ) )
+		return;
+
+	edd_empty_cart();
+}
+add_action( 'atcf_found_single', 'atcf_clear_cart' );
