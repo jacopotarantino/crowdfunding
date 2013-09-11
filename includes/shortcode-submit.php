@@ -671,7 +671,7 @@ function atcf_shortcode_submit( $atts ) {
 	ob_start();
 
 	/** Allow things to change the content of the shortcode. */
-	if ( apply_filters( 'atcf_shortcode_submit_hide', false ) ) {
+	if ( apply_filters( 'atcf_shortcode_submit_hide', false, $atts ) ) {
 		do_action( 'atcf_shortcode_submit_hidden', $atts );
 
 		$form = ob_get_clean();
