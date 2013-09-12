@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource 
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 1.7.1
+Stable Tag: 1.7.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,6 +60,18 @@ Developers can contribute to the source code of the project on [GitHub](https://
 Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
 == Changelog ==
+
+= 1.7.2: September 12, 2013 =
+
+https://github.com/Astoundify/crowdfunding/issues?milestone=17&page=1&state=closed
+
+* Fix: Don't 404 when only the name is filled out when submitting a campaign.
+* Fix: Go back to clearing the cart when viewing a new pledge.
+* Fix: Make sure all data is exported via CSV.
+* Fix: Always make sure the goal is an integer to avoid errors.
+* Fix: When there are more than 11 pledge levels, make sure they can properly be selected.
+* Fix: Add the Terms of Service back to the submission process
+* Tweaks: Various improvements and language updates.
 
 = 1.7.1: September 1, 2013 =
 
