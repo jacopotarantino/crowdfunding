@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AppThemer Crowdfunding\n"
-"POT-Creation-Date: 2013-09-12 18:46-0500\n"
-"PO-Revision-Date: 2013-09-12 18:46-0500\n"
+"POT-Creation-Date: 2013-09-14 15:48-0500\n"
+"PO-Revision-Date: 2013-09-14 15:48-0500\n"
 "Last-Translator: Spencer Finnell <spencerfinnell@gmail.com>\n"
 "Language-Team: Astoundify <contact@astoundify.com>\n"
 "MIME-Version: 1.0\n"
@@ -27,41 +27,41 @@ msgstr ""
 msgid "At least one reward is required."
 msgstr ""
 
-#: ../includes/checkout.php:64
+#: ../includes/checkout.php:77
 msgid "Hide name on backers list?"
 msgstr ""
 
-#: ../includes/class-campaign.php:465
+#: ../includes/class-campaign.php:457
 msgid "Reward Options:"
 msgstr ""
 
-#: ../includes/class-campaign.php:477
+#: ../includes/class-campaign.php:469
 msgid "Enable multiple reward options"
 msgstr ""
 
-#: ../includes/class-campaign.php:488
+#: ../includes/class-campaign.php:480
 msgid "All-or-nothing"
 msgstr ""
 
-#: ../includes/class-campaign.php:489
+#: ../includes/class-campaign.php:481
 msgid ""
 "Only collect pledged funds when the campaign ends if the set goal is met."
 msgstr ""
 
-#: ../includes/class-campaign.php:492
+#: ../includes/class-campaign.php:484
 msgid "Flexible"
 msgstr ""
 
-#: ../includes/class-campaign.php:493
+#: ../includes/class-campaign.php:485
 msgid "Collect funds pledged at the end of the campaign no matter what."
 msgstr ""
 
-#: ../includes/class-campaign.php:500 ../includes/class-campaigns.php:885
+#: ../includes/class-campaign.php:492 ../includes/class-campaigns.php:885
 #: ../includes/shortcode-submit.php:512
 msgid "Donation"
 msgstr ""
 
-#: ../includes/class-campaign.php:501
+#: ../includes/class-campaign.php:493
 msgid "Funds will be collected automatically as pledged."
 msgstr ""
 
@@ -117,7 +117,7 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: ../includes/class-campaigns.php:156
+#: ../includes/class-campaigns.php:156 ../includes/class-campaigns.php:511
 msgid "Backers"
 msgstr ""
 
@@ -155,48 +155,44 @@ msgstr ""
 msgid "Campaign Video"
 msgstr ""
 
-#: ../includes/class-campaigns.php:346
+#: ../includes/class-campaigns.php:348
 #, php-format
 msgid "Error processing preapproved payment via %s when collecting funds."
 msgstr ""
 
-#: ../includes/class-campaigns.php:409
+#: ../includes/class-campaigns.php:411
 #, php-format
 msgid "This %s has not reached its funding goal."
 msgstr ""
 
-#: ../includes/class-campaigns.php:410
+#: ../includes/class-campaigns.php:412
 #, php-format
 msgid "You do not have permission to collect funds for %s."
 msgstr ""
 
-#: ../includes/class-campaigns.php:411
+#: ../includes/class-campaigns.php:413
 #, php-format
 msgid "All payments have been processed and collected for this %s."
 msgstr ""
 
-#: ../includes/class-campaigns.php:412
+#: ../includes/class-campaigns.php:414
 #, php-format
 msgid "There are no payments for this %s."
 msgstr ""
 
-#: ../includes/class-campaigns.php:413
+#: ../includes/class-campaigns.php:415
 #, php-format
 msgid ""
 "<strong>Payments processed.</strong> %d payments failed to process. Please "
 "check <a href=\"%s\">gateway logs</a> before trying again."
 msgstr ""
 
-#: ../includes/class-campaigns.php:489
+#: ../includes/class-campaigns.php:491
 msgid "Whoops, the provided date is invalid."
 msgstr ""
 
 #: ../includes/class-campaigns.php:510 ../includes/shortcode-submit.php:1107
 msgid "Limit"
-msgstr ""
-
-#: ../includes/class-campaigns.php:511
-msgid "Purchased"
 msgstr ""
 
 #: ../includes/class-campaigns.php:565

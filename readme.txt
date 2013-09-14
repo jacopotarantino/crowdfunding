@@ -65,6 +65,7 @@ Yes. However, it won't look much different than a standard EDD install. Template
 
 https://github.com/Astoundify/crowdfunding/issues?milestone=17&page=1&state=closed
 
+* Fix: Better payment tracking when pledging multiple times, deleting, etc.
 * Fix: More consistent dates when editing/submitting/updating.
 * Fix: Don't 404 when only the name is filled out when submitting a campaign.
 * Fix: Go back to clearing the cart when viewing a new pledge.
