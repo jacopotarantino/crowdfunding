@@ -476,8 +476,8 @@ class ATCF_Submit_Campaign {
 			else if ( $length > $max )
 				$length = $max;
 
-			$end_date = strtotime( sprintf( '+%d day', $length ) );
-			$end_date = get_gmt_from_date( date( 'Y-m-d H:i:s', $end_date ) );
+			$end_date = strtotime( sprintf( '+%d day', $length ), current_time( 'timestamp' ) );
+			$end_date = date( 'Y-m-d H:i:s', $end_date );
 		} else {
 			$end_date = null;
 		}
@@ -1220,7 +1220,7 @@ function atcf_shortcode_submit_process() {
 
 		$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', $url );
 		
-		wp_safe_redirect( add_query_arg( array( 'success' => true, 'campaign' => $campaign->ID ), $redirect ) );
+		wp_safe_redirect( add_query_arg( array( 'success' => true, 'campaign' => $campaign ), $redirect ) );
 		exit();
 	} else {
 		wp_safe_redirect( add_query_arg( 'preview', 'true', get_permalink( $campaign ) ) );

@@ -489,8 +489,6 @@ function atcf_campaign_save_end_date( $new ) {
 		return new WP_Error( 'invalid_date', __( 'Whoops, the provided date is invalid.', 'atcf' ) );
 	}
 
-	$end_date = get_gmt_from_date( $end_date );
-
 	if ( mysql2date( 'G', $end_date ) > current_time( 'timestamp' ) ) {
 		delete_post_meta( $post->ID, '_campaign_expired' );
 	}
@@ -735,12 +733,12 @@ function _atcf_metabox_campaign_info() {
 		$end_date = date( 'Y-m-d h:i:s', time() + ( $start * 86400 ) );
 	}
 
-	$jj = mysql2date( 'd', $end_date, false );
-	$mm = mysql2date( 'm', $end_date, false );
-	$aa = mysql2date( 'Y', $end_date, false );
-	$hh = mysql2date( 'H', $end_date, false );
-	$mn = mysql2date( 'i', $end_date, false );
-	$ss = mysql2date( 's', $end_date, false );
+	$jj = mysql2date( 'd', $end_date );
+	$mm = mysql2date( 'm', $end_date );
+	$aa = mysql2date( 'Y', $end_date );
+	$hh = mysql2date( 'H', $end_date );
+	$mn = mysql2date( 'i', $end_date );
+	$ss = mysql2date( 's', $end_date );
 
 	do_action( 'atcf_metabox_campaign_info_before', $campaign );
 
@@ -812,7 +810,7 @@ function _atcf_metabox_campaign_info() {
 		<input type="text" id="end-hh" name="end-hh" value="<?php echo esc_attr( $hh ); ?>" size="2" maxlength="2" autocomplete="off" /> :
 		<input type="text" id="end-mn" name="end-mn" value="<?php echo esc_attr( $mn ); ?>" size="2" maxlength="2" autocomplete="off" />
 		<input type="hidden" id="end-ss" name="end-ss" value="<?php echo esc_attr( $ss ); ?>" />
-		<input type="hidden" id="campaign_end_date" name="campaign_end_date" />
+		<input type="hidden" id="campaign_end_date" name="campaign_end_date" value="1" />
 	</p>
 	
 	<p>

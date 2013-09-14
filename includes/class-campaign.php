@@ -132,7 +132,7 @@ class ATCF_Campaign {
 	 * @return sting Campaign End Date
 	 */
 	public function end_date() {
-		return mysql2date( 'Y-m-d h:i:s', $this->__get( 'campaign_end_date' ), false );
+		return $this->__get( 'campaign_end_date' );
 	}
 
 	/**
@@ -273,6 +273,38 @@ class ATCF_Campaign {
 	}
 
 	/**
+	 * Campaign Time Remaining
+	 *
+	 * @since Astoundify Crowdfunding 1.7
+	 *
+	 * @param string The format to output
+	 * @return int The remaining time in the specified format.
+	 */
+	public function time_remaining( $format ) {
+		$now     = current_time( 'timestamp' );
+		$expires = strtotime( $this->end_date(), $now );
+
+		if ( $now > $expires )
+			return 0;
+
+		$diff = $expires - $now;
+
+		switch ( $format ) {
+			case 'days' :
+				$off = $diff / 86400;
+			break;
+
+			case 'hours' :
+				$off = $diff / ( 60 * 60 );
+			break;
+		}
+
+		$remaining = floor( $off );
+
+		return apply_filters( 'atcf_campaign_time_remainig', $remaining, $this );
+	}
+
+	/**
 	 * Campaign Days Remaining
 	 *
 	 * Calculate the end date, minus today's date, and output a number.
@@ -282,20 +314,9 @@ class ATCF_Campaign {
 	 * @return int The number of days remaining
 	 */
 	public function days_remaining() {
-		$expires = strtotime( $this->end_date() );
-		$now     = current_time( 'timestamp' );
+		_deprecated_function( __FUNCTION__, '1.7.2', 'time_remaining()' );
 
-		if ( $now > $expires )
-			return 0;
-
-		$diff = $expires - $now;
-
-		if ( $diff < 0 )
-			return 0;
-
-		$days = $diff / 86400;
-
-		return ceil( $days );
+		return $this->time_remaining( 'days' );
 	}
 
 	/**
@@ -308,20 +329,9 @@ class ATCF_Campaign {
 	 * @return int The hours remaining
 	 */
 	public function hours_remaining() {
-		$expires = strtotime( $this->end_date() );
-		$now     = current_time( 'timestamp' );
+		_deprecated_function( __FUNCTION__, '1.7.2', 'time_remaining()' );
 
-		if ( $now > $expires )
-			return 0;
-
-		$diff = $expires - $now;
-
-		if ( $diff < 0 )
-			return 0;
-
-		$days = $diff / ( 60 * 60 );
-
-		return floor( $days );
+		return $this->time_remaining( 'hours' );
 	}
 
 	/**
