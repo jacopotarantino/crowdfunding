@@ -31,8 +31,13 @@ function atcf_log_pledge_limit( $payment_id, $new_status, $old_status ) {
 	if ( edd_is_test_mode() && ! apply_filters( 'edd_log_test_payment_stats', false ) )
 		return;
 
+	atcf_update_backer_count( $payment_id, 'increase' );
+}
+add_action( 'edd_update_payment_status', 'atcf_log_pledge_limit', 100, 3 );
+
+function atcf_update_backer_count( $payment_id, $direction ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
-	$downloads    = maybe_unserialize( $payment_data['downloads'] );
+	$downloads    = maybe_unserialize( $payment_data[ 'downloads' ] );
 	
 	if ( ! is_array( $downloads ) )
 		return;
@@ -43,15 +48,23 @@ function atcf_log_pledge_limit( $payment_id, $new_status, $old_status ) {
 		foreach ( $variable_pricing as $key => $value ) {
 			$what = $download[ 'options' ][ 'price_id' ];
 
+			if ( ! isset ( $variable_pricing[ $what ][ 'bought' ] ) )
+				$variable_pricing[ $what ][ 'bought' ] = 0;
+
+			$current = $variable_pricing[ $what ][ 'bought' ];
+
 			if ( $key == $what ) {
-				$variable_pricing[ $what ][ 'bought' ] = ( isset ( $variable_pricing[ $what ][ 'bought' ] ) ? $variable_pricing[ $what ][ 'bought' ] : 0 ) + 1;
+				if ( 'increase' == $direction ) {
+					$variable_pricing[ $what ][ 'bought' ] = $current + 1;
+				} else {
+					$variable_pricing[ $what ][ 'bought' ] = $current - 1;
+				}
 			}
 		}
 
 		update_post_meta( $download[ 'id' ], 'edd_variable_prices', $variable_pricing );
 	}
 }
-add_action( 'edd_update_payment_status', 'atcf_log_pledge_limit', 100, 3 );
 
 function atcf_edd_purchase_form_user_info() {
 	if ( ! atcf_theme_supports( 'anonymous-backers' ) )

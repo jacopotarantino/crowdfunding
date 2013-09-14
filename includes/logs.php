@@ -37,15 +37,17 @@ function atcf_pending_purchase( $payment_id, $new_status, $old_status ) {
 		return;
 
 	foreach ( $downloads as $download ) {
-		$edd_logs->insert_log( 
-			array( 
-				'post_parent' => $download[ 'id' ], 
-				'log_type'    => 'preapproval' 
-			), 
-			array(
-				'payment_id' => $payment_id 
-			) 
-		);
+		for( $i = 0; $i < $download['quantity']; $i++ ) {
+			$edd_logs->insert_log( 
+				array( 
+					'post_parent' => $download[ 'id' ], 
+					'log_type'    => 'preapproval' 
+				), 
+				array(
+					'payment_id' => $payment_id 
+				) 
+			);
+		}
 	}
 }
 add_action( 'edd_update_payment_status', 'atcf_pending_purchase', 50, 3 );
@@ -64,3 +66,45 @@ function atcf_log_type_preapproval( $types ) {
 	return $types;
 }
 add_filter( 'edd_log_types', 'atcf_log_type_preapproval' );
+
+/**
+ * Delete preapproval log when deleting a payment.
+ * This is done automatically for standard payments.
+ *
+ * @since Astoundify Crowdfunding 1.7.2
+ *
+ * @param int $payment_id The ID of the payment that was deleted.
+ * @return void
+ */
+function atcf_edd_payment_deleted_preapproval( $payment_id ) {
+	if ( ! atcf_has_preapproval_gateway() )
+		return $payment_id;
+
+	global $edd_logs;
+
+	$edd_logs->delete_logs(
+		null,
+		'preapproval',
+		array(
+			array(
+				'key'   => '_edd_log_payment_id',
+				'value' => $payment_id
+			)
+		)
+	);
+}
+add_action( 'edd_payment_deleted', 'atcf_edd_payment_deleted_preapproval' );
+
+/**
+ * Decrease the purchase count of each reward when a payment
+ * is deleted.
+ *
+ * @since Astoundify Crowdfunding 1.7.2
+ *
+ * @param int $payment_id The ID of the payment that was deleted.
+ * @return void
+ */
+function atcf_edd_payment_delete( $payment_id ) {
+	atcf_update_backer_count( $payment_id, 'decrease' );
+}
+add_action( 'edd_payment_delete', 'atcf_edd_payment_delete' );

@@ -316,7 +316,9 @@ class ATCF_Campaigns {
 		$failed_payments  = array();
 
 		if ( empty( $backers ) ) {
-			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 14 ), admin_url( 'post.php' ) ) );
+			delete_post_meta( $campaign->ID, '_campaign_failed_payments' );
+			
+			wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 14 ), admin_url( 'post.php' ) ) );
 			exit();
 		}
 
@@ -506,7 +508,7 @@ function atcf_campaign_save_end_date( $new ) {
 function atcf_pledge_limit_head() {
 ?>
 	<th style="width: 30px"><?php _e( 'Limit', 'edd' ); ?></th>
-	<th style="width: 30px"><?php _e( 'Purchased', 'edd' ); ?></th>
+	<th style="width: 30px"><?php _e( 'Backers', 'edd' ); ?></th>
 <?php
 }
 
