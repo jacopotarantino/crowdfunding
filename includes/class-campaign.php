@@ -288,7 +288,7 @@ class ATCF_Campaign {
 	 * @return int The number of days remaining
 	 */
 	public function days_remaining() {
-		_deprecated_function( __FUNCTION__, '1.7.2', 'time_remaining()' );
+		//_deprecated_function( __FUNCTION__, '1.7.2', 'time_remaining()' );
 
 		return $this->time_remaining( 'days' );
 	}
@@ -303,7 +303,7 @@ class ATCF_Campaign {
 	 * @return int The hours remaining
 	 */
 	public function hours_remaining() {
-		_deprecated_function( __FUNCTION__, '1.7.2', 'time_remaining()' );
+		//_deprecated_function( __FUNCTION__, '1.7.2', 'time_remaining()' );
 
 		return $this->time_remaining( 'hours' );
 	}

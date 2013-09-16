@@ -169,7 +169,7 @@ class ATCF_Submit_Campaign {
 			),
 			'length' => array(
 				'label'       => __( 'Length', 'atcf' ),
-				'default'     => ( $min + $max ) / 2,
+				'default'     => floor( ( $min + $max ) / 2 ),
 				'type'        => 'number',
 				'editable'    => false,
 				'placeholder' => null,
