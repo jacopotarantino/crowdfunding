@@ -220,7 +220,8 @@ function atcf_shortcode_profile_contributions( $user ) {
 
 	$contributions = edd_get_payments( array(
 		'user'   => $user->ID,
-		'status' => atcf_has_preapproval_gateway() ? array( 'preapproval', 'publish' ) : 'publish'
+		'status' => atcf_has_preapproval_gateway() ? array( 'preapproval', 'publish' ) : 'publish',
+		'mode'   => edd_is_test_mode() ? 'test' : 'live'
 	) );
 
 	if ( empty( $contributions ) )
