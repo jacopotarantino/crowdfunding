@@ -397,6 +397,10 @@ class ATCF_Submit_Campaign {
 			case 'tos' :
 				$data = 1;
 			break;
+
+			case 'organization' :
+				$data = $campaign->__get( 'campaign_author' );
+			break;
 			
 			default :
 				$data = apply_filters( 'atcf_shortcode_submit_saved_data_' . $key, null, $key, $campaign );
@@ -627,6 +631,21 @@ class ATCF_Submit_Campaign {
 	}
 
 	/**
+	 * Save Updates
+	 *
+	 * @since Astoundify Crowdfunding 1.7
+	 *
+	 * @param $key The key of the current field.
+	 * @param $field The array of field arguments.
+	 * @param $atts The shortcoe attribtues.
+	 * @param $campaign The current campaign (if editing/previewing).
+	 * @return void
+	 */
+	public function save_updates( $key, $field, $campaign, $fields ) {
+		update_post_meta( $campaign, 'campaign_updates', $field[ 'value' ] );
+	}
+
+	/**
 	 * Save a generic field.
 	 *
 	 * @since Astoundify Crowdfunding 1.7
@@ -643,8 +662,7 @@ class ATCF_Submit_Campaign {
 
 		do_action( 'atcf_shortcode_submit_save_field_' . $key, $key, $field, $campaign, $fields );
 
-		if ( ! did_action( 'atcf_shortcode_submit_save_field_' . $key ) )
-			update_post_meta( $campaign, 'campaign_' . $key, sanitize_text_field( $field[ 'value' ] ) );
+		update_post_meta( $campaign, 'campaign_' . $key, sanitize_text_field( $field[ 'value' ] ) );
 	}
 }
 
@@ -1261,6 +1279,8 @@ function atcf_submit_process_after( $campaign, $postdata, $status, $fields ) {
 			case 'image' :
 			case 'goal' :
 			case 'physical' :
+			case 'organization' :
+			case 'updates' :
 				$method = 'save_' . $key;
 
 				$submit_campaign->$method( $key, $field, $campaign, $fields );
