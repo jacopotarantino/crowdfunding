@@ -181,11 +181,16 @@ function atcf_shipping_save_meta( $payment_meta ) {
 	if ( ! atcf_shipping_cart_shipping() )
 		return $payment_meta;
 
+	$state = isset ( $_POST[ 'shipping_state_other' ] ) ? $_POST[ 'shipping_state_other' ] : null;
+	$state = isset ( $_POST[ 'shipping_state_ca' ] ) ? $_POST[ 'shipping_state_ca' ] : null;
+	$state = isset ( $_POST[ 'shipping_state_us' ] ) ? $_POST[ 'shipping_state_us' ] : null;
+
 	$payment_meta[ 'shipping' ][ 'shipping_address' ]   = isset( $_POST[ 'shipping_address' ] )   ? sanitize_text_field( $_POST[ 'shipping_address' ] )   : '';
 	$payment_meta[ 'shipping' ][ 'shipping_address_2' ] = isset( $_POST[ 'shipping_address_2' ] ) ? sanitize_text_field( $_POST[ 'shipping_address_2' ] ) : '';
 	$payment_meta[ 'shipping' ][ 'shipping_city' ]      = isset( $_POST[ 'shipping_city' ] )      ? sanitize_text_field( $_POST[ 'shipping_city' ] )      : '';
 	$payment_meta[ 'shipping' ][ 'shipping_country' ]   = isset( $_POST[ 'shipping_country' ] )   ? sanitize_text_field( $_POST[ 'shipping_country' ] )   : '';
-	$payment_meta[ 'shipping' ][ 'shipping_state' ]     = isset( $_POST[ 'shipping_state' ] )     ? sanitize_text_field( $_POST[ 'shipping_state' ] )     : '';
+	$payment_meta[ 'shipping' ][ 'shipping_state' ]     = sanitize_text_field( $state );
+
 	$payment_meta[ 'shipping' ][ 'shipping_zip' ]       = isset( $_POST[ 'shipping_zip' ] )	      ? sanitize_text_field( $_POST[ 'shipping_zip' ] )       : '';
 
 	return $payment_meta;
