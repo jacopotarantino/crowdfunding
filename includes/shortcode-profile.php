@@ -188,11 +188,11 @@ function atcf_shortcode_profile_campaigns( $user ) {
 				</ul>
 
 				<ul class="actions">
-					<?php if ( ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && atcf_has_preapproval_gateway() ) : ?>
+					<?php if ( 'donation' == $campaign->type() || ! $campaign->is_collected() && ( 'flexible' == $campaign->type() || $campaign->is_funded() ) && atcf_has_preapproval_gateway() ) : ?>
 					<li><a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'atcf-request-payout', 'campaign' => $campaign->ID ) ), 'atcf-request-payout' ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Request Payout for %s', 'atcf' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Request Payout', 'atcf' ); ?></a></li>
 					<?php endif; ?>
 
-					<?php if ( ( 'flexible' == $campaign->type() || $campaign->is_funded() ) ) : ?>
+					<?php if ( 'donation' == $campaign->type() || ( 'flexible' == $campaign->type() || $campaign->is_funded() ) ) : ?>
 					<li><a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'atcf-request-data', 'campaign' => $campaign->ID ) ), 'atcf-request-data' ) ); ?>" title="<?php echo esc_attr( sprintf( __( 'Export data for %s', 'atcf' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php _e( 'Export Data', 'atcf' ); ?></a></li>
 					<?php endif; ?>
 					<?php do_action( 'atcf_profile_campaign_actions_special', $campaign ); ?>
