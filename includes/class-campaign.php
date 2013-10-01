@@ -192,12 +192,14 @@ class ATCF_Campaign {
 	public function backers( $unique = false ) {
 		global $edd_logs;
 
-		$backers = $edd_logs->get_connected_logs( array(
-			'post_parent'    => $this->ID, 
-			'log_type'       => atcf_has_preapproval_gateway() ? 'preapproval' : 'sale',
-			'post_status'    => array( 'publish' ),
-			'posts_per_page' => -1
-		) );
+		$backers_args = apply_filters( 'atcf_campaign_backers_args', array(
+	       'post_parent'    => $this->ID, 
+	       'log_type'       => atcf_has_preapproval_gateway() ? 'preapproval' : 'sale',
+	       'post_status'    => array( 'publish' ),
+	       'posts_per_page' => -1
+	     ) );
+		 
+		$backers = $edd_logs->get_connected_logs( $backers_args );
 
 		if ( ! $backers )
 			return array();
