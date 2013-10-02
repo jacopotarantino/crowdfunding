@@ -714,7 +714,7 @@ function atcf_shortcode_submit( $atts ) {
 					continue;
 
 				/** If we _are_ editing, and the field is not editable, skip... */
-				if ( $atts[ 'editing' ] && $field[ 'editable' ] === false )
+				if ( $atts[ 'editing' ] && $field[ 'editable' ] === false && $post->post_status != 'draft' )
 					continue;
 
 				$field = apply_filters( 'atcf_shortcode_submit_field', $key, $field, $atts, $campaign );
