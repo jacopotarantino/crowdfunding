@@ -711,7 +711,7 @@ function atcf_shortcode_submit( $atts ) {
 		<?php
 			foreach ( atcf_shortcode_submit_fields() as $key => $field ) :
 				/** If we _aren't_ editing, and the field should only be shown on edit, skip... */
-				if ( ! $atts[ 'editing' ] && 'only' === $field[ 'editable' ] )
+				if ( ( ! $atts[ 'editing' ] || $is_draft ) && 'only' === $field[ 'editable' ] )
 					continue;
 
 				/** If we _are_ editing, and the field is not editable, skip... */
