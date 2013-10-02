@@ -701,6 +701,7 @@ function atcf_shortcode_submit( $atts ) {
 		global $post;
 		
 		$campaign = atcf_get_campaign( $post );
+		$is_draft = $post->post_status == 'draft';
 	}
 ?>
 	<?php do_action( 'atcf_shortcode_submit_before', $atts, $campaign ); ?>
@@ -714,7 +715,7 @@ function atcf_shortcode_submit( $atts ) {
 					continue;
 
 				/** If we _are_ editing, and the field is not editable, skip... */
-				if ( $atts[ 'editing' ] && $field[ 'editable' ] === false && $post->post_status != 'draft' )
+				if ( $atts[ 'editing' ] && $field[ 'editable' ] === false && ! $is_draft )
 					continue;
 
 				$field = apply_filters( 'atcf_shortcode_submit_field', $key, $field, $atts, $campaign );
@@ -728,10 +729,12 @@ function atcf_shortcode_submit( $atts ) {
 
 		<p class="atcf-submit-campaign-submit">
 			<button type="submit" name="submit" value="submit" class="button">
-				<?php echo $atts[ 'editing' ] && ! $atts[ 'previewing' ] ? sprintf( _x( 'Update %s', 'edit "campaign"', 'atcf' ), edd_get_label_singular() ) : sprintf( _x( 'Submit %s', 'submit "campaign"', 'atcf' ), edd_get_label_singular() ); ?>
+				<?php echo $atts[ 'editing' ] && ! $atts[ 'previewing' ] && ! $is_draft
+				? sprintf( _x( 'Update %s', 'edit "campaign"', 'atcf' ), edd_get_label_singular() ) 
+				: sprintf( _x( 'Submit %s', 'submit "campaign"', 'atcf' ), edd_get_label_singular() ); ?>
 			</button>
 
-			<?php if ( is_user_logged_in() && ! $atts[ 'editing' ] ) : ?>
+			<?php if ( is_user_logged_in() && ( ! $atts[ 'editing' ] || $is_draft ) )  : ?>
 			<button type="submit" name="submit" value="preview" class="button button-secondary">
 				<?php _e( 'Save and Preview', 'atcf' ); ?>
 			</button>
