@@ -719,7 +719,7 @@ function atcf_shortcode_submit( $atts = array() ) {
 		return $form;
 	}
 ?>
-	<?php do_action( 'atcf_shortcode_submit_before', $args ); ?>
+	<?php do_action( 'atcf_shortcode_submit_before', $args, $args['campaign'] ); ?>
 
 	<form action="" method="post" class="atcf-submit-campaign" enctype="multipart/form-data">
 		
@@ -733,12 +733,12 @@ function atcf_shortcode_submit( $atts = array() ) {
 				if ( $is_editing && $field[ 'editable' ] === false )
 					continue;
 
-				$field = apply_filters( 'atcf_shortcode_submit_field', $key, $field, $args );
+				$field = apply_filters( 'atcf_shortcode_submit_field', $key, $field, $args, $args['campaign'] );
 				$field = apply_filters( 'atcf_shortcode_submit_field_before_render_' . $key, $field );
 
-				do_action( 'atcf_shortcode_submit_field_before_' . $key, $key, $field, $args );
-				do_action( 'atcf_shortcode_submit_field_' . $field[ 'type' ], $key, $field, $args );
-				do_action( 'atcf_shortcode_submit_field_after_' . $key, $key, $field, $args );
+				do_action( 'atcf_shortcode_submit_field_before_' . $key, $key, $field, $args, $args['campaign'] );
+				do_action( 'atcf_shortcode_submit_field_' . $field[ 'type' ], $key, $field, $args, $args['campaign'] );
+				do_action( 'atcf_shortcode_submit_field_after_' . $key, $key, $field, $args, $args['campaign'] );
 			endforeach;
 		?>
 
@@ -764,7 +764,7 @@ function atcf_shortcode_submit( $atts = array() ) {
 		</p>
 	</form>
 
-	<?php do_action( 'atcf_shortcode_submit_after', $args ); ?>
+	<?php do_action( 'atcf_shortcode_submit_after', $args, $args['campaign'] ); ?>
 
 <?php
 	$form = ob_get_clean();
