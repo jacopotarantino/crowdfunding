@@ -95,20 +95,20 @@ class ATCF_Submit_Campaign {
 		add_action( 'atcf_shortcode_submit_before', 'edd_print_errors' );
 
 		/** Output Fields */
-		add_filter( 'atcf_shortcode_submit_field', array( $this, 'get_field_value' ), 10, 4 );
+		add_filter( 'atcf_shortcode_submit_field', array( $this, 'get_field_value' ), 10, 3 );
 
-		add_action( 'atcf_shortcode_submit_field_heading', 'atcf_shortcode_submit_heading', 10, 4 );
-		add_action( 'atcf_shortcode_submit_field_hidden', 'atcf_shortcode_submit_field_hidden', 10, 4 );
-		add_action( 'atcf_shortcode_submit_field_text', 'atcf_shortcode_submit_field_text', 10, 4 );
-		add_action( 'atcf_shortcode_submit_field_textarea', 'atcf_shortcode_submit_field_textarea', 10, 4 );
-		add_action( 'atcf_shortcode_submit_field_select', 'atcf_shortcode_submit_field_select', 10, 4 );
-		add_action( 'atcf_shortcode_submit_field_number', 'atcf_shortcode_submit_field_number', 10, 4 );
-		add_action( 'atcf_shortcode_submit_field_checkbox', 'atcf_shortcode_submit_field_checkbox', 10, 4 );
-		add_action( 'atcf_shortcode_submit_field_radio', 'atcf_shortcode_submit_field_radio', 10, 4 );
-		add_action( 'atcf_shortcode_submit_field_term_checklist', 'atcf_shortcode_submit_field_term_checklist', 10, 4 );
-		add_action( 'atcf_shortcode_submit_field_wp_editor', 'atcf_shortcode_submit_field_wp_editor', 10, 4 );
-		add_action( 'atcf_shortcode_submit_field_featured_image', 'atcf_shortcode_submit_field_featured_image', 10, 4 );
-		add_action( 'atcf_shortcode_submit_field_rewards', 'atcf_shortcode_submit_field_rewards', 10, 4 );
+		add_action( 'atcf_shortcode_submit_field_heading', 'atcf_shortcode_submit_heading', 10, 3 );
+		add_action( 'atcf_shortcode_submit_field_hidden', 'atcf_shortcode_submit_field_hidden', 10, 3 );
+		add_action( 'atcf_shortcode_submit_field_text', 'atcf_shortcode_submit_field_text', 10, 3 );
+		add_action( 'atcf_shortcode_submit_field_textarea', 'atcf_shortcode_submit_field_textarea', 10, 3 );
+		add_action( 'atcf_shortcode_submit_field_select', 'atcf_shortcode_submit_field_select', 10, 3 );
+		add_action( 'atcf_shortcode_submit_field_number', 'atcf_shortcode_submit_field_number', 10, 3 );
+		add_action( 'atcf_shortcode_submit_field_checkbox', 'atcf_shortcode_submit_field_checkbox', 10, 3 );
+		add_action( 'atcf_shortcode_submit_field_radio', 'atcf_shortcode_submit_field_radio', 10, 3 );
+		add_action( 'atcf_shortcode_submit_field_term_checklist', 'atcf_shortcode_submit_field_term_checklist', 10, 3 );
+		add_action( 'atcf_shortcode_submit_field_wp_editor', 'atcf_shortcode_submit_field_wp_editor', 10, 3 );
+		add_action( 'atcf_shortcode_submit_field_featured_image', 'atcf_shortcode_submit_field_featured_image', 10, 3 );
+		add_action( 'atcf_shortcode_submit_field_rewards', 'atcf_shortcode_submit_field_rewards', 10, 3 );
 
 		/** Save Fields */
 		add_action( 'atcf_submit_process_after', 'atcf_submit_process_after', 10, 4 );
@@ -334,13 +334,12 @@ class ATCF_Submit_Campaign {
 	 *
 	 * @param $key The key of the current field.
 	 * @param $field The array of field arguments.
-	 * @param $atts The shortcoe attribtues.
-	 * @param $campaign The current campaign (if editing/previewing).
+	 * @param $args The state of the current campaign being created/edited
 	 * @return $field The array of modified form arguments.
 	 */
-	public function get_field_value( $key, $field, $atts, $campaign ) {
-		if ( $atts[ 'previewing' ] || $atts[ 'editing' ] )
-			$field[ 'value' ] = $this->saved_data( $key, $campaign );
+	public function get_field_value( $key, $field, $args ) {
+		if ( !is_null( $args['campaign'] ) )
+			$field[ 'value' ] = $this->saved_data( $key, $args['campaign'] );
 		else
 			$field[ 'value' ] = isset ( $_POST[ $key ] ) ? $_POST[ $key ] : $field[ 'default' ];
 
@@ -675,66 +674,82 @@ class ATCF_Submit_Campaign {
  * @param $atts
  * @return $form
  */
-function atcf_shortcode_submit( $atts ) {
+function atcf_shortcode_submit( $atts = array() ) {
 	global $edd_options;
 
 	$atts = shortcode_atts( array(
-		'editing'    => false,
-		'previewing' => false
+		'campaign_id' => false, 
 	), $atts );
 
-	$crowdfunding    = crowdfunding();
-	$campaign        = null;
+	// Initalize default variables
+	$crowdfunding = crowdfunding();
+	$campaign = $atts['campaign_id'] === false ? null : atcf_get_campaign( $atts['campaign_id'] );
+	$is_draft = false;
+	$is_editing = false;
+
+	if ( is_null( $campaign ) ) {
+
+		global $post;
+			
+		// If the current $post is a download, we know this is 
+		// either a draft, pending or published campaign
+		if ( $post->post_type == 'download' ) {
+			$is_draft = $post->post_status == 'draft';
+			$is_editing = ! $is_draft;
+
+			$campaign = atcf_get_campaign( $post );
+		}		
+	}	
+
+	// State args
+	$args = array(
+		'campaign' => $campaign,
+		'previewing' => $is_draft, 
+		'editing' => $is_editing
+	);
 
 	ob_start();
 
 	/** Allow things to change the content of the shortcode. */
-	if ( apply_filters( 'atcf_shortcode_submit_hide', false, $atts ) ) {
-		do_action( 'atcf_shortcode_submit_hidden', $atts );
+	if ( apply_filters( 'atcf_shortcode_submit_hide', false, $args ) ) {
+		do_action( 'atcf_shortcode_submit_hidden', $args );
 
 		$form = ob_get_clean();
 
 		return $form;
 	}
-
-	if ( $atts[ 'editing' ] || $atts[ 'previewing' ] ) {
-		global $post;
-		
-		$campaign = atcf_get_campaign( $post );
-		$is_draft = $post->post_status == 'draft';
-	}
 ?>
-	<?php do_action( 'atcf_shortcode_submit_before', $atts, $campaign ); ?>
+	<?php do_action( 'atcf_shortcode_submit_before', $args ); ?>
 
 	<form action="" method="post" class="atcf-submit-campaign" enctype="multipart/form-data">
 		
 		<?php
 			foreach ( atcf_shortcode_submit_fields() as $key => $field ) :
 				/** If we _aren't_ editing, and the field should only be shown on edit, skip... */
-				if ( ( ! $atts[ 'editing' ] || $is_draft ) && 'only' === $field[ 'editable' ] )
+				if ( ! $is_editing && 'only' === $field[ 'editable' ] )
 					continue;
 
 				/** If we _are_ editing, and the field is not editable, skip... */
-				if ( $atts[ 'editing' ] && $field[ 'editable' ] === false && ! $is_draft )
+				if ( $is_editing && $field[ 'editable' ] === false )
 					continue;
 
-				$field = apply_filters( 'atcf_shortcode_submit_field', $key, $field, $atts, $campaign );
+				$field = apply_filters( 'atcf_shortcode_submit_field', $key, $field, $args );
 				$field = apply_filters( 'atcf_shortcode_submit_field_before_render_' . $key, $field );
 
-				do_action( 'atcf_shortcode_submit_field_before_' . $key, $key, $field, $atts, $campaign );
-				do_action( 'atcf_shortcode_submit_field_' . $field[ 'type' ], $key, $field, $atts, $campaign );
-				do_action( 'atcf_shortcode_submit_field_after_' . $key, $key, $field, $atts, $campaign );
+				do_action( 'atcf_shortcode_submit_field_before_' . $key, $key, $field, $args );
+				do_action( 'atcf_shortcode_submit_field_' . $field[ 'type' ], $key, $field, $args );
+				do_action( 'atcf_shortcode_submit_field_after_' . $key, $key, $field, $args );
 			endforeach;
 		?>
 
 		<p class="atcf-submit-campaign-submit">
 			<button type="submit" name="submit" value="submit" class="button">
-				<?php echo $atts[ 'editing' ] && ! $atts[ 'previewing' ] && ! $is_draft
+				<?php echo $is_editing || $is_draft
 				? sprintf( _x( 'Update %s', 'edit "campaign"', 'atcf' ), edd_get_label_singular() ) 
 				: sprintf( _x( 'Submit %s', 'submit "campaign"', 'atcf' ), edd_get_label_singular() ); ?>
 			</button>
 
-			<?php if ( is_user_logged_in() && ( ! $atts[ 'editing' ] || $is_draft ) )  : ?>
+			<?php if ( is_user_logged_in() && ( ! $is_editing ) )  : ?>
 			<button type="submit" name="submit" value="preview" class="button button-secondary">
 				<?php _e( 'Save and Preview', 'atcf' ); ?>
 			</button>
@@ -743,13 +758,13 @@ function atcf_shortcode_submit( $atts ) {
 			<input type="hidden" name="action" value="atcf-campaign-submit" />
 			<?php wp_nonce_field( 'atcf-campaign-submit' ); ?>
 
-			<?php if ( $atts[ 'previewing' ] || $atts[ 'editing' ] ) : ?>
+			<?php if ( $is_editing || $is_draft ) : ?>
 				<input type="hidden" name="campaign_id" value="<?php echo $campaign->ID; ?>" />
 			<?php endif; ?>
 		</p>
 	</form>
 
-	<?php do_action( 'atcf_shortcode_submit_after', $atts, $campaign ); ?>
+	<?php do_action( 'atcf_shortcode_submit_after', $args ); ?>
 
 <?php
 	$form = ob_get_clean();
@@ -785,7 +800,7 @@ function atcf_shortcode_submit_field_tos( $fields ) {
 }
 add_filter( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_tos' );
 
-function atcf_shortcode_submit_field_before_tos( $key, $field, $atts, $campaign ) {
+function atcf_shortcode_submit_field_before_tos( $key, $field, $args ) {
 	global $edd_options;
 ?>
 	<div class="atcf-edd-terms-wrap">
@@ -805,7 +820,7 @@ function atcf_shortcode_submit_field_before_tos( $key, $field, $atts, $campaign 
 }
 add_action( 'atcf_shortcode_submit_field_before_tos', 'atcf_shortcode_submit_field_before_tos', 10, 4 );
 
-function atcf_shortcode_submit_field_after_tos( $key, $field, $atts, $campaign ) {
+function atcf_shortcode_submit_field_after_tos( $key, $field, $args ) {
 	echo '</div>';
 }
 add_action( 'atcf_shortcode_submit_field_after_tos', 'atcf_shortcode_submit_field_after_tos', 10, 4 );
@@ -825,11 +840,10 @@ add_filter( 'atcf_shortcode_submit_field_label_length', 'atcf_shortcode_submit_f
  *
  * @param $key The key of the current field.
  * @param $field The array of field arguments.
- * @param $atts The shortcoe attribtues.
- * @param $campaign The current campaign (if editing/previewing).
+ * @param $args The array of arguments relating to the current state of the campaign
  * @return void
  */
-function atcf_shortcode_submit_heading( $key, $field, $atts, $campaign ) {
+function atcf_shortcode_submit_heading( $key, $field, $args ) {
 ?>
 	<h3 class="atcf-submit-section <?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $field[ 'label' ] ); ?></h3>
 <?php
@@ -842,11 +856,10 @@ function atcf_shortcode_submit_heading( $key, $field, $atts, $campaign ) {
  *
  * @param $key The key of the current field.
  * @param $field The array of field arguments.
- * @param $atts The shortcoe attribtues.
- * @param $campaign The current campaign (if editing/previewing).
+ * @param $args The array of arguments relating to the current state of the campaign
  * @return void
  */
-function atcf_shortcode_submit_field_hidden( $key, $field, $atts, $campaign ) {
+function atcf_shortcode_submit_field_hidden( $key, $field, $args ) {
 ?>
 	<input type="hidden" name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $field[ 'value' ] ); ?>">
 	
@@ -865,11 +878,10 @@ function atcf_shortcode_submit_field_hidden( $key, $field, $atts, $campaign ) {
  *
  * @param $key The key of the current field.
  * @param $field The array of field arguments.
- * @param $atts The shortcoe attribtues.
- * @param $campaign The current campaign (if editing/previewing).
+ * @param $args The array of arguments relating to the current state of the campaign
  * @return void
  */
-function atcf_shortcode_submit_field_text( $key, $field, $atts, $campaign ) {
+function atcf_shortcode_submit_field_text( $key, $field, $args ) {
 ?>
 	<p class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
 		<label for="<?php echo esc_attr( $key ); ?>"><?php echo apply_filters( 'atcf_shortcode_submit_field_label_' . $key, esc_attr( $field[ 'label' ] ) ); ?></label>
@@ -885,11 +897,10 @@ function atcf_shortcode_submit_field_text( $key, $field, $atts, $campaign ) {
  *
  * @param $key The key of the current field.
  * @param $field The array of field arguments.
- * @param $atts The shortcoe attribtues.
- * @param $campaign The current campaign (if editing/previewing).
+ * @param $args The array of arguments relating to the current state of the campaign
  * @return void
  */
-function atcf_shortcode_submit_field_textarea( $key, $field, $atts, $campaign ) {
+function atcf_shortcode_submit_field_textarea( $key, $field, $args ) {
 ?>
 	<p class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
 		<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $field[ 'label' ] ); ?></label>
@@ -905,11 +916,10 @@ function atcf_shortcode_submit_field_textarea( $key, $field, $atts, $campaign ) 
  *
  * @param $key The key of the current field.
  * @param $field The array of field arguments.
- * @param $atts The shortcoe attribtues.
- * @param $campaign The current campaign (if editing/previewing).
+ * @param $args The array of arguments relating to the current state of the campaign
  * @return void
  */
-function atcf_shortcode_submit_field_number( $key, $field, $atts, $campaign ) {
+function atcf_shortcode_submit_field_number( $key, $field, $args ) {
 ?>
 	<p class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
 		<label for="<?php echo esc_attr( $key ); ?>"><?php echo apply_filters( 'atcf_shortcode_submit_field_label_' . $key, esc_attr( $field[ 'label' ] ) ); ?></label>
@@ -925,11 +935,10 @@ function atcf_shortcode_submit_field_number( $key, $field, $atts, $campaign ) {
  *
  * @param $key The key of the current field.
  * @param $field The array of field arguments.
- * @param $atts The shortcoe attribtues.
- * @param $campaign The current campaign (if editing/previewing).
+ * @param $args The array of arguments relating to the current state of the campaign
  * @return void
  */
-function atcf_shortcode_submit_field_checkbox( $key, $field, $atts, $campaign ) {
+function atcf_shortcode_submit_field_checkbox( $key, $field, $args ) {
 ?>
 	<p class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
 		<label for="<?php echo esc_attr( $key ); ?>">
@@ -946,11 +955,10 @@ function atcf_shortcode_submit_field_checkbox( $key, $field, $atts, $campaign ) 
  *
  * @param $key The key of the current field.
  * @param $field The array of field arguments.
- * @param $atts The shortcoe attribtues.
- * @param $campaign The current campaign (if editing/previewing).
+ * @param $args The array of arguments relating to the current state of the campaign
  * @return void
  */
-function atcf_shortcode_submit_field_radio( $key, $field, $atts, $campaign ) {
+function atcf_shortcode_submit_field_radio( $key, $field, $args ) {
 	if ( count( $field[ 'options' ] ) == 1 ) {
 		echo '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . key( $field[ 'options' ] ) . '" />';
 
@@ -976,11 +984,10 @@ function atcf_shortcode_submit_field_radio( $key, $field, $atts, $campaign ) {
  *
  * @param $key The key of the current field.
  * @param $field The array of field arguments.
- * @param $atts The shortcoe attribtues.
- * @param $campaign The current campaign (if editing/previewing).
+ * @param $args The array of arguments relating to the current state of the campaign
  * @return void
  */
-function atcf_shortcode_submit_field_select( $key, $field, $atts, $campaign ) {
+function atcf_shortcode_submit_field_select( $key, $field, $args ) {
 ?>
 	<p class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
 		<label for="<?php echo esc_attr( $key ); ?>"><?php echo apply_filters( 'atcf_shortcode_submit_field_label_' . $key, esc_attr( $field[ 'label' ] ) ); ?></label>
@@ -1001,11 +1008,10 @@ function atcf_shortcode_submit_field_select( $key, $field, $atts, $campaign ) {
  *
  * @param $key The key of the current field.
  * @param $field The array of field arguments.
- * @param $atts The shortcoe attribtues.
- * @param $campaign The current campaign (if editing/previewing).
+ * @param $args The array of arguments relating to the current state of the campaign
  * @return void
  */
-function atcf_shortcode_submit_field_term_checklist( $key, $field, $atts, $campaign ) {
+function atcf_shortcode_submit_field_term_checklist( $key, $field, $args ) {
 	if ( ! atcf_theme_supports( 'campaign-' . $key ) )
 		return;
 
@@ -1018,7 +1024,7 @@ function atcf_shortcode_submit_field_term_checklist( $key, $field, $atts, $campa
 
 		<ul class="atcf-multi-select">			
 		<?php 
-			wp_terms_checklist( isset ( $campaign->ID ) ? $campaign->ID : 0, array( 
+			wp_terms_checklist( is_null( $args['campaign'] ) ? 0 : $args['campaign']->ID, array( 
 				'taxonomy'   => 'download_' . $key,
 				'walker'     => new ATCF_Walker_Terms_Checklist
 			) );
@@ -1035,11 +1041,10 @@ function atcf_shortcode_submit_field_term_checklist( $key, $field, $atts, $campa
  *
  * @param $key The key of the current field.
  * @param $field The array of field arguments.
- * @param $atts The shortcoe attribtues.
- * @param $campaign The current campaign (if editing/previewing).
+ * @param $args The array of arguments relating to the current state of the campaign
  * @return void
  */
-function atcf_shortcode_submit_field_wp_editor( $key, $field, $atts, $campaign ) {
+function atcf_shortcode_submit_field_wp_editor( $key, $field, $args ) {
 ?>
 	<div class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
 		<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $field[ 'label' ] ); ?></label>
@@ -1068,11 +1073,10 @@ function atcf_shortcode_submit_field_wp_editor( $key, $field, $atts, $campaign )
  *
  * @param $key The key of the current field.
  * @param $field The array of field arguments.
- * @param $atts The shortcoe attribtues.
- * @param $campaign The current campaign (if editing/previewing).
+ * @param $args The array of arguments relating to the current state of the campaign
  * @return void
  */
-function atcf_shortcode_submit_field_featured_image( $key, $field, $atts, $campaign ) {
+function atcf_shortcode_submit_field_featured_image( $key, $field, $args ) {
 	if ( ! atcf_theme_supports( 'campaign-featured-image' ) )
 		return;
 ?>
@@ -1080,7 +1084,7 @@ function atcf_shortcode_submit_field_featured_image( $key, $field, $atts, $campa
 		<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $field[ 'label' ] ); ?></label>
 		<input type="file" name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" />
 
-		<?php if ( $atts[ 'editing' ] || $atts[ 'previewing' ] ) : ?>
+		<?php if ( ! is_null( $args['campaign'] ) ) : ?>
 			<br /><?php the_post_thumbnail( array( 50, 50 ) ); ?>
 		<?php endif; ?>
 	</p>
@@ -1094,12 +1098,11 @@ function atcf_shortcode_submit_field_featured_image( $key, $field, $atts, $campa
  *
  * @param $key The key of the current field.
  * @param $field The array of field arguments.
- * @param $atts The shortcoe attribtues.
- * @param $campaign The current campaign (if editing/previewing).
+ * @param $args The array of arguments relating to the current state of the campaign
  * @return void
  */
-function atcf_shortcode_submit_field_rewards( $key, $field, $atts, $campaign ) {
-	if ( isset ( $campaign ) && $campaign->is_donations_only() )
+function atcf_shortcode_submit_field_rewards( $key, $field, $args ) {
+	if ( ! is_null( $args['campaign'] ) && $args['campaign']->is_donations_only() )
 		return;
 
 	$rewards = isset ( $field[ 'value' ] ) ? $field[ 'value' ] : array( 0 => array( 'amount' => null, 'name' => null, 'limit' => null ) );
