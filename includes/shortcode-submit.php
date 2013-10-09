@@ -681,31 +681,29 @@ function atcf_shortcode_submit( $atts = array() ) {
 		'campaign_id' => false, 
 	), $atts );
 
-	// Initalize default variables
 	$crowdfunding = crowdfunding();
-	$campaign = $atts['campaign_id'] === false ? null : atcf_get_campaign( $atts['campaign_id'] );
-	$is_draft = false;
-	$is_editing = false;
+	$campaign     = $atts['campaign_id'] === false ? null : atcf_get_campaign( $atts[ 'campaign_id' ] );
+	
+	$is_draft     = false;
+	$is_editing   = false;
 
 	if ( is_null( $campaign ) ) {
-
 		global $post;
 			
 		// If the current $post is a download, we know this is 
 		// either a draft, pending or published campaign
-		if ( $post->post_type == 'download' ) {
-			$is_draft = $post->post_status == 'draft';
+		if ( 'download' == $post->post_type) {
+			$is_draft   = 'draft' == $post->post_status;
 			$is_editing = ! $is_draft;
 
-			$campaign = atcf_get_campaign( $post );
+			$campaign   = atcf_get_campaign( $post );
 		}		
 	}	
 
-	// State args
 	$args = array(
-		'campaign' => $campaign,
+		'campaign'   => $campaign,
 		'previewing' => $is_draft, 
-		'editing' => $is_editing
+		'editing'    => $is_editing
 	);
 
 	ob_start();
@@ -744,7 +742,7 @@ function atcf_shortcode_submit( $atts = array() ) {
 
 		<p class="atcf-submit-campaign-submit">
 			<button type="submit" name="submit" value="submit" class="button">
-				<?php echo $is_editing || $is_draft
+				<?php echo $is_editing
 				? sprintf( _x( 'Update %s', 'edit "campaign"', 'atcf' ), edd_get_label_singular() ) 
 				: sprintf( _x( 'Submit %s', 'submit "campaign"', 'atcf' ), edd_get_label_singular() ); ?>
 			</button>
@@ -800,6 +798,16 @@ function atcf_shortcode_submit_field_tos( $fields ) {
 }
 add_filter( 'atcf_shortcode_submit_fields', 'atcf_shortcode_submit_field_tos' );
 
+/**
+ * Start TOS
+ *
+ * @since Astoundify Crowdfunding 1.7,2
+ *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $args The array of arguments relating to the current state of the campaign
+ * @return void
+ */
 function atcf_shortcode_submit_field_before_tos( $key, $field, $args ) {
 	global $edd_options;
 ?>
@@ -820,11 +828,31 @@ function atcf_shortcode_submit_field_before_tos( $key, $field, $args ) {
 }
 add_action( 'atcf_shortcode_submit_field_before_tos', 'atcf_shortcode_submit_field_before_tos', 10, 4 );
 
+/**
+ * End TOS
+ *
+ * @since Astoundify Crowdfunding 1.7.2
+ *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $args The array of arguments relating to the current state of the campaign
+ * @return void
+ */
 function atcf_shortcode_submit_field_after_tos( $key, $field, $args ) {
 	echo '</div>';
 }
 add_action( 'atcf_shortcode_submit_field_after_tos', 'atcf_shortcode_submit_field_after_tos', 10, 4 );
 
+/**
+ * No End Date
+ *
+ * @since Astoundify Crowdfunding 1.7
+ *
+ * @param $key The key of the current field.
+ * @param $field The array of field arguments.
+ * @param $args The array of arguments relating to the current state of the campaign
+ * @return void
+ */
 function atcf_shortcode_submit_field_label_length( $label ) {
 	if ( atcf_has_preapproval_gateway() )
 		return $label;
