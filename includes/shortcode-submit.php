@@ -555,7 +555,11 @@ class ATCF_Submit_Campaign {
 		$upload_overrides = array( 'test_form' => false );
 
 		if ( '' != $_FILES[ $key ][ 'name' ] ) {
+			if ( ! isset( $_FILES[ $key ] ) )
+				return;
+			
 			$upload = wp_handle_upload( $_FILES[ $key ], $upload_overrides );
+
 			$attachment = array(
 				'guid'           => $upload[ 'url' ], 
 				'post_mime_type' => $upload[ 'type' ],
