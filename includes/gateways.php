@@ -88,3 +88,14 @@ function atcf_is_gatweay_active( $gateway ) {
 
 	return array_key_exists( $gateway, $active_gateways );
 }
+
+/**
+ * Payments Queueueuueue
+ *
+ * @since Astoundify Crowdfunding 1.8
+ *
+ * @return void
+ */
+function atcf_process_payments() {
+
+}

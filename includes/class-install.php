@@ -44,5 +44,8 @@ class ATCF_Install {
 	public static function cron() {
 		wp_clear_scheduled_hook( 'atcf_check_for_completed_campaigns' );
 		wp_schedule_event( time(), 'hourly', 'atcf_check_for_completed_campaigns' );
+
+		wp_clear_scheduled_hook( 'atcf_process_payments' );
+		wp_schedule_event( time(), 'hourly', 'atcf_process_payments' );
 	}
 }

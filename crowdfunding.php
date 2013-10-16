@@ -71,7 +71,8 @@ final class ATCF_CrowdFunding {
 	private function setup_globals() {
 		/** Versions **********************************************************/
 
-		$this->version    = '1.7.3';
+		$this->version    = '1.8';
+		$this->version_db = get_option( 'atcf_version' );
 		$this->db_version = '1';
 
 		/** Paths *************************************************************/
@@ -144,16 +145,43 @@ final class ATCF_CrowdFunding {
 		if ( ! class_exists( 'Easy_Digital_Downloads' ) )
 			return;
 
+		// Scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts' ) );
+
+		// Template Files
 		add_filter( 'template_include', array( $this, 'template_loader' ) );
 
-		$this->load_textdomain();
+		// Upgrade Routine
+		add_action( 'admin_init', array( $this, 'check_upgrade' ) );
 
+		// Textdomain
+		add_action( 'init', array( $this, 'load_textdomain' ) );
+
+		// Activation
 		register_activation_hook( $this->file, array( 'ATCF_Install', 'init' ), 10 );
 
 		do_action( 'atcf_setup_actions' );
 	}
 
+	/**
+	 *
+	 */
+	function check_upgrade() {
+		if ( false === $this->version_db || version_compare( $this->version, $this->version_db, '<' ) ) {
+			$this->upgrade_routine();
+		}
+	}
+
+	function upgrade_routine() {
+		flush_rewrite_rules();
+
+		// If we are on 1.8, but their version is older.
+		if ( $this->version === '1.8' || ! $this->version_db ) {
+			ATCF_Install::init(); // Just run the installer again
+
+			add_option( 'atcf_version', $this->version );
+		}
+	}
 	
 	/**
 	 * Easy Digital Downloads
