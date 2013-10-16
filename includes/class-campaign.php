@@ -275,7 +275,7 @@ class ATCF_Campaign {
 			break;
 		}
 
-		$remaining = floor( $off );
+		$remaining = ceil( $off );
 
 		return apply_filters( 'atcf_campaign_time_remainig', $remaining, $this );
 	}

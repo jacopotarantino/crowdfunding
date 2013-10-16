@@ -488,6 +488,8 @@ class ATCF_Submit_Campaign {
 		if ( $end_date ) {
 			update_post_meta( $campaign, 'campaign_end_date', sanitize_text_field( $end_date ) );
 			update_post_meta( $campaign, 'campaign_length', $field[ 'value' ] );
+
+			delete_post_meta( $campaign, 'campaign_endless' );
 		} else {
 			update_post_meta( $campaign, 'campaign_endless', 1 );
 		}
@@ -557,7 +559,7 @@ class ATCF_Submit_Campaign {
 		if ( '' != $_FILES[ $key ][ 'name' ] ) {
 			if ( ! isset( $_FILES[ $key ] ) )
 				return;
-			
+
 			$upload = wp_handle_upload( $_FILES[ $key ], $upload_overrides );
 
 			$attachment = array(
@@ -861,7 +863,12 @@ function atcf_shortcode_submit_field_label_length( $label ) {
 	if ( atcf_has_preapproval_gateway() )
 		return $label;
 
-	return $label . '<a href="#" class="atcf-toggle-neverending">' . __( 'No End Date', 'atcf' ) . '</a>';
+	global $campaign;
+
+	$state = is_object( $campaign ) ? $campaign->is_endless() : false;
+	$state = $state ? ' active' : '';
+
+	return $label . '<a href="#" class="atcf-toggle-neverending' . $state . '">' . __( 'No End Date', 'atcf' ) . '</a>';
 }
 add_filter( 'atcf_shortcode_submit_field_label_length', 'atcf_shortcode_submit_field_label_length' );
 

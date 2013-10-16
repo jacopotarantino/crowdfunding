@@ -189,6 +189,9 @@ Crowdfunding.SubmitCampaign = ( function($) {
 
 			$( 'input[id="length"]' ).attr( 'disabled', ! $( 'input[id="length"]' ).attr( 'disabled' ) );
 		});
+
+		if ( $( '.atcf-toggle-neverending' ).hasClass( 'active' ) )
+			$( '.atcf-toggle-neverending' ).trigger( 'click' );
 	}
 
 	return {
