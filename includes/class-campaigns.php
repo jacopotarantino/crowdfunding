@@ -17,7 +17,7 @@ class ATCF_Campaigns {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'setup' ), 0 );
+		add_action( 'init', array( $this, 'setup' ), -1 );
 	}
 
 	/**
@@ -932,6 +932,8 @@ function atcf_check_for_completed_campaigns() {
 		'update_post_term_cache' => false
 	) );
 
+	$processing = get_option( 'atcf_processing' );
+	
 	foreach ( $active_campaigns as $campaign ) {
 		$campaign = atcf_get_campaign( $campaign );
 
@@ -940,10 +942,16 @@ function atcf_check_for_completed_campaigns() {
 		if ( $now > $expiration_date ) {
 			update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
 
+			if ( ! in_array( $campaign->ID, $processing ) ) {
+				$processing[] = $campaign->ID;
+			}
+
 			do_action( 'atcf_campaign_expired', $campaign );
 		} else if ( $now < $expiration_date && get_post_meta( $campaign->ID, '_campaign_expired', true ) ) {
 			delete_post_meta( $campaign->ID, '_campaign_expired' );
 		}
 	}
+
+	update_option( 'atcf_processing', $processing );
 }
 add_action( 'atcf_check_for_completed_campaigns', 'atcf_check_for_completed_campaigns' );
