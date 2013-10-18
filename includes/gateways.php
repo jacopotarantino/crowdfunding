@@ -104,50 +104,99 @@ function atcf_process_payments() {
 
 class ATCF_Process_Campaign {
 
+	/**
+	 *
+	 *
+	 * @var int
+	 */
 	var $campaign_id;
+
+	/**
+	 * 
+	 *
+	 * @var object
+	 */
 	var $campaign;
-	var $payments;
 
-	public function __construct( $campaign_id ) {
-		$this->campaign_id = $campaign_id;
-		$this->campaign    = atcf_get_campaign( $this->campaign_id );
+	/**
+	 *
+	 *
+	 * @var array
+	 */
+	var $payments = array();
 
-		$this->payments    = $this->campaign->backers();
+	/**
+	 *
+	 *
+	 * @var array
+	 */
+	var $failed_payments = array();
+
+	/**
+	 *
+	 *
+	 * @var array
+	 */
+	var $gateways = array();
+
+	/**
+	 *
+	 *
+	 * @var int
+	 */
+	const to_process = 10;
+
+	/**
+	 * Constructor. Adds hooks.
+	 */
+	function __construct( $campaign_id ) {
+		$this->campaign_id     = $campaign_id;
+		$this->campaign        = atcf_get_campaign( $this->campaign_id );
+
+		$this->payments        = $this->campaign->_payment_ids;
+		$this->failed_payments = $this->campaign->_campaign_failed_payments;
+
+		$this->gateways        = edd_get_enabled_payment_gateways();
+
+		$this->get_payments();
+		$this->sort_paymens();
+		$this->process();
 	}
 
-	function process() {
-		$backers          = $campaign->backers();
-		$gateways         = edd_get_enabled_payment_gateways();
-		$failed_payments  = array();
+	function get_payments() {
+		if ( $this->payments )
+			return;
 
-		if ( empty( $backers ) ) {
-			delete_post_meta( $campaign->ID, '_campaign_failed_payments' );
-			
-			wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 14 ), admin_url( 'post.php' ) ) );
-			exit();
+		$backers        = $this->campaign->backers();
+		$this->payments = array();
+
+		foreach ( $backers as $backer ) {
+			$this->payments[] = $backer->_edd_log_payment_id;
 		}
 
-		
-		foreach ( $backers as $backer ) {
-			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
-			$gateway    = get_post_meta( $payment_id, '_edd_payment_gateway', true );
+		add_post_meta( $this->campaign_id, '_payment_ids', $this->payments );
+	}
+
+	function sort_payments() {
+		foreach ( $this->payments as $payment_id ) {
+			$gateway = get_post_meta( $payment_id, '_edd_payment_gateway', true );
 
 			if ( 'publish' == get_post_field( 'post_status', $payment_id ) || ! $payment_id )
 				continue;
 
-			$gateways[ $gateway ][ 'payments' ][] = $payment_id;
+			$this->gateways[ $gateway ][ 'payments' ][] = $payment_id;
 		}
+	}
 
-		$process = $gateways;
-		
-		foreach ( $process as $gateway => $gateway_args ) {
+	function process() {
+		foreach ( $this->gateways as $gateway => $gateway_args ) {
 			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $failed_payments );
 		}
 
-		if ( ! empty( $failed_payments ) ) {
+		if ( ! empty( $this->failed_payments ) ) {
 			$failed_count = 0;
 
-			foreach ( $failed_payments as $gateway => $payments ) {
+			foreach ( $this->failed_payments as $gateway => $payments ) {
 				/** Loop through each gateway's failed payments */
 				foreach ( $payments[ 'payments' ] as $payment_id ) {
 					edd_insert_payment_note( $payment_id, apply_filters( 'atcf_failed_payment_note', sprintf( __( 'Error processing preapproved payment via %s when collecting funds.', 'atcf' ), $gateway ) ) );
@@ -158,16 +207,10 @@ class ATCF_Process_Campaign {
 				}
 			}
 
-			update_post_meta( $campaign->ID, '_campaign_failed_payments', $failed_payments );
-
-			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 15, 'failed' => $failed_count ), admin_url( 'post.php' ) ) );
-			exit();
+			update_post_meta( $this->campaign_id, '_campaign_failed_payments', $failed_payments );
 		} else {
-			update_post_meta( $campaign->ID, '_campaign_bulk_collected', 1 );
-			delete_post_meta( $campaign->ID, '_campaign_failed_payments' );
-
-			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 13, 'collected' => $campaign->backers_count() ), admin_url( 'post.php' ) ) );
-			exit();
+			update_post_meta( $this->campaign_id, '_campaign_bulk_collected', 1 );
+			delete_post_meta( $this->campaign_id, '_campaign_failed_payments' );
 		}
 	}
 }
