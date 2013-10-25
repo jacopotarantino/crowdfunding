@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AppThemer Crowdfunding\n"
-"POT-Creation-Date: 2013-10-07 12:25-0500\n"
-"PO-Revision-Date: 2013-10-07 12:25-0500\n"
+"POT-Creation-Date: 2013-10-25 14:57-0500\n"
+"PO-Revision-Date: 2013-10-25 14:57-0500\n"
 "Last-Translator: Spencer Finnell <spencerfinnell@gmail.com>\n"
 "Language-Team: Astoundify <contact@astoundify.com>\n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,14 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../crowdfunding.php:187
+#: ../crowdfunding.php:184
 #, php-format
 msgid ""
 "<strong>Notice:</strong> Crowdfunding by Astoundify requires <a href=\"%s"
 "\">Easy Digital Downloads</a> in order to function properly."
 msgstr ""
 
-#: ../crowdfunding.php:300
+#: ../crowdfunding.php:297
 msgid "At least one reward is required."
 msgstr ""
 
@@ -57,7 +57,7 @@ msgid "Collect funds pledged at the end of the campaign no matter what."
 msgstr ""
 
 #: ../includes/class-campaign.php:494 ../includes/class-campaigns.php:885
-#: ../includes/shortcode-submit.php:516
+#: ../includes/shortcode-submit.php:517
 msgid "Donation"
 msgstr ""
 
@@ -191,7 +191,7 @@ msgstr ""
 msgid "Whoops, the provided date is invalid."
 msgstr ""
 
-#: ../includes/class-campaigns.php:510 ../includes/shortcode-submit.php:1125
+#: ../includes/class-campaigns.php:510 ../includes/shortcode-submit.php:1170
 msgid "Limit"
 msgstr ""
 
@@ -795,57 +795,57 @@ msgstr ""
 msgid "Location"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:731
+#: ../includes/shortcode-submit.php:752
 #, php-format
 msgctxt "edit \"campaign\""
 msgid "Update %s"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:731
+#: ../includes/shortcode-submit.php:753
 #, php-format
 msgctxt "submit \"campaign\""
 msgid "Submit %s"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:736
+#: ../includes/shortcode-submit.php:758
 msgid "Save and Preview"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:772
+#: ../includes/shortcode-submit.php:794
 msgid "Agree to Terms?"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:797
+#: ../includes/shortcode-submit.php:829
 msgid "Show Terms"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:798
+#: ../includes/shortcode-submit.php:830
 msgid "Hide Terms"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:814
+#: ../includes/shortcode-submit.php:871
 msgid "No End Date"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:1115
+#: ../includes/shortcode-submit.php:1160
 #, php-format
 msgid "Amount (%s)"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:1120
+#: ../includes/shortcode-submit.php:1165
 msgid "Reward"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:1142
+#: ../includes/shortcode-submit.php:1187
 msgid "+ <em>Add Reward</em>"
 msgstr ""
 
-#: ../includes/shortcode-submit.php:1186
+#: ../includes/shortcode-submit.php:1231
 #, php-format
 msgid "The <strong>%s</strong> field is required."
 msgstr ""
 
-#: ../includes/shortcode-submit.php:1344
+#: ../includes/shortcode-submit.php:1389
 #, php-format
 msgid ""
 "<strong>Note</strong>: You are currently logged in as %1$s. This %2$s will "

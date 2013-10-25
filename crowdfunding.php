@@ -367,7 +367,7 @@ add_action( 'plugins_loaded', 'crowdfunding' );
  * but the activation hook can't run then. So we need to fire this off
  * right away.
  *
- * @since Astoundify Crowdfunding 1.7.4
+ * @since Astoundify Crowdfunding 1.7.3.1
  */
 function atcf_install() {
 	$crowdfunding = crowdfunding();
