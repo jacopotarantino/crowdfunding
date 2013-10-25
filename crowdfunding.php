@@ -25,7 +25,7 @@ final class ATCF_CrowdFunding {
 	/**
 	 * @var crowdfunding The one true AT_CrowdFunding
 	 */
-	private static $instance;
+	public static $instance;
 
 	/**
 	 * Main Crowd Funding Instance
@@ -106,7 +106,6 @@ final class ATCF_CrowdFunding {
 		if ( ! class_exists( 'Easy_Digital_Downloads' ) )
 			return;
 
-		require( $this->includes_dir . 'class-install.php' );
 		require( $this->includes_dir . 'class-campaigns.php' );
 		require( $this->includes_dir . 'class-campaign.php' );
 		require( $this->includes_dir . 'class-roles.php' );
@@ -148,8 +147,6 @@ final class ATCF_CrowdFunding {
 		add_filter( 'template_include', array( $this, 'template_loader' ) );
 
 		$this->load_textdomain();
-
-		register_activation_hook( $this->file, array( 'ATCF_Install', 'init' ), 10 );
 
 		do_action( 'atcf_setup_actions' );
 	}
@@ -361,3 +358,24 @@ function crowdfunding() {
 	return ATCF_CrowdFunding::instance();
 }
 add_action( 'plugins_loaded', 'crowdfunding' );
+
+/**
+ * Activation
+ *
+ * A bit ghetto, but it's a way to get around a few quirks.
+ * We need to wait for other plugins to be loaded for the majority of things
+ * but the activation hook can't run then. So we need to fire this off
+ * right away.
+ *
+ * @since Astoundify Crowdfunding 1.7.4
+ */
+function atcf_install() {
+	$crowdfunding = crowdfunding();
+
+	require( $crowdfunding->includes_dir . 'class-install.php' );
+	register_activation_hook( $crowdfunding->file, array( 'ATCF_Install', 'init' ), 10 );
+
+	$crowdfunding::$instance = null;
+}
+
+atcf_install();
