@@ -60,6 +60,7 @@ class ATCF_Campaigns {
 
 		add_action( 'edd_after_price_field', 'atcf_after_price_field' );
 
+		add_action( 'admin_action_atcf-collect-failed-funds', array( $this, 'collect_funds' ) );
 		add_action( 'admin_action_atcf-reinstate', array( $this, 'reinstate' ) );
 
 		add_action( 'wp_insert_post', array( $this, 'update_post_date_on_publish' ) );
@@ -283,6 +284,34 @@ class ATCF_Campaigns {
 		$fields[] = 'campaign_updates';
 
 		return $fields;
+	}
+
+	 /**
+	 * Collect Funds
+	 *
+	 * @since Astoundify Crowdfunding 0.1-alpha
+	 *
+	 * @return void
+	 */
+	function collect_funds() {
+		global $edd_options, $failed_payments;
+
+		$campaign = absint( $_GET[ 'campaign' ] );
+		$campaign = atcf_get_campaign( $campaign );
+
+		/** check nonce */
+		if ( ! check_admin_referer( 'atcf-collect-failed-funds' ) ) {
+			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) );
+			exit();
+		}
+
+		/** check roles */
+		if ( ! current_user_can( 'update_core' ) ) {
+			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 12 ), admin_url( 'post.php' ) ) );
+			exit();
+		}
+
+		new ATCF_Process_Campaign( $campaign->ID, true );
 	}
 
 	/**
@@ -509,7 +538,7 @@ function _atcf_metabox_campaign_funds() {
 
 	do_action( 'atcf_metabox_campaign_funds_before', $campaign );
 ?>
-	<?php if ( ! $campaign->_campaign_batch_complete && in_array( $campaign->ID, get_option( 'atcf_processing' ) ) ) : ?>
+	<?php if ( ! $campaign->__get( '_campaign_batch_complete' ) && in_array( $campaign->ID, get_option( 'atcf_processing' ) ) ) : ?>
 		<p><?php _e( 'This campaign is currently being processed.', 'atcf' ); ?></p>
 	<?php endif; ?>
 
@@ -528,6 +557,8 @@ function _atcf_metabox_campaign_funds() {
 			</li>
 		<?php endforeach; ?>
 		</ul>
+
+		<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-failed-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-failed-funds' ); ?>" class="button">Retry Failed Funds</a></p>
 	<?php endif; ?>
 <?php
 	do_action( 'atcf_metabox_campaign_funds_after', $campaign );
@@ -797,13 +828,13 @@ add_filter( 'edd_metabox_save_edd_variable_prices', 'atcf_save_variable_prices_n
 function atcf_load_admin_scripts( $hook ) {
 	global $pagenow, $typenow;
  
- 	if ( ! in_array( $pagenow, array( 'post.php', 'post-new.php' ) ) )
- 		return;
+	if ( ! in_array( $pagenow, array( 'post.php', 'post-new.php' ) ) )
+		return;
 
- 	if ( 'download' != $typenow )
- 		return;
+	if ( 'download' != $typenow )
+		return;
 
- 	$crowdfunding = crowdfunding();
+	$crowdfunding = crowdfunding();
 
 	wp_enqueue_script( 'atcf-admin-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding-admin.js', array( 'jquery', 'edd-admin-scripts' ) );
 }
@@ -837,12 +868,13 @@ function atcf_check_for_completed_campaigns() {
 		if ( $now > $expiration_date ) {
 			update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
 
-			if ( 
+			if ( (
 				! in_array( $campaign->ID, $processing ) && 
-				! $campaign->_campaign_batch_complete &&
-				'fixed' == $campaign->type() &&
-				$campaign->is_funded()
-			) {
+				! $campaign->_campaign_batch_complete
+			) && (
+				( 'fixed' == $campaign->type() && $campaign->is_funded() ) ||
+				'flexible' == $campaign->type()
+			) ) {
 				$processing[] = $campaign->ID;
 			}
 

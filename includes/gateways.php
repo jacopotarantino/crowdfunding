@@ -99,12 +99,11 @@ function atcf_is_gatweay_active( $gateway ) {
 function atcf_process_payments() {
 	$processing = get_option( 'atcf_processing', array() );
 
-	foreach ( $processing as $campaign ) {
+	foreach ( $processing as $key => $campaign ) {
 		new ATCF_Process_Campaign( $campaign );
 	}
 }
-
-atcf_process_payments();
+add_action( 'atcf_process_payments', 'atcf_process_payments' );
 
 class ATCF_Process_Campaign {
 
@@ -151,16 +150,27 @@ class ATCF_Process_Campaign {
 	var $to_process;
 
 	/**
+	 *
+	 *
+	 * @var boolean
+	 */
+	var $process_failed;
+
+	/**
 	 * Constructor. Adds hooks.
 	 */
-	function __construct( $campaign_id ) {
+	function __construct( $campaign_id, $process_failed = false ) {
 		$this->to_process      = apply_filters( 'atcf_bulk_process_limit', 25 );
+		$this->process_failed  = $process_failed;
 
 		$this->campaign_id     = $campaign_id;
 		$this->campaign        = atcf_get_campaign( $this->campaign_id );
 
-		$this->payments        = $this->campaign->data->__get( '_payment_ids' );
-		$this->failed_payments = $this->campaign->data->__get( '_campaign_failed_payments' );
+		$this->payments        = $this->campaign->__get( '_payment_ids' );
+		$this->failed_payments = $this->campaign->__get( '_campaign_failed_payments' );
+
+		if ( $this->process_failed )
+			$this->payments = $this->failed_payments;
 
 		$this->gateways        = edd_get_enabled_payment_gateways();
 
@@ -182,17 +192,18 @@ class ATCF_Process_Campaign {
 	 * rebuild the list from.
 	 */
 	function get_payments() {
-		if ( ! empty( $this->payments ) )
+		if ( ! empty( $this->payments ) || $this->process_failed )
 			return;
 
 		$backers = $this->campaign->unique_backers();
 
 		foreach ( $backers as $backer ) {
-			$payment = get_post( $backer );
-
 			if ( 'preapproval' == get_post_status( $backer ) )
 				$this->payments[ $backer ] = $backer;
 		}
+
+		if ( empty( $this->payments ) )
+			$this->payments = array();
 
 		update_post_meta( $this->campaign_id, '_payment_ids', $this->payments );
 	}
@@ -203,9 +214,12 @@ class ATCF_Process_Campaign {
 	 * Sort them into gateways, but only do the amount specificed.
 	 */
 	function sort_payments() {
+		if ( $this->process_failed )
+			return;
+
 		$count = 1;
 
-		foreach ( $this->payments as $payment_id ) {
+		foreach ( $this->payments as $key => $payment_id ) {
 			$gateway = get_post_meta( $payment_id, '_edd_payment_gateway', true );
 
 			if ( 'publish' == get_post_field( 'post_status', $payment_id ) || ! $payment_id )
@@ -233,7 +247,7 @@ class ATCF_Process_Campaign {
 			foreach ( $gateway_args[ 'payments' ] as $payment ) {
 
 				// Skip failed payments
-				if ( isset( $this->failed_payments[ $gateway ] ) && in_array( $payment, $this->failed_payments[ $gateway ] ) )
+				if ( ! $this->process_failed && isset( $this->failed_payments[ $gateway ] ) && in_array( $payment, $this->failed_payments[ $gateway ] ) )
 					continue;
 
 				// Start the charge from the gateway
@@ -241,10 +255,14 @@ class ATCF_Process_Campaign {
 
 				// If the charge has failed, record it in the failed payments
 				if ( ! $charge )
-					$this->failed_payments[ $gateway ][ 'payments'][] = $payment;
+					$this->failed_payments[ $gateway ][ 'payments' ][ $payment ] = $payment;
 
 				// Remove this payment from our master list
 				unset( $this->payments[ $payment ] );
+
+				if ( $this->process_failed && $charge ) {
+					unset( $this->failed_payments[ $gateway ][ 'payments' ][ $payment ] );
+				}
 
 				// Allow plugins to do other things when a payment processes
 				do_action( 'atcf_process_payment_' . $gateway, $payment, $charge );
@@ -281,14 +299,20 @@ class ATCF_Process_Campaign {
 	function cleanup() {
 		if ( ! empty( $this->failed_payments ) ) {
 			update_post_meta( $this->campaign_id, '_campaign_failed_payments', $this->failed_payments );
+		} else {
+			delete_post_meta( $this->campaign_id, '_campaign_failed_payments' );
 		}
 
-		if ( ! empty( $this->payments ))  {
+		if ( ! empty( $this->payments ) )  {
 			update_post_meta( $this->campaign_id, '_payment_ids', $this->payments );
-		}
-
-		if ( empty( $this->payments ) ) {
+		} else {
+			delete_post_meta( $this->campaign_id, '_payment_ids' );
 			add_post_meta( $this->campaign_id, '_campaign_batch_complete', true, true );
+
+			$processing = get_option( 'atcf_processing', array() );
+			unset( $processing[ $this->campaign_id ] );
+
+			update_option( 'atcf_processing', $processing );
 		}
 	}
 }
