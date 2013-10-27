@@ -244,10 +244,6 @@ class ATCF_Campaigns {
 		)
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
-		if ( ( $campaign->__get( '_campaign_batch_complete' ) || $campaign->is_collected() ) && ! $campaign->failed_payments() ) {
-			add_meta_box( 'atcf_campaign_reinstate', __( 'Reinstate Campaign', 'atcf' ), '_atcf_metabox_campaign_reinstate', 'download', 'side', 'high' );
-		}
-
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
 		add_meta_box( 'atcf_campaign_updates', __( 'Campaign Updates', 'atcf' ), '_atcf_metabox_campaign_updates', 'download', 'normal', 'high' );
 
@@ -466,6 +462,7 @@ function _atcf_metabox_campaign_stats() {
 		<strong><?php _e( 'Backers:' ,'atcf' ); ?></strong>
 		<?php echo $campaign->backers_count(); ?>
 	</p>
+
 
 	<?php if ( ! $campaign->is_endless() ) : ?>
 	<p>

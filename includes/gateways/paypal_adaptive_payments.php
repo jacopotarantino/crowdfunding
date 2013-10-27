@@ -353,6 +353,43 @@ function atcf_gateway_paypal_adaptive_payments_receivers( $campaign ) {
 }
 
 /**
+ * Figure out the Paypal account info to send the funds to.
+ *
+ * @since Astoundify Crowdfunding 1.8
+ *
+ * @return $receivers
+ */
+function atcf_edap_adaptive_receivers( $receivers ) {
+	global $edd_options;
+
+	$campaign_id = null;
+
+	if ( ! ( isset( $edd_options[ 'epap_preapproval' ] ) && $edd_options[ 'epap_preapproval' ] && isset( $_GET[ 'epap_process' ] ) && isset( $_GET[ 'payment_id' ] ) && isset( $_GET[ 'preapproval_key' ] ) ) )
+		return $recievers;
+
+	if ( in_array( $_GET[ 'epap_process' ], array( 'preapproval', 'cancel_preapproval' ) ) ) {
+		$cart_items = edd_get_payment_meta_cart_details( $_GET[ 'payment_id' ] );
+	}
+
+	if ( ! $cart_items || empty( $cart_items ) )
+		return $receivers;
+
+	foreach ( $cart_items as $item ) {
+		$campaign_id = $item[ 'id' ];
+
+		break;
+	}
+
+	if ( 0 == get_post( $campaign_id )->ID )
+		return $receivers;
+
+	$campaign = atcf_get_campaign( $campaign_id );
+
+	return atcf_gateway_paypal_adaptive_payments_receivers( $campaign );
+}
+add_filter( 'edap_adaptive_receivers', 'atcf_edap_adaptive_receivers' );
+
+/**
  * Process preapproved payments
  *
  * @since Astoundify Crowdfunding 1.1
