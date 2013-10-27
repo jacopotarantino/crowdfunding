@@ -15,9 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @return void
  */
-function atcf_collect_funds_wepay( $charged, $payment ) {
+function atcf_collect_funds_wepay( $charged, $payment, $campaign ) {
 	global $edd_wepay, $failed_payments;
 
 	return $edd_wepay->charge_preapproved( $payment );
 }
-add_filter( 'atcf_collect_funds_wepay', 'atcf_collect_funds_wepay', 10, 2 );
+add_filter( 'atcf_collect_funds_wepay', 'atcf_collect_funds_wepay', 10, 3 );

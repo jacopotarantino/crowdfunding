@@ -289,7 +289,7 @@ class ATCF_Process_Campaign {
 					continue;
 
 				// Start the charge from the gateway
-				$charge = apply_filters( 'atcf_collect_funds_' . $gateway, false, $payment );
+				$charge = apply_filters( 'atcf_collect_funds_' . $gateway, false, $payment, $this->campaign );
 
 				// If the charge has failed, record it in the failed payments
 				if ( ! $charge )

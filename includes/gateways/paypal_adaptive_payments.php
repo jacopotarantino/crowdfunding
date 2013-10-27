@@ -359,21 +359,9 @@ function atcf_gateway_paypal_adaptive_payments_receivers( $campaign ) {
  *
  * @return void
  */
-function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $campaign, $failed_payments ) {
-	global $edd_options, $failed_payments;
+function atcf_collect_funds_paypal_adaptive_payments( $charged, $payment, $campaign ) {
+	$receivers = atcf_gateway_paypal_adaptive_payments_receivers( $campaign );
 
-	if ( ! isset ( $gateway_args[ 'payments' ] ) )
-		return;
-
-	foreach ( $gateway_args[ 'payments' ] as $payment ) {
-		$charge = epap_process_preapprovals( $payment, atcf_gateway_paypal_adaptive_payments_receivers( $campaign ) );
-		
-		if ( ! $charge )
-			$failed_payments[ $gateway ][ 'payments' ][] = $payment;
-
-		do_action( 'atcf_process_payment_' . $gateway, $payment, $charge );
-	}
-
-	return $failed_payments;
+	return epap_process_preapprovals( $payment, $receivers );
 }
-add_action( 'atcf_collect_funds_paypal_adaptive_payments', 'atcf_collect_funds_paypal_adaptive_payments', 10, 4 );
+add_filter( 'atcf_collect_funds_paypal_adaptive_payments', 'atcf_collect_funds_paypal_adaptive_payments', 10, 3 );
