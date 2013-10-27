@@ -60,9 +60,7 @@ class ATCF_Campaigns {
 
 		add_action( 'edd_after_price_field', 'atcf_after_price_field' );
 
-		add_action( 'admin_action_atcf-collect-funds', array( $this, 'collect_funds' ) );
 		add_action( 'admin_action_atcf-reinstate', array( $this, 'reinstate' ) );
-		add_filter( 'post_updated_messages', array( $this, 'messages' ) );
 
 		add_action( 'wp_insert_post', array( $this, 'update_post_date_on_publish' ) );
 
@@ -237,10 +235,11 @@ class ATCF_Campaigns {
 		$campaign = atcf_get_campaign( $post );
 
 		if ( 
+			in_array( $campaign->ID, get_option( 'atcf_processing', array() ) ) &&
 			( ! $campaign->is_collected() && 
-			( 'flexible' == $campaign->type() || $campaign->is_funded() ) &&
-			atcf_has_preapproval_gateway() /*&&
-			$campaign->backers_count() > 0*/ ) ||
+				( 'flexible' == $campaign->type() || $campaign->is_funded() ) &&
+				atcf_has_preapproval_gateway() 
+			) ||
 			$campaign->failed_payments()
 		)
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
@@ -510,6 +509,10 @@ function _atcf_metabox_campaign_funds() {
 
 	do_action( 'atcf_metabox_campaign_funds_before', $campaign );
 ?>
+	<?php if ( ! $campaign->_campaign_batch_complete && in_array( $campaign->ID, get_option( 'atcf_processing' ) ) ) : ?>
+		<p><?php _e( 'This campaign is currently being processed.', 'atcf' ); ?></p>
+	<?php endif; ?>
+
 	<?php if ( $failed_payments ) : ?>
 		<p><strong><?php printf( _n( '%d payment failed to process.', '%d payments failed to process.', $count, 'atcf' ), $count ); ?></strong> <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'edd-reports', 'tab' => 'logs', 'view' => 'gateway_errors', 'post_type' => 'download' ), admin_url( 'edit.php' ) ) ); ?>"><?php _e( 'View gateway errors', 'atcf' ); ?></a>.</p>
 
@@ -824,7 +827,7 @@ function atcf_check_for_completed_campaigns() {
 		'update_post_term_cache' => false
 	) );
 
-	$processing = get_option( 'atcf_processing' );
+	$processing = get_option( 'atcf_processing', array() );
 
 	foreach ( $active_campaigns as $campaign ) {
 		$campaign = atcf_get_campaign( $campaign );
@@ -834,7 +837,12 @@ function atcf_check_for_completed_campaigns() {
 		if ( $now > $expiration_date ) {
 			update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
 
-			if ( ! in_array( $campaign->ID, $processing ) ) {
+			if ( 
+				! in_array( $campaign->ID, $processing ) && 
+				! $campaign->_campaign_batch_complete &&
+				'fixed' == $campaign->type() &&
+				$campaign->is_funded()
+			) {
 				$processing[] = $campaign->ID;
 			}
 

@@ -97,10 +97,14 @@ function atcf_is_gatweay_active( $gateway ) {
  * @return void
  */
 function atcf_process_payments() {
-	$processing = get_option( 'atcf_processing' );
+	$processing = get_option( 'atcf_processing', array() );
 
-	new ATCF_Process_Campaign( $processing[0] );
+	foreach ( $processing as $campaign ) {
+		new ATCF_Process_Campaign( $campaign );
+	}
 }
+
+atcf_process_payments();
 
 class ATCF_Process_Campaign {
 
@@ -144,40 +148,63 @@ class ATCF_Process_Campaign {
 	 *
 	 * @var int
 	 */
-	const to_process = 10;
+	var $to_process;
 
 	/**
 	 * Constructor. Adds hooks.
 	 */
 	function __construct( $campaign_id ) {
+		$this->to_process      = apply_filters( 'atcf_bulk_process_limit', 25 );
+
 		$this->campaign_id     = $campaign_id;
 		$this->campaign        = atcf_get_campaign( $this->campaign_id );
 
-		$this->payments        = $this->campaign->_payment_ids;
-		$this->failed_payments = $this->campaign->_campaign_failed_payments;
+		$this->payments        = $this->campaign->data->__get( '_payment_ids' );
+		$this->failed_payments = $this->campaign->data->__get( '_campaign_failed_payments' );
 
 		$this->gateways        = edd_get_enabled_payment_gateways();
 
 		$this->get_payments();
-		$this->sort_paymens();
+		$this->sort_payments();
 		$this->process();
+		$this->log_failed();
+		$this->cleanup();
 	}
 
+	/**
+	 * Assign the payments related to this campaign
+	 * to a static/duplicate array associated with the campaign.
+	 *
+	 * This will be modified as payments are processed and used as
+	 * our "destructable" list of payments we still need to process.
+	 *
+	 * If something goes wrong, we always have the actual payments we can 
+	 * rebuild the list from.
+	 */
 	function get_payments() {
-		if ( $this->payments )
+		if ( ! empty( $this->payments ) )
 			return;
 
-		$backers        = $this->campaign->backers();
-		$this->payments = array();
+		$backers = $this->campaign->unique_backers();
 
 		foreach ( $backers as $backer ) {
-			$this->payments[] = $backer->_edd_log_payment_id;
+			$payment = get_post( $backer );
+
+			if ( 'preapproval' == get_post_status( $backer ) )
+				$this->payments[ $backer ] = $backer;
 		}
 
-		add_post_meta( $this->campaign_id, '_payment_ids', $this->payments );
+		update_post_meta( $this->campaign_id, '_payment_ids', $this->payments );
 	}
 
+	/**
+	 * Sort out our payments for this batch of processing.
+	 *
+	 * Sort them into gateways, but only do the amount specificed.
+	 */
 	function sort_payments() {
+		$count = 1;
+
 		foreach ( $this->payments as $payment_id ) {
 			$gateway = get_post_meta( $payment_id, '_edd_payment_gateway', true );
 
@@ -185,32 +212,83 @@ class ATCF_Process_Campaign {
 				continue;
 
 			$this->gateways[ $gateway ][ 'payments' ][] = $payment_id;
+
+			if ( $count == $this->to_process )
+				break;
+
+			$count++;
 		}
 	}
 
+	/**
+	 * Process the payments.
+	 */
 	function process() {
+
 		foreach ( $this->gateways as $gateway => $gateway_args ) {
-			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $failed_payments );
-		}
 
-		if ( ! empty( $this->failed_payments ) ) {
-			$failed_count = 0;
+			if ( ! isset ( $gateway_args[ 'payments' ] ) )
+				continue;
 
-			foreach ( $this->failed_payments as $gateway => $payments ) {
-				/** Loop through each gateway's failed payments */
-				foreach ( $payments[ 'payments' ] as $payment_id ) {
-					edd_insert_payment_note( $payment_id, apply_filters( 'atcf_failed_payment_note', sprintf( __( 'Error processing preapproved payment via %s when collecting funds.', 'atcf' ), $gateway ) ) );
+			foreach ( $gateway_args[ 'payments' ] as $payment ) {
 
-					$failed_count++;
+				// Skip failed payments
+				if ( isset( $this->failed_payments[ $gateway ] ) && in_array( $payment, $this->failed_payments[ $gateway ] ) )
+					continue;
 
-					do_action( 'atcf_failed_payment', $payment_id, $gateway );
-				}
+				// Start the charge from the gateway
+				$charge = apply_filters( 'atcf_collect_funds_' . $gateway, false, $payment );
+
+				// If the charge has failed, record it in the failed payments
+				if ( ! $charge )
+					$this->failed_payments[ $gateway ][ 'payments'][] = $payment;
+
+				// Remove this payment from our master list
+				unset( $this->payments[ $payment ] );
+
+				// Allow plugins to do other things when a payment processes
+				do_action( 'atcf_process_payment_' . $gateway, $payment, $charge );
+
 			}
 
-			update_post_meta( $this->campaign_id, '_campaign_failed_payments', $failed_payments );
-		} else {
-			update_post_meta( $this->campaign_id, '_campaign_bulk_collected', 1 );
-			delete_post_meta( $this->campaign_id, '_campaign_failed_payments' );
+		}
+
+	}
+
+	/**
+	 * Record notes on failed payments
+	 */
+	function log_failed() {
+		if ( empty( $this->failed_payments ) )
+			return;
+
+		foreach ( $this->failed_payments as $gateway => $payments ) {
+			
+			foreach ( $payments[ 'payments' ] as $payment_id ) {
+				edd_insert_payment_note( $payment_id, apply_filters( 'atcf_failed_payment_note', sprintf( __( 'Error processing preapproved payment via %s when collecting funds.', 'atcf' ), $gateway ) ) );
+
+				// Allow plugins to do other things when a payment fails
+				do_action( 'atcf_failed_payment', $payment_id, $gateway );
+			}
+
+		}
+		
+	}
+
+	/**
+	 * Save what we have done
+	 */
+	function cleanup() {
+		if ( ! empty( $this->failed_payments ) ) {
+			update_post_meta( $this->campaign_id, '_campaign_failed_payments', $this->failed_payments );
+		}
+
+		if ( ! empty( $this->payments ))  {
+			update_post_meta( $this->campaign_id, '_payment_ids', $this->payments );
+		}
+
+		if ( empty( $this->payments ) ) {
+			add_post_meta( $this->campaign_id, '_campaign_batch_complete', true, true );
 		}
 	}
 }
