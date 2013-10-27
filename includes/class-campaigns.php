@@ -61,8 +61,7 @@ class ATCF_Campaigns {
 		add_action( 'edd_after_price_field', 'atcf_after_price_field' );
 
 		add_action( 'admin_action_atcf-collect-failed-funds', array( $this, 'collect_funds' ) );
-		add_action( 'admin_action_atcf-reinstate', array( $this, 'reinstate' ) );
-
+		
 		add_action( 'wp_insert_post', array( $this, 'update_post_date_on_publish' ) );
 
 		do_action( 'atcf_campaigns_actions_admin' );
@@ -245,7 +244,7 @@ class ATCF_Campaigns {
 		)
 			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
 
-		if ( $campaign->is_collected() && ! $campaign->failed_payments() ) {
+		if ( ( $campaign->__get( '_campaign_batch_complete' ) || $campaign->is_collected() ) && ! $campaign->failed_payments() ) {
 			add_meta_box( 'atcf_campaign_reinstate', __( 'Reinstate Campaign', 'atcf' ), '_atcf_metabox_campaign_reinstate', 'download', 'side', 'high' );
 		}
 
@@ -312,39 +311,6 @@ class ATCF_Campaigns {
 		}
 
 		new ATCF_Process_Campaign( $campaign->ID, true );
-	}
-
-	/**
-	 * Reinstate Campaign
-	 *
-	 * @since Astoundify Crowdfunding 1.5
-	 *
-	 * @return void
-	 */
-	function reinstate() {
-		global $edd_options;
-
-		$campaign = absint( $_GET[ 'campaign' ] );
-		$campaign = atcf_get_campaign( $campaign );
-
-		/** check nonce */
-		if ( ! check_admin_referer( 'atcf-reinstate' ) ) {
-			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) );
-			exit();
-		}
-
-		/** check roles */
-		if ( ! current_user_can( 'update_core' ) ) {
-			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) );
-			exit();
-		}
-
-		delete_post_meta( $campaign->ID, '_campaign_bulk_collected' );
-		delete_post_meta( $campaign->ID, '_campaign_failed_payments' );
-		delete_post_meta( $campaign->ID, '_campaign_expired' );
-
-		return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) );
-		exit();
 	}
 
 	/**
@@ -562,31 +528,6 @@ function _atcf_metabox_campaign_funds() {
 	<?php endif; ?>
 <?php
 	do_action( 'atcf_metabox_campaign_funds_after', $campaign );
-}
-
-/**
- * Reinstate Campaign Box
- *
- * If a campaign has collected funds, but wants to run again, show a button.
- * This still requires updating expiration information, etc, and can only done
- * by teh admin.
- *
- * @since Astoundify Crowdfunding 1.5
- *
- * @return void
- */
-function _atcf_metabox_campaign_reinstate() {
-	global $post;
-
-	$campaign = atcf_get_campaign( $post );
-	
-	do_action( 'atcf_metabox_campaign_reinstate_before', $campaign );
-?>
-	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-reinstate', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-reinstate' ); ?>" class="button button-primary"><?php _e( 'Reinstate Campaign', 'atcf' ); ?></a></p>
-
-	<p><?php _e( '<strong>Note:</strong> This will only allow funds to be collected again. All dates, etc must manually be updated.', 'atcf' ); ?></p>
-<?php
-	do_action( 'atcf_metabox_campaign_reinstate_after', $campaign );
 }
 
 /**
