@@ -90,7 +90,10 @@ function atcf_is_gatweay_active( $gateway ) {
 }
 
 /**
- * Payments Queueueuueue
+ * Payments Queueueuueue.
+ *
+ * This is attached to the cron, and simply loops through any campaigns 
+ * that are still processing and instaitates the processing class.
  *
  * @since Astoundify Crowdfunding 1.8
  *
@@ -99,68 +102,84 @@ function atcf_is_gatweay_active( $gateway ) {
 function atcf_process_payments() {
 	$processing = get_option( 'atcf_processing', array() );
 
+	if ( empty( $processing ) )
+		return;
+
 	foreach ( $processing as $key => $campaign ) {
 		new ATCF_Process_Campaign( $campaign );
 	}
 }
 add_action( 'atcf_process_payments', 'atcf_process_payments' );
 
+/**
+ * Payment Processing
+ *
+ * Instead of trying to process a campaign's payments all at once
+ * manually, we can instead do them in batches every hour until they
+ * are complete. This will greatly reduce the load on the server.
+ */
 class ATCF_Process_Campaign {
 
 	/**
-	 *
+	 * Campaign ID
 	 *
 	 * @var int
 	 */
 	var $campaign_id;
 
 	/**
-	 * 
+	 * Campaign
 	 *
 	 * @var object
 	 */
 	var $campaign;
 
 	/**
-	 *
+	 * Payments to process
 	 *
 	 * @var array
 	 */
 	var $payments = array();
 
 	/**
-	 *
+	 * Failed payments (existing and new)
 	 *
 	 * @var array
 	 */
 	var $failed_payments = array();
 
 	/**
-	 *
+	 * Active payment gateways
 	 *
 	 * @var array
 	 */
 	var $gateways = array();
 
 	/**
-	 *
+	 * The number of payments to process per campaign
 	 *
 	 * @var int
 	 */
 	var $to_process;
 
 	/**
-	 *
+	 * If we are only processing failed payments
 	 *
 	 * @var boolean
 	 */
 	var $process_failed;
 
 	/**
-	 * Constructor. Adds hooks.
+	 * Get things moving.
+	 *
+	 * Defines some class variables and starts the processinging.
+	 *
+	 * @since Astoundify Crowdfunding 1.8
+	 *
+	 * @return void
 	 */
 	function __construct( $campaign_id, $process_failed = false ) {
-		$this->to_process      = apply_filters( 'atcf_bulk_process_limit', 25 );
+		$this->to_process      = apply_filters( 'atcf_bulk_process_limit', 20 );
 		$this->process_failed  = $process_failed;
 
 		$this->campaign_id     = $campaign_id;
@@ -182,14 +201,18 @@ class ATCF_Process_Campaign {
 	}
 
 	/**
-	 * Assign the payments related to this campaign
-	 * to a static/duplicate array associated with the campaign.
+	 * Gather the payments associated with this campaign and create
+	 * a list stored as campaign meta.
 	 *
 	 * This will be modified as payments are processed and used as
 	 * our "destructable" list of payments we still need to process.
 	 *
 	 * If something goes wrong, we always have the actual payments we can 
 	 * rebuild the list from.
+	 *
+	 * @since Astoundify Crowdfunding 1.8
+	 *
+	 * @return void
 	 */
 	function get_payments() {
 		if ( ! empty( $this->payments ) || $this->process_failed )
@@ -210,8 +233,11 @@ class ATCF_Process_Campaign {
 
 	/**
 	 * Sort out our payments for this batch of processing.
-	 *
 	 * Sort them into gateways, but only do the amount specificed.
+	 *
+	 * @since Astoundify Crowdfunding 1.8
+	 *
+	 * @return void
 	 */
 	function sort_payments() {
 		if ( $this->process_failed )
@@ -236,6 +262,18 @@ class ATCF_Process_Campaign {
 
 	/**
 	 * Process the payments.
+	 *
+	 * If we aren't specifically processing failed payments, skip
+	 * any that have previously been marked as failed.
+	 *
+	 * Try to charge the payment via the gateway callback. If it fails,
+	 * add it to the list. No matter what, always remove the payment
+	 * from the list of IDs that needs to be processed. If we are only processeing
+	 * failed payments, and the charge was not a succeess, remove it.
+	 *
+	 * @since Astoundify Crowdfunding 1.8
+	 *
+	 * @return void
 	 */
 	function process() {
 
@@ -275,6 +313,13 @@ class ATCF_Process_Campaign {
 
 	/**
 	 * Record notes on failed payments
+	 *
+	 * Once payments have attempted to be processed, any payments
+	 * that still failed shold record a note on that payment.
+	 *
+	 * @since Astoundify Crowdfunding 1.8
+	 *
+	 * @return void
 	 */
 	function log_failed() {
 		if ( empty( $this->failed_payments ) )
@@ -283,7 +328,7 @@ class ATCF_Process_Campaign {
 		foreach ( $this->failed_payments as $gateway => $payments ) {
 			
 			foreach ( $payments[ 'payments' ] as $payment_id ) {
-				edd_insert_payment_note( $payment_id, apply_filters( 'atcf_failed_payment_note', sprintf( __( 'Error processing preapproved payment via %s when collecting funds.', 'atcf' ), $gateway ) ) );
+				edd_insert_payment_note( $payment_id, apply_filters( 'atcf_failed_payment_note', sprintf( __( 'Error processing preapproved payment via %s when automatically collecting funds.', 'atcf' ), $gateway ) ) );
 
 				// Allow plugins to do other things when a payment fails
 				do_action( 'atcf_failed_payment', $payment_id, $gateway );
@@ -294,7 +339,12 @@ class ATCF_Process_Campaign {
 	}
 
 	/**
-	 * Save what we have done
+	 * Save what we have done, and add/remove any flag data
+	 * we may need the next time we are processing.
+	 *
+	 * @since Astoundify Crowdfunding 1.8
+	 *
+	 * @return void
 	 */
 	function cleanup() {
 		if ( ! empty( $this->failed_payments ) ) {

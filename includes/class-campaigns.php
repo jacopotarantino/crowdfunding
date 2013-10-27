@@ -875,7 +875,7 @@ function atcf_check_for_completed_campaigns() {
 				( 'fixed' == $campaign->type() && $campaign->is_funded() ) ||
 				'flexible' == $campaign->type()
 			) ) {
-				$processing[] = $campaign->ID;
+				$processing[ $campaign->ID ] = $campaign->ID;
 			}
 
 			do_action( 'atcf_campaign_expired', $campaign );
