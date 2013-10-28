@@ -359,17 +359,11 @@ function atcf_gateway_paypal_adaptive_payments_receivers( $campaign ) {
  *
  * @return $receivers
  */
-function atcf_edap_adaptive_receivers( $receivers ) {
+function atcf_edap_adaptive_receivers( $receivers, $payment_id ) {
 	global $edd_options;
 
 	$campaign_id = null;
-
-	if ( ! ( isset( $edd_options[ 'epap_preapproval' ] ) && $edd_options[ 'epap_preapproval' ] && isset( $_GET[ 'epap_process' ] ) && isset( $_GET[ 'payment_id' ] ) && isset( $_GET[ 'preapproval_key' ] ) ) )
-		return $recievers;
-
-	if ( in_array( $_GET[ 'epap_process' ], array( 'preapproval', 'cancel_preapproval' ) ) ) {
-		$cart_items = edd_get_payment_meta_cart_details( $_GET[ 'payment_id' ] );
-	}
+	$cart_items  = edd_get_payment_meta_cart_details( $payment_id );
 
 	if ( ! $cart_items || empty( $cart_items ) )
 		return $receivers;
@@ -387,7 +381,7 @@ function atcf_edap_adaptive_receivers( $receivers ) {
 
 	return atcf_gateway_paypal_adaptive_payments_receivers( $campaign );
 }
-add_filter( 'edap_adaptive_receivers', 'atcf_edap_adaptive_receivers' );
+add_filter( 'epap_adaptive_receivers', 'atcf_edap_adaptive_receivers', 10, 2 );
 
 /**
  * Process preapproved payments
