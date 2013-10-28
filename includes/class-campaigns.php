@@ -640,7 +640,7 @@ function atcf_save_variable_prices_norewards( $prices ) {
 	if ( ! $norewards )
 		return $prices;
 
-	if ( $prices[0][ 'name' ] != '' )
+	if ( isset( $prices[0][ 'name' ] ) )
 		return $prices;
 
 	$prices = array();
