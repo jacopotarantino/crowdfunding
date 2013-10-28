@@ -110,6 +110,7 @@ final class ATCF_CrowdFunding {
 		require( $this->includes_dir . 'class-install.php' );
 		require( $this->includes_dir . 'class-campaigns.php' );
 		require( $this->includes_dir . 'class-campaign.php' );
+		require( $this->includes_dir . 'class-processing.php' );
 		require( $this->includes_dir . 'class-roles.php' );
 		require( $this->includes_dir . 'settings.php' );
 		require( $this->includes_dir . 'gateways.php' );
