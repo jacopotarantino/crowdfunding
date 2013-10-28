@@ -105,7 +105,7 @@ function atcf_settings_general( $settings ) {
 		'type' => 'header'
 	);
 
-	$settings[ 'atcf_settings_automatic_process' ] = array(
+	$settings[ 'atcf_automatic_process' ] = array(
 		'id'      => 'atcf_automatic_process',
 		'name'    => __( 'Automatically Process Collection', 'atcf' ),
 		'desc'    => __( 'When a campaign is complete and meets the criteria, payments will automatically start processing.', 'atcf' ),
@@ -113,7 +113,7 @@ function atcf_settings_general( $settings ) {
 		'std'     => 1
 	);
 
-	$settings[ 'atcf_settings_to_process' ] = array(
+	$settings[ 'atcf_to_process' ] = array(
 		'id'   => 'atcf_to_process',
 		'name' => __( 'Batch Process', 'atcf' ),
 		'desc' => __( 'The number of payments per campaign to process each hour.', 'atcf' ),
