@@ -1,10 +1,46 @@
 <?php
 
+/*
+ * Start the processing so our cron events are attached.
+ */
+new ATCF_Processing;
+
+/**
+ * Processing wrapper to attach items to the cron, or easily disable
+ * automatic processing if not needed.
+ *
+ * @since Astoundify Crowdfunding 1.8
+ */
 class ATCF_Processing {
 
 	function __construct() {
-		add_action( 'atcf_check_for_completed_campaigns', array( $this, 'find_completed_campaigns' ) );
-		add_action( 'atcf_process_payments', array( $this, 'process_payments' ) );
+		global $edd_options;
+
+		add_filter( 'edd_settings_general_sanitize', array( $this, 'reset_cron' ) );
+
+		/* Register Cron callbacks */
+		if ( isset( $edd_options[ 'atcf_settings_automatic_process' ] ) ) {
+			add_action( 'atcf_check_for_completed_campaigns', array( $this, 'find_completed_campaigns' ) );
+			add_action( 'atcf_process_payments', array( $this, 'process_payments' ) );
+
+		} else {
+			if ( ! is_admin() )
+				return;
+
+			add_action( 'admin_action_atcf-collect-funds', array( $this, 'collect_funds' ) );
+			add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
+		}
+	}
+
+	function reset_cron( $settings ) {
+		if ( ! isset( $settings[ 'atcf_settings_automatic_process' ] ) ) {
+			wp_clear_scheduled_hook( 'atcf_check_for_completed_campaigns' );
+			wp_clear_scheduled_hook( 'atcf_process_payments' );
+		} else {
+			ATCF_Install::cron();
+		}
+
+		return $settings;
 	}
 
 	/**
@@ -95,6 +131,133 @@ class ATCF_Processing {
 		}
 
 		update_option( 'atcf_processing', $processing );
+	}
+
+	function add_meta_box() {
+		global $post;
+
+		if ( ! is_object( $post ) )
+			return;
+
+		$campaign = atcf_get_campaign( $post );
+
+		if ( count( $campaign->unique_backers() == 0 ) )
+			return;
+
+		if ( $campaign->__get( '_campaign_batch_complete' ) )
+			return;
+
+		if ( in_array( $campaign->ID, get_option( 'atcf_processing', array() ) ) )
+			return;
+
+		if ( ! ( ( $campaign->type() == 'fixed' && $campaign->is_funded() ) || $campaign->type() == 'flexible' ) )
+			return;
+
+		add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), array( $this, 'collect_funds_metabox' ), 'download', 'side', 'high' );
+	}
+
+	function collect_funds_metabox() {
+		global $post;
+
+		$campaign        = atcf_get_campaign( $post );
+		$failed_payments = $campaign->failed_payments();
+		$pledges         = count( $campaign->unique_backers() );
+		$count           = 0;
+		$to_process      = apply_filters( 'atcf_bulk_process_limit', 20 );
+
+		if ( $failed_payments ) {
+			foreach ( $failed_payments as $gateways ) {
+				foreach ( $gateways as $gateway ) {
+					$count = $count + count( $gateway );
+				}
+			}
+		}
+
+		$show_batch = true;
+
+		if ( 
+			! $campaign->__get( '_campaign_batch_complete' ) || 
+			! isset( $edd_options[ 'atcf_settings_automatic_process' ] )
+		)
+			$show_batch = false;
+
+		$show_collect = false;
+
+		if ( 
+			( ( 'fixed' == $campaign->type() && $campaign->is_funded() ) || 
+			'flexible' == $campaign->type() ) &&
+			$pledges > 0
+		)
+			$show_collect = true;
+
+		do_action( 'atcf_metabox_campaign_funds_before', $campaign );
+	?>
+		<?php if ( $show_batch ) : ?>
+
+			<p><?php _e( 'This campaign is currently being processed.', 'atcf' ); ?></p>
+
+		<?php elseif ( $show_collect ) : ?>
+
+			<p><?php printf( __( 'There are currently %d pledges for this campaign. Because you have turned off automatic processing, you can process them in batches below.', 'atcf' ), $pledges ); ?>
+
+			<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-failed-funds', 'campaign' => $campaign->ID, 'status' => 'failed' ), admin_url() ), 'atcf-collect-failed-funds' ); ?>" class="button">
+					<?php printf( __( 'Collect %d Payments', 'atcf' ), $pledges <= $to_process ? $pledges : $to_process ); ?>
+			</a></p>
+
+		<?php endif; ?>
+
+		<?php if ( $failed_payments ) : ?>
+			<p><strong><?php printf( _n( '%d payment failed to process.', '%d payments failed to process.', $count, 'atcf' ), $count ); ?></strong> <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'edd-reports', 'tab' => 'logs', 'view' => 'gateway_errors', 'post_type' => 'download' ), admin_url( 'edit.php' ) ) ); ?>"><?php _e( 'View gateway errors', 'atcf' ); ?></a>.</p>
+
+			<ul>
+			<?php foreach ( $failed_payments as $gateway => $payments ) : ?>
+				<li><strong><?php echo edd_get_gateway_admin_label( $gateway ); ?></strong>
+
+					<ul>
+						<?php foreach ( $payments[ 'payments' ] as $payment ) : ?>
+							<li><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=edit-payment&purchase_id=' . $payment ) ); ?>">#<?php echo $payment; ?></a></li>
+						<?php endforeach; ?>
+					</ul>
+				</li>
+			<?php endforeach; ?>
+			</ul>
+
+			<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-failed-funds', 'campaign' => $campaign->ID, 'status' => 'failed' ), admin_url() ), 'atcf-collect-failed-funds' ); ?>" class="button">Retry Failed Funds</a></p>
+		<?php endif; ?>
+	<?php
+		do_action( 'atcf_metabox_campaign_funds_after', $campaign );
+	}
+
+	/**
+	 * Collect Funds
+	 *
+	 * @since Astoundify Crowdfunding 0.1-alpha
+	 *
+	 * @return void
+	 */
+	function collect_funds() {
+		global $edd_options, $failed_payments;
+
+		$campaign = absint( $_GET[ 'campaign' ] );
+		$campaign = atcf_get_campaign( $campaign );
+
+		$process_failed = ! isset( $_GET[ 'status' ] ) && $_GET[ 'status' ] != 'failed' ? false : true;
+
+		/** check nonce */
+		if ( ! check_admin_referer( 'atcf-collect-failed-funds' ) ) {
+			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) );
+			exit();
+		}
+
+		/** check roles */
+		if ( ! current_user_can( 'update_core' ) ) {
+			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 12 ), admin_url( 'post.php' ) ) );
+			exit();
+		}
+
+		new ATCF_Process_Campaign( $campaign->ID, $process_failed );
+
+		add_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ), true );
 	}
 }
 
