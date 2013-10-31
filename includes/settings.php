@@ -107,7 +107,7 @@ function atcf_settings_general( $settings ) {
 
 	$settings[ 'atcf_automatic_process' ] = array(
 		'id'      => 'atcf_automatic_process',
-		'name'    => __( 'Automatically Process Collection', 'atcf' ),
+		'name'    => __( 'Automatically Start Payment Processing', 'atcf' ),
 		'desc'    => __( 'When a campaign is complete and meets the criteria, payments will automatically start processing.', 'atcf' ),
 		'type'    => 'checkbox',
 		'std'     => 1
