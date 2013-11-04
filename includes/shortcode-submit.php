@@ -468,6 +468,9 @@ class ATCF_Submit_Campaign {
 	public function save_length( $key, $field, $campaign, $fields ) {
 		global $edd_options;
 
+		if ( get_post( $campaign )->post_status == 'publish' )
+			return;
+
 		if ( '' != $field[ 'value' ] ) {
 			$length = absint( $field[ 'value' ] );
 
