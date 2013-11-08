@@ -38,7 +38,7 @@ function atcf_trigger_pending_purchase_receipt( $payment_id, $new_status, $old_s
 	// Send email with secure download link
 	atcf_email_pending_purchase_receipt( $payment_id );
 }
-add_action( 'edd_update_payment_status', 'edd_trigger_purchase_receipt', 10, 3 );
+add_action( 'edd_update_payment_status', 'atcf_trigger_pending_purchase_receipt', 10, 3 );
 
 /**
  * Build the purchase email.
