@@ -70,23 +70,23 @@ function atcf_shipping_address_fields() {
 		<legend><?php _e( 'Shipping Address', 'atcf' ); ?></legend>
 
 		<p id="atcf-edd-address-1-wrap">
-			<label class="edd-label"><?php _e('Shipping Address', 'edd'); ?></label>
+			<label class="edd-label"><?php _e('Shipping Address', 'atcf'); ?></label>
 			<span class="edd-description"><?php _e( 'Where should we send any physical goods?', 'atcf' ); ?></span>
-			<input type="text" name="shipping_address" class="shipping-address edd-input required" placeholder="<?php _e('Address line 1', 'edd'); ?>"/>
+			<input type="text" name="shipping_address" class="shipping-address edd-input required" placeholder="<?php _e('Address line 1', 'atcf'); ?>"/>
 		</p>
 
 		<p id="atcf-edd-address-2-wrap">
-			<label class="edd-label"><?php _e('Shipping Address Line 2', 'edd'); ?></label>
-			<input type="text" name="shipping_address_2" class="shipping-address-2 edd-input required" placeholder="<?php _e('Address line 2', 'edd'); ?>"/>
+			<label class="edd-label"><?php _e('Shipping Address Line 2', 'atcf'); ?></label>
+			<input type="text" name="shipping_address_2" class="shipping-address-2 edd-input required" placeholder="<?php _e('Address line 2', 'atcf'); ?>"/>
 		</p>
 
 		<p id="atcf-edd-address-city">
-			<label class="edd-label"><?php _e('Shipping City', 'edd'); ?></label>
-			<input type="text" name="shipping_city" class="shipping-city edd-input required" placeholder="<?php _e('City', 'edd'); ?>"/>
+			<label class="edd-label"><?php _e('Shipping City', 'atcf'); ?></label>
+			<input type="text" name="shipping_city" class="shipping-city edd-input required" placeholder="<?php _e('City', 'atcf'); ?>"/>
 		</p>
 
 		<p>
-			<label class="edd-label"><?php _e('Shipping Country', 'edd'); ?></label>
+			<label class="edd-label"><?php _e('Shipping Country', 'atcf'); ?></label>
 			<select name="shipping_country" class="shipping-country edd-select required">
 				<?php 
 				$countries = edd_get_country_list();
@@ -98,8 +98,8 @@ function atcf_shipping_address_fields() {
 		</p>
 
 		<p>
-			<label class="edd-label"><?php _e('Shipping State / Province', 'edd'); ?></label>
-			<input type="text" size="6" name="shipping_state_other" id="shipping_state_other" class="shipping-state edd-input" placeholder="<?php _e('State / Province', 'edd'); ?>" style="display:none;"/>
+			<label class="edd-label"><?php _e('Shipping State / Province', 'atcf'); ?></label>
+			<input type="text" size="6" name="shipping_state_other" id="shipping_state_other" class="shipping-state edd-input" placeholder="<?php _e('State / Province', 'atcf'); ?>" style="display:none;"/>
             <select name="shipping_state_us" id="shipping_state_us" class="shipping-state edd-select required">
                 <?php
                     $states = edd_get_states_list();
@@ -118,8 +118,8 @@ function atcf_shipping_address_fields() {
             </select>
 		</p>
 		<p>
-			<label class="edd-label"><?php _e('Shipping Zip / Postal Code', 'edd'); ?></label>
-			<input type="text" size="4" name="shipping_zip" class="shipping-zip edd-input required" placeholder="<?php _e('Zip / Postal code', 'edd'); ?>"/>
+			<label class="edd-label"><?php _e('Shipping Zip / Postal Code', 'atcf'); ?></label>
+			<input type="text" size="4" name="shipping_zip" class="shipping-zip edd-input required" placeholder="<?php _e('Zip / Postal code', 'atcf'); ?>"/>
 		</p>
 
 	</fieldset>

@@ -829,8 +829,8 @@ function atcf_shortcode_submit_field_before_tos( $key, $field, $args ) {
 			?>
 		</div>
 		<div id="edd_show_terms">
-			<a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'edd' ); ?></a>
-			<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'edd' ); ?></a>
+			<a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'atcf' ); ?></a>
+			<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'atcf' ); ?></a>
 		</div>
 <?php
 	edd_agree_to_terms_js();

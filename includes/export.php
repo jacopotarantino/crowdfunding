@@ -57,9 +57,9 @@ function atcf_campaign_export_box() {
 		<div id="post-body">
 			<div id="post-body-content">
 				<div class="postbox">
-					<h3><span><?php _e( 'Export Campaign Data', 'edd'); ?></span></h3>
+					<h3><span><?php _e( 'Export Campaign Data', 'atcf'); ?></span></h3>
 					<div class="inside">
-						<p><?php _e( 'Download a CSV of all pledges recorded.', 'edd' ); ?></p>
+						<p><?php _e( 'Download a CSV of all pledges recorded.', 'atcf' ); ?></p>
 						<p>
 							<form method="post">
 								<select name="edd_export_campaign_id">
@@ -79,7 +79,7 @@ function atcf_campaign_export_box() {
 									?>
 								</select>
 								<input type="hidden" name="edd-action" value="export_campaign"/>
-								<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
+								<input type="submit" value="<?php _e( 'Generate CSV', 'atcf' ); ?>" class="button-secondary"/>
 							</form>
 						</p>
 					</div><!-- .inside -->

@@ -119,11 +119,11 @@ class ATCF_Campaign_Export extends EDD_Export {
 				'products' => $products,
 				'amount'   => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ) ),
 				'tax'      => html_entity_decode( edd_payment_tax( $payment_id, $payment_meta ) ),
-				'discount' => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'edd' ),
+				'discount' => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'atcf' ),
 				'gateway'  => edd_get_gateway_admin_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) ),
 				'key'      => $payment_meta['key'],
 				'date'     => date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ),
-				'user'     => $user ? $user->display_name : __( 'guest', 'edd' ),
+				'user'     => $user ? $user->display_name : __( 'guest', 'atcf' ),
 				'status'   => edd_get_payment_status( $payment, true )
 			), $payment_id );
 

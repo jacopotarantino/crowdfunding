@@ -507,8 +507,8 @@ function atcf_campaign_save_end_date( $new ) {
  */
 function atcf_pledge_limit_head() {
 ?>
-	<th style="width: 30px"><?php _e( 'Limit', 'edd' ); ?></th>
-	<th style="width: 30px"><?php _e( 'Backers', 'edd' ); ?></th>
+	<th style="width: 30px"><?php _e( 'Limit', 'atcf' ); ?></th>
+	<th style="width: 30px"><?php _e( 'Backers', 'atcf' ); ?></th>
 <?php
 }
 
