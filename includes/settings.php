@@ -105,6 +105,23 @@ function atcf_settings_general( $settings ) {
 		'type' => 'header'
 	);
 
+	$settings[ 'atcf_automatic_process' ] = array(
+		'id'      => 'atcf_automatic_process',
+		'name'    => __( 'Automatically Start Payment Processing', 'atcf' ),
+		'desc'    => __( 'When a campaign is complete and meets the criteria, payments will automatically start processing.', 'atcf' ),
+		'type'    => 'checkbox',
+		'std'     => 1
+	);
+
+	$settings[ 'atcf_to_process' ] = array(
+		'id'   => 'atcf_to_process',
+		'name' => __( 'Batch Process', 'atcf' ),
+		'desc' => __( 'The number of payments per campaign to process each hour.', 'atcf' ),
+		'type' => 'text',
+		'size' => 'small',
+		'std'  => 20
+	);
+
 	$settings[ 'atcf_settings_custom_pledge' ] = array(
 		'id'      => 'atcf_settings_custom_pledge',
 		'name'    => __( 'Custom Pledging', 'atcf' ),

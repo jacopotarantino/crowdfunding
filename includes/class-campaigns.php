@@ -59,11 +59,7 @@ class ATCF_Campaigns {
 		add_action( 'edd_download_price_table_row', 'atcf_pledge_limit_column', 9, 3 );
 
 		add_action( 'edd_after_price_field', 'atcf_after_price_field' );
-
-		add_action( 'admin_action_atcf-collect-funds', array( $this, 'collect_funds' ) );
-		add_action( 'admin_action_atcf-reinstate', array( $this, 'reinstate' ) );
-		add_filter( 'post_updated_messages', array( $this, 'messages' ) );
-
+		
 		add_action( 'wp_insert_post', array( $this, 'update_post_date_on_publish' ) );
 
 		do_action( 'atcf_campaigns_actions_admin' );
@@ -229,26 +225,6 @@ class ATCF_Campaigns {
 	 * @return void
 	 */
 	function add_meta_boxes() {
-		global $post;
-
-		if ( ! is_object( $post ) )
-			return;
-
-		$campaign = atcf_get_campaign( $post );
-
-		if ( 
-			( ! $campaign->is_collected() && 
-			( 'flexible' == $campaign->type() || $campaign->is_funded() ) &&
-			atcf_has_preapproval_gateway() /*&&
-			$campaign->backers_count() > 0*/ ) ||
-			$campaign->failed_payments()
-		)
-			add_meta_box( 'atcf_campaign_funds', __( 'Campaign Funds', 'atcf' ), '_atcf_metabox_campaign_funds', 'download', 'side', 'high' );
-
-		if ( $campaign->is_collected() && ! $campaign->failed_payments() ) {
-			add_meta_box( 'atcf_campaign_reinstate', __( 'Reinstate Campaign', 'atcf' ), '_atcf_metabox_campaign_reinstate', 'download', 'side', 'high' );
-		}
-
 		add_meta_box( 'atcf_campaign_stats', __( 'Campaign Stats', 'atcf' ), '_atcf_metabox_campaign_stats', 'download', 'side', 'high' );
 		add_meta_box( 'atcf_campaign_updates', __( 'Campaign Updates', 'atcf' ), '_atcf_metabox_campaign_updates', 'download', 'normal', 'high' );
 
@@ -284,137 +260,6 @@ class ATCF_Campaigns {
 		$fields[] = 'campaign_updates';
 
 		return $fields;
-	}
-
-	/**
-	 * Collect Funds
-	 *
-	 * @since Astoundify Crowdfunding 0.1-alpha
-	 *
-	 * @return void
-	 */
-	function collect_funds() {
-		global $edd_options, $failed_payments;
-
-		$campaign = absint( $_GET[ 'campaign' ] );
-		$campaign = atcf_get_campaign( $campaign );
-
-		/** check nonce */
-		if ( ! check_admin_referer( 'atcf-collect-funds' ) ) {
-			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) );
-			exit();
-		}
-
-		/** check roles */
-		if ( ! current_user_can( 'update_core' ) ) {
-			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 12 ), admin_url( 'post.php' ) ) );
-			exit();
-		}
-
-		$backers          = $campaign->backers();
-		$gateways         = edd_get_enabled_payment_gateways();
-		$failed_payments  = array();
-
-		if ( empty( $backers ) ) {
-			delete_post_meta( $campaign->ID, '_campaign_failed_payments' );
-			
-			wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 14 ), admin_url( 'post.php' ) ) );
-			exit();
-		}
-
-		
-		foreach ( $backers as $backer ) {
-			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
-			$gateway    = get_post_meta( $payment_id, '_edd_payment_gateway', true );
-
-			if ( 'publish' == get_post_field( 'post_status', $payment_id ) || ! $payment_id )
-				continue;
-
-			$gateways[ $gateway ][ 'payments' ][] = $payment_id;
-		}
-
-		$process = $gateways;
-		
-		foreach ( $process as $gateway => $gateway_args ) {
-			do_action( 'atcf_collect_funds_' . $gateway, $gateway, $gateway_args, $campaign, $failed_payments );
-		}
-
-		if ( ! empty( $failed_payments ) ) {
-			$failed_count = 0;
-
-			foreach ( $failed_payments as $gateway => $payments ) {
-				/** Loop through each gateway's failed payments */
-				foreach ( $payments[ 'payments' ] as $payment_id ) {
-					edd_insert_payment_note( $payment_id, apply_filters( 'atcf_failed_payment_note', sprintf( __( 'Error processing preapproved payment via %s when collecting funds.', 'atcf' ), $gateway ) ) );
-
-					$failed_count++;
-
-					do_action( 'atcf_failed_payment', $payment_id, $gateway );
-				}
-			}
-
-			update_post_meta( $campaign->ID, '_campaign_failed_payments', $failed_payments );
-
-			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 15, 'failed' => $failed_count ), admin_url( 'post.php' ) ) );
-			exit();
-		} else {
-			update_post_meta( $campaign->ID, '_campaign_bulk_collected', 1 );
-			delete_post_meta( $campaign->ID, '_campaign_failed_payments' );
-
-			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit', 'message' => 13, 'collected' => $campaign->backers_count() ), admin_url( 'post.php' ) ) );
-			exit();
-		}
-	}
-
-	/**
-	 * Reinstate Campaign
-	 *
-	 * @since Astoundify Crowdfunding 1.5
-	 *
-	 * @return void
-	 */
-	function reinstate() {
-		global $edd_options;
-
-		$campaign = absint( $_GET[ 'campaign' ] );
-		$campaign = atcf_get_campaign( $campaign );
-
-		/** check nonce */
-		if ( ! check_admin_referer( 'atcf-reinstate' ) ) {
-			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) );
-			exit();
-		}
-
-		/** check roles */
-		if ( ! current_user_can( 'update_core' ) ) {
-			return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) );
-			exit();
-		}
-
-		delete_post_meta( $campaign->ID, '_campaign_bulk_collected' );
-		delete_post_meta( $campaign->ID, '_campaign_failed_payments' );
-		delete_post_meta( $campaign->ID, '_campaign_expired' );
-
-		return wp_safe_redirect( add_query_arg( array( 'post' => $campaign->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) );
-		exit();
-	}
-
-	/**
-	 * Custom messages for various actions when managing campaigns.
-	 *
-	 * @since Astoundify Crowdfunding 0.1-alpha
-	 *
-	 * @param array $messages An array of messages to display
-	 * @return array $messages An updated array of messages to display
-	 */
-	function messages( $messages ) {
-		$messages[ 'download' ][11] = sprintf( __( 'This %s has not reached its funding goal.', 'atcf' ), strtolower( edd_get_label_singular() ) );
-		$messages[ 'download' ][12] = sprintf( __( 'You do not have permission to collect funds for %s.', 'atcf' ), strtolower( edd_get_label_plural() ) );
-		$messages[ 'download' ][13] = sprintf( __( 'All payments have been processed and collected for this %s.', 'atcf' ), strtolower( edd_get_label_singular() ) );
-		$messages[ 'download' ][14] = sprintf( __( 'There are no payments for this %s.', 'atcf' ), strtolower( edd_get_label_singular() ) );
-		$messages[ 'download' ][15] = sprintf( __( '<strong>Payments processed.</strong> %d payments failed to process. Please check <a href="%s">gateway logs</a> before trying again.', 'atcf' ), isset ( $_GET[ 'failed' ] ) ? intval( $_GET[ 'failed' ] ) : 0, admin_url( 'edit.php?view=gateway_errors&post_type=download&page=edd-reports&tab=logs' ) );
-
-		return $messages;
 	}
 
 	/**
@@ -571,6 +416,7 @@ function _atcf_metabox_campaign_stats() {
 		<?php echo $campaign->backers_count(); ?>
 	</p>
 
+
 	<?php if ( ! $campaign->is_endless() ) : ?>
 	<p>
 		<strong><?php _e( 'Days Remaining:', 'atcf' ); ?></strong>
@@ -579,88 +425,6 @@ function _atcf_metabox_campaign_stats() {
 	<?php endif; ?>
 <?php
 	do_action( 'atcf_metabox_campaign_stats_after', $campaign );
-}
-
-/**
- * Campaign Collect Funds Box
- *
- * If a campaign is fully funded (or expired and fully funded) show this box.
- * Includes a button to collect funds.
- *
- * @since Astoundify Crowdfunding 0.1-alpha
- *
- * @return void
- */
-function _atcf_metabox_campaign_funds() {
-	global $post;
-
-	$campaign        = atcf_get_campaign( $post );
-	$failed_payments = $campaign->failed_payments();
-	$count           = 0;
-
-	if ( $failed_payments ) {
-		foreach ( $failed_payments as $gateways ) {
-			foreach ( $gateways as $gateway ) {
-				$count = $count + count( $gateway );
-			}
-		}
-	}
-
-	do_action( 'atcf_metabox_campaign_funds_before', $campaign );
-?>
-	<?php if ( 'fixed' == $campaign->type() ) : ?>
-	<p><?php printf( __( 'This %1$s has reached its funding goal. You may now send the funds to the owner. This will end the %1$s.', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?></p>
-	<?php else : ?>
-	<p><?php printf( __( 'This %1$s is flexible. You may collect the funds at any time. This will end the %1$s.', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?></p>
-	<?php endif; ?>
-
-	<?php if ( $failed_payments ) : ?>
-		<p><strong><?php printf( _n( '%d payment failed to process.', '%d payments failed to process.', $count, 'atcf' ), $count ); ?></strong> <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'edd-reports', 'tab' => 'logs', 'view' => 'gateway_errors', 'post_type' => 'download' ), admin_url( 'edit.php' ) ) ); ?>"><?php _e( 'View gateway errors', 'atcf' ); ?></a>.</p>
-
-		<ul>
-		<?php foreach ( $failed_payments as $gateway => $payments ) : ?>
-			<li><strong><?php echo edd_get_gateway_admin_label( $gateway ); ?></strong>
-
-				<ul>
-					<?php foreach ( $payments[ 'payments' ] as $payment ) : ?>
-						<li><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=edit-payment&purchase_id=' . $payment ) ); ?>">#<?php echo $payment; ?></a></li>
-					<?php endforeach; ?>
-				</ul>
-			</li>
-		<?php endforeach; ?>
-		</ul>
-	<?php endif; ?>
-
-	<?php if ( ! apply_filters( 'atcf_hide_collect_funds_button', false ) ) : ?>
-	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ); ?>" class="button button-primary"><?php _e( 'Collect Funds', 'atcf' ); ?></a></p>
-	<?php endif; ?>
-<?php
-	do_action( 'atcf_metabox_campaign_funds_after', $campaign );
-}
-
-/**
- * Reinstate Campaign Box
- *
- * If a campaign has collected funds, but wants to run again, show a button.
- * This still requires updating expiration information, etc, and can only done
- * by teh admin.
- *
- * @since Astoundify Crowdfunding 1.5
- *
- * @return void
- */
-function _atcf_metabox_campaign_reinstate() {
-	global $post;
-
-	$campaign = atcf_get_campaign( $post );
-	
-	do_action( 'atcf_metabox_campaign_reinstate_before', $campaign );
-?>
-	<p><a href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'atcf-reinstate', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-reinstate' ); ?>" class="button button-primary"><?php _e( 'Reinstate Campaign', 'atcf' ); ?></a></p>
-
-	<p><?php _e( '<strong>Note:</strong> This will only allow funds to be collected again. All dates, etc must manually be updated.', 'atcf' ); ?></p>
-<?php
-	do_action( 'atcf_metabox_campaign_reinstate_after', $campaign );
 }
 
 /**
@@ -876,7 +640,7 @@ function atcf_save_variable_prices_norewards( $prices ) {
 	if ( ! $norewards )
 		return $prices;
 
-	if ( $prices[0][ 'name' ] != '' )
+	if ( isset( $prices[0][ 'name' ] ) )
 		return $prices;
 
 	$prices = array();
@@ -902,56 +666,13 @@ add_filter( 'edd_metabox_save_edd_variable_prices', 'atcf_save_variable_prices_n
 function atcf_load_admin_scripts( $hook ) {
 	global $pagenow, $typenow;
  
- 	if ( ! in_array( $pagenow, array( 'post.php', 'post-new.php' ) ) )
- 		return;
+	if ( ! in_array( $pagenow, array( 'post.php', 'post-new.php' ) ) )
+		return;
 
- 	if ( 'download' != $typenow )
- 		return;
+	if ( 'download' != $typenow )
+		return;
 
- 	$crowdfunding = crowdfunding();
+	$crowdfunding = crowdfunding();
 
 	wp_enqueue_script( 'atcf-admin-scripts', $crowdfunding->plugin_url . '/assets/js/crowdfunding-admin.js', array( 'jquery', 'edd-admin-scripts' ) );
 }
-add_action( 'admin_enqueue_scripts', 'atcf_load_admin_scripts' );
-
-function atcf_check_for_completed_campaigns() {
-	$now = current_time( 'timestamp', true );
-
-	$active_campaigns = get_posts( array(
-		'post_type'             => array( 'download' ),
-		'post_status'           => array( 'publish' ),
-		'meta_query'            => array(
-			array(
-				'key'     => '_campaign_expired',
-				'compare' => 'NOT EXISTS'
-			)
-		),
-		'nopaging'               => true,
-		'cache_results'          => false,
-		'update_post_meta_cache' => false,
-		'update_post_term_cache' => false
-	) );
-
-	$processing = get_option( 'atcf_processing' );
-	
-	foreach ( $active_campaigns as $campaign ) {
-		$campaign = atcf_get_campaign( $campaign );
-
-		$expiration_date = mysql2date( 'G', $campaign->end_date() );
-
-		if ( $now > $expiration_date ) {
-			update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
-
-			if ( ! in_array( $campaign->ID, $processing ) ) {
-				$processing[] = $campaign->ID;
-			}
-
-			do_action( 'atcf_campaign_expired', $campaign );
-		} else if ( $now < $expiration_date && get_post_meta( $campaign->ID, '_campaign_expired', true ) ) {
-			delete_post_meta( $campaign->ID, '_campaign_expired' );
-		}
-	}
-
-	update_option( 'atcf_processing', $processing );
-}
-add_action( 'atcf_check_for_completed_campaigns', 'atcf_check_for_completed_campaigns' );

@@ -353,27 +353,46 @@ function atcf_gateway_paypal_adaptive_payments_receivers( $campaign ) {
 }
 
 /**
+ * Figure out the Paypal account info to send the funds to.
+ *
+ * @since Astoundify Crowdfunding 1.8
+ *
+ * @return $receivers
+ */
+function atcf_edap_adaptive_receivers( $receivers, $payment_id ) {
+	global $edd_options;
+
+	$campaign_id = null;
+	$cart_items  = edd_get_payment_meta_cart_details( $payment_id );
+
+	if ( ! $cart_items || empty( $cart_items ) )
+		return $receivers;
+
+	foreach ( $cart_items as $item ) {
+		$campaign_id = $item[ 'id' ];
+
+		break;
+	}
+
+	if ( 0 == get_post( $campaign_id )->ID )
+		return $receivers;
+
+	$campaign = atcf_get_campaign( $campaign_id );
+
+	return atcf_gateway_paypal_adaptive_payments_receivers( $campaign );
+}
+add_filter( 'epap_adaptive_receivers', 'atcf_edap_adaptive_receivers', 10, 2 );
+
+/**
  * Process preapproved payments
  *
  * @since Astoundify Crowdfunding 1.1
  *
  * @return void
  */
-function atcf_collect_funds_paypal_adaptive_payments( $gateway, $gateway_args, $campaign, $failed_payments ) {
-	global $edd_options, $failed_payments;
+function atcf_collect_funds_paypal_adaptive_payments( $charged, $payment, $campaign ) {
+	$receivers = atcf_gateway_paypal_adaptive_payments_receivers( $campaign );
 
-	if ( ! isset ( $gateway_args[ 'payments' ] ) )
-		return;
-
-	foreach ( $gateway_args[ 'payments' ] as $payment ) {
-		$charge = epap_process_preapprovals( $payment, atcf_gateway_paypal_adaptive_payments_receivers( $campaign ) );
-		
-		if ( ! $charge )
-			$failed_payments[ $gateway ][ 'payments' ][] = $payment;
-
-		do_action( 'atcf_process_payment_' . $gateway, $payment, $charge );
-	}
-
-	return $failed_payments;
+	return epap_process_preapprovals( $payment, $receivers );
 }
-add_action( 'atcf_collect_funds_paypal_adaptive_payments', 'atcf_collect_funds_paypal_adaptive_payments', 10, 4 );
+add_filter( 'atcf_collect_funds_paypal_adaptive_payments', 'atcf_collect_funds_paypal_adaptive_payments', 10, 3 );
