@@ -5,7 +5,7 @@
  * Description: A crowd funding platform in the likes of Kickstarter and Indigogo
  * Author:      Astoundify
  * Author URI:  http://astoundify.com
- * Version:     1.7.3
+ * Version:     1.8
  * Text Domain: atcf
  */
 
@@ -107,22 +107,22 @@ final class ATCF_CrowdFunding {
 		if ( ! class_exists( 'Easy_Digital_Downloads' ) )
 			return;
 
-		require( $this->includes_dir . 'class-campaigns.php' );
-		require( $this->includes_dir . 'class-campaign.php' );
-		require( $this->includes_dir . 'class-processing.php' );
-		require( $this->includes_dir . 'class-roles.php' );
-		require( $this->includes_dir . 'settings.php' );
-		require( $this->includes_dir . 'gateways.php' );
-		require( $this->includes_dir . 'theme-stuff.php' );
-		require( $this->includes_dir . 'shipping.php' );
-		require( $this->includes_dir . 'logs.php' );
-		require( $this->includes_dir . 'export.php' );
-		require( $this->includes_dir . 'permalinks.php' );
-		require( $this->includes_dir . 'checkout.php' );
-		require( $this->includes_dir . 'shortcode-submit.php' );
-		require( $this->includes_dir . 'shortcode-profile.php' );
-		require( $this->includes_dir . 'shortcode-login.php' );
-		require( $this->includes_dir . 'shortcode-register.php' );
+		require_once( $this->includes_dir . 'class-campaigns.php' );
+		require_once( $this->includes_dir . 'class-campaign.php' );
+		require_once( $this->includes_dir . 'class-processing.php' );
+		require_once( $this->includes_dir . 'class-roles.php' );
+		require_once( $this->includes_dir . 'settings.php' );
+		require_once( $this->includes_dir . 'gateways.php' );
+		require_once( $this->includes_dir . 'theme-stuff.php' );
+		require_once( $this->includes_dir . 'shipping.php' );
+		require_once( $this->includes_dir . 'logs.php' );
+		require_once( $this->includes_dir . 'export.php' );
+		require_once( $this->includes_dir . 'permalinks.php' );
+		require_once( $this->includes_dir . 'checkout.php' );
+		require_once( $this->includes_dir . 'shortcode-submit.php' );
+		require_once( $this->includes_dir . 'shortcode-profile.php' );
+		require_once( $this->includes_dir . 'shortcode-login.php' );
+		require_once( $this->includes_dir . 'shortcode-register.php' );
 
 		do_action( 'atcf_include_files' );
 
@@ -400,7 +400,8 @@ add_action( 'plugins_loaded', 'crowdfunding' );
 function atcf_install() {
 	$crowdfunding = crowdfunding();
 
-	require( $crowdfunding->includes_dir . 'class-install.php' );
+	require_once( $crowdfunding->includes_dir . 'class-roles.php' );
+	require_once( $crowdfunding->includes_dir . 'class-install.php' );
 	register_activation_hook( $crowdfunding->file, array( 'ATCF_Install', 'init' ), 10 );
 
 	$crowdfunding::$instance = null;
