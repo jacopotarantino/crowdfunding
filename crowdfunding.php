@@ -367,6 +367,10 @@ final class ATCF_CrowdFunding {
 		// Look in local /wp-content/plugins/appthemer-crowdfunding/languages/ folder
 		load_textdomain( $this->domain, $mofile_local );
 	}
+
+	public function __destruct() {
+		
+	}
 }
 
 /**
@@ -398,13 +402,13 @@ add_action( 'plugins_loaded', 'crowdfunding' );
  * @since Astoundify Crowdfunding 1.7.3.1
  */
 function atcf_install() {
-	$crowdfunding = crowdfunding();
+	$file         = __FILE__;
+	$plugin_dir   = apply_filters( 'atcf_plugin_dir_path',  plugin_dir_path( $file ) );
+	$includes_dir = apply_filters( 'atcf_includes_dir', trailingslashit( $plugin_dir . 'includes'  ) );
 
-	require_once( $crowdfunding->includes_dir . 'class-roles.php' );
-	require_once( $crowdfunding->includes_dir . 'class-install.php' );
-	register_activation_hook( $crowdfunding->file, array( 'ATCF_Install', 'init' ), 10 );
-
-	$crowdfunding::$instance = null;
+	require_once( $includes_dir . 'class-roles.php' );
+	require_once( $includes_dir . 'class-install.php' );
+	register_activation_hook( $file, array( 'ATCF_Install', 'init' ), 10 );
 }
 
 atcf_install();
