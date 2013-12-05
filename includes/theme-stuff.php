@@ -143,11 +143,11 @@ function atcf_campaign_contribute_options( $prices, $type, $download_id ) {
 										esc_attr( 'edd_price_option_' . $download_id ),
 										esc_attr( $key )
 									);
-						?> <span class="pledge-verb"><?php _ex( 'Pledge', 'Pledge verb. (Pledge $5)', 'atcf' ); ?></span> <?php echo edd_currency_filter( edd_format_amount( $amount ) ); ?></label></h3>
+						?> <span class="pledge-verb"><?php _e( 'Pledge', 'atcf' ); ?></span> <?php echo edd_currency_filter( edd_format_amount( $amount ) ); ?></label></h3>
 						
 						<div class="backers">
 							<div class="backer-count">
-								<i class="icon-user"></i> <?php printf( _nx( '1 Backer', '%1$s Backers', $bought, 'number of backers for pledge level', 'atcf' ), $bought ); ?>
+								<i class="icon-user"></i> <?php printf( _n( '1 Backer', '%1$s Backers', $bought, 'atcf' ), $bought ); ?>
 							</div>
 
 							<?php if ( '' != $limit && ! $allgone ) : ?>
