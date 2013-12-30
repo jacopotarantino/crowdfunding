@@ -93,7 +93,7 @@ final class ATCF_CrowdFunding {
 
 		/** Misc **************************************************************/
 
-		$this->domain       = 'atcf'; 
+		$this->domain       = 'atcf';
 	}
 
 	/**
@@ -179,7 +179,7 @@ final class ATCF_CrowdFunding {
 			add_option( 'atcf_version', $this->version );
 		}
 	}
-	
+
 	/**
 	 * Easy Digital Downloads
 	 *
@@ -208,8 +208,8 @@ final class ATCF_CrowdFunding {
 	function edd_notice() {
 ?>
 		<div class="updated">
-			<p><?php printf( 
-						__( '<strong>Notice:</strong> Crowdfunding by Astoundify requires <a href="%s">Easy Digital Downloads</a> in order to function properly.', 'atcf' ), 
+			<p><?php printf(
+						__( '<strong>Notice:</strong> Crowdfunding by Astoundify requires <a href="%s">Easy Digital Downloads</a> in order to function properly.', 'atcf' ),
 						wp_nonce_url( network_admin_url( 'update.php?action=install-plugin&plugin=easy-digital-downloads' ), 'install-plugin_easy-digital-downloads' )
 				); ?></p>
 		</div>
@@ -232,23 +232,23 @@ final class ATCF_CrowdFunding {
 	 */
 	public function template_loader( $template ) {
 		global $wp_query;
-		
+
 		$find    = array();
 		$files   = array();
 
 		/** Check if we are editing */
-		if ( isset ( $wp_query->query_vars[ 'edit' ] ) && 
-			 is_singular( 'download' ) && 
+		if ( isset ( $wp_query->query_vars[ 'edit' ] ) &&
+			 is_singular( 'download' ) &&
 			 ( $wp_query->queried_object->post_author == get_current_user_id() || current_user_can( 'manage_options' ) ) &&
 			 atcf_theme_supports( 'campaign-edit' )
 		) {
 			do_action( 'atcf_found_edit' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_edit', array( 'single-campaign-edit.php' ) );
-		} 
+		}
 
 		/** Check if viewing a widget */
-		else if ( isset ( $wp_query->query_vars[ 'widget' ] ) && 
+		else if ( isset ( $wp_query->query_vars[ 'widget' ] ) &&
 			 is_singular( 'download' ) &&
 			 atcf_theme_supports( 'campaign-widget' )
 		) {
@@ -262,7 +262,7 @@ final class ATCF_CrowdFunding {
 			do_action( 'atcf_found_single' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_campaign', array( 'single-campaign.php', 'single-download.php', 'single.php' ) );
-		} 
+		}
 
 		/** Check if viewing archives */
 		else if ( is_post_type_archive( 'download' ) || is_tax( 'download_category' ) ) {
@@ -281,7 +281,7 @@ final class ATCF_CrowdFunding {
 		if ( ! empty( $files ) ) {
 			$template = locate_template( $find );
 
-			if ( ! $template ) 
+			if ( ! $template )
 				$template = $this->plugin_dir . 'templates/' . $file;
 		}
 
@@ -369,7 +369,7 @@ final class ATCF_CrowdFunding {
 	}
 
 	public function __destruct() {
-		
+
 	}
 }
 

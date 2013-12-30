@@ -4,10 +4,10 @@ Author URI: http://astoundify.com
 Plugin URI: http://astoundify.com
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=contact@astoundify.com&item_name=Donation+for+Crowdfunding
 Contributors: SpencerFinnell, adampickering
-Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource 
+Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 1.7.3.1
+Stable Tag: 1.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,6 +60,14 @@ Developers can contribute to the source code of the project on [GitHub](https://
 Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
 == Changelog ==
+
+= 1.8: January 2, 2013 =
+
+* New: Single payment processing for PayPal Adaptive Payments, Stripe, and WePay.
+* New: Automatic payment processing (in batches) when a campaign is complete.
+* Fix: Make sure all data is properly stored/saved when previewing/editing.
+* Fix: Translation fixes.
+* Tweaks: Various improvements and language updates.
 
 = 1.7.3.1: October 25, 2013 =
 
