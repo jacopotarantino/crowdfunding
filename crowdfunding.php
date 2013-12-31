@@ -15,6 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /** Check if Easy Digital Downloads is active */
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
+// EDD Slug above all.
+define( 'EDD_SLUG', apply_filters( 'atcf_edd_slug', 'campaigns' ) );
+
 /**
  * Main Crowd Funding Class
  *
@@ -265,7 +268,7 @@ final class ATCF_CrowdFunding {
 		}
 
 		/** Check if viewing archives */
-		else if ( is_post_type_archive( 'download' ) || is_tax( 'download_category' ) ) {
+		else if ( is_post_type_archive( 'download' ) || is_tax( array( 'download_category', 'download_tag' ) ) ) {
 			do_action( 'atcf_found_archive' );
 
 			$files = apply_filters( 'atcf_crowdfunding_templates_archive', array( 'archive-campaigns.php', 'archive-download.php', 'archive.php' ) );

@@ -30,23 +30,21 @@ class ATCF_Campaigns {
 	 * @return void
 	 */
 	function setup() {
-		define( 'EDD_SLUG', apply_filters( 'atcf_edd_slug', 'campaigns' ) );
-		
 		add_filter( 'edd_download_labels', array( $this, 'download_labels' ) );
 		add_filter( 'edd_default_downloads_name', array( $this, 'download_names' ) );
 		add_filter( 'edd_download_supports', array( $this, 'download_supports' ) );
-		
+
 		do_action( 'atcf_campaigns_actions' );
-		
+
 		if ( ! is_admin() )
 			return;
-		
+
 		add_filter( 'edd_price_options_heading', 'atcf_edd_price_options_heading' );
 		add_filter( 'edd_variable_pricing_toggle_text', 'atcf_edd_variable_pricing_toggle_text' );
 
 		add_filter( 'manage_edit-download_columns', array( $this, 'dashboard_columns' ), 11, 1 );
 		add_filter( 'manage_download_posts_custom_column', array( $this, 'dashboard_column_item' ), 11, 2 );
-		
+
 		add_action( 'add_meta_boxes', array( $this, 'remove_meta_boxes' ), 11 );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
@@ -59,7 +57,7 @@ class ATCF_Campaigns {
 		add_action( 'edd_download_price_table_row', 'atcf_pledge_limit_column', 9, 3 );
 
 		add_action( 'edd_after_price_field', 'atcf_after_price_field' );
-		
+
 		add_action( 'wp_insert_post', array( $this, 'update_post_date_on_publish' ) );
 
 		do_action( 'atcf_campaigns_actions_admin' );
@@ -137,7 +135,7 @@ class ATCF_Campaigns {
 	/**
 	 * Download Columns
 	 *
-	 * Add "Amount Funded" and "Expires" to the main campaign table listing. 
+	 * Add "Amount Funded" and "Expires" to the main campaign table listing.
 	 *
 	 * @since Astoundify Crowdfunding 0.1-alpha
 	 *
@@ -185,21 +183,21 @@ class ATCF_Campaigns {
 				echo $campaign->backers_count();
 
 				break;
-			default : 
+			default :
 				break;
 		}
 	}
 
 	/**
 	 * Remove some metaboxes that we don't need to worry about. Sales
-	 * and download stats, aren't really important. 
+	 * and download stats, aren't really important.
 	 *
 	 * @since Astoundify Crowdfunding 0.1-alpha
 	 *
 	 * @return void
 	 */
 	function remove_meta_boxes() {
-		$boxes = array( 
+		$boxes = array(
 			'edd_file_download_log' => 'normal',
 			'edd_purchase_log'      => 'normal',
 			'edd_download_stats'    => 'side'
@@ -329,9 +327,9 @@ function atcf_campaign_save_end_date( $new ) {
 	$ss = ($ss > 59 ) ? $ss -60 : $ss;
 
 	$end_date = sprintf( "%04d-%02d-%02d %02d:%02d:%02d", $aa, $mm, $jj, $hh, $mn, $ss );
-	
+
 	$valid_date = wp_checkdate( $mm, $jj, $aa, $end_date );
-	
+
 	if ( ! $valid_date ) {
 		return new WP_Error( 'invalid_date', __( 'Whoops, the provided date is invalid.', 'atcf' ) );
 	}
@@ -485,7 +483,7 @@ function _atcf_metabox_campaign_info() {
 
 	/** Verification Field */
 	wp_nonce_field( 'cf', 'cf-save' );
-	
+
 	$campaign = atcf_get_campaign( $post );
 
 	$end_date = $campaign->end_date();
@@ -509,7 +507,7 @@ function _atcf_metabox_campaign_info() {
 	do_action( 'atcf_metabox_campaign_info_before', $campaign );
 
 	$types = atcf_campaign_types();
-?>	
+?>
 	<p>
 		<label for="_campaign_featured">
 			<input type="checkbox" name="_campaign_featured" id="_campaign_featured" value="1" <?php checked( 1, $campaign->featured() ); ?> />
@@ -523,7 +521,7 @@ function _atcf_metabox_campaign_info() {
 			<?php _e( 'Collect shipping information on checkout', 'atcf' ); ?>
 		</label>
 	</p>
-	
+
 	<p>
 		<strong><?php _e( 'Funding Type:', 'atcf' ); ?></strong>
 	</p>
@@ -535,7 +533,7 @@ function _atcf_metabox_campaign_info() {
 	</p>
 
 	<p>
-		<label for="campaign_goal"><strong><?php _e( 'Goal:', 'atcf' ); ?></strong></label><br />	
+		<label for="campaign_goal"><strong><?php _e( 'Goal:', 'atcf' ); ?></strong></label><br />
 		<?php if ( ! isset( $edd_options[ 'currency_position' ] ) || $edd_options[ 'currency_position' ] == 'before' ) : ?>
 			<?php echo edd_currency_filter( '' ); ?><input type="text" name="campaign_goal" id="campaign_goal" value="<?php echo edd_format_amount( $campaign->goal(false) ); ?>" style="width:80px" />
 		<?php else : ?>
@@ -571,14 +569,14 @@ function _atcf_metabox_campaign_info() {
 			<?php endfor; ?>
 		</select>
 
-		<input type="text" id="end-jj" name="end-jj" value="<?php echo esc_attr( $jj ); ?>" size="2" maxlength="2" autocomplete="off" />, 
+		<input type="text" id="end-jj" name="end-jj" value="<?php echo esc_attr( $jj ); ?>" size="2" maxlength="2" autocomplete="off" />,
 		<input type="text" id="end-aa" name="end-aa" value="<?php echo esc_attr( $aa ); ?>" size="4" maxlength="4" autocomplete="off" /> @
 		<input type="text" id="end-hh" name="end-hh" value="<?php echo esc_attr( $hh ); ?>" size="2" maxlength="2" autocomplete="off" /> :
 		<input type="text" id="end-mn" name="end-mn" value="<?php echo esc_attr( $mn ); ?>" size="2" maxlength="2" autocomplete="off" />
 		<input type="hidden" id="end-ss" name="end-ss" value="<?php echo esc_attr( $ss ); ?>" />
 		<input type="hidden" id="campaign_end_date" name="campaign_end_date" value="1" />
 	</p>
-	
+
 	<p>
 		<label for="campaign_endless">
 			<input type="checkbox" name="campaign_endless" id="campaign_endless" value="1" <?php checked( 1, $campaign->is_endless() ); ?>> <?php printf( __( 'This %s never ends', 'atcf' ), strtolower( edd_get_label_singular() ) ); ?>
@@ -665,7 +663,7 @@ add_filter( 'edd_metabox_save_edd_variable_prices', 'atcf_save_variable_prices_n
  */
 function atcf_load_admin_scripts( $hook ) {
 	global $pagenow, $typenow;
- 
+
 	if ( ! in_array( $pagenow, array( 'post.php', 'post-new.php' ) ) )
 		return;
 
