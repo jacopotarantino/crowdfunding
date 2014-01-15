@@ -1,22 +1,22 @@
-# Copyright (C) 2013 
+# Copyright (C) 2014
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
 "Project-Id-Version:  \n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/appthemer-crowdfunding\n"
-"POT-Creation-Date: 2013-12-30 18:53:40+00:00\n"
+"POT-Creation-Date: 2014-01-15 18:44:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2013-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: crowdfunding.php:212
+#: crowdfunding.php:215
 msgid "<strong>Notice:</strong> Crowdfunding by Astoundify requires <a href=\"%s\">Easy Digital Downloads</a> in order to function properly."
 msgstr ""
 
-#: crowdfunding.php:325
+#: crowdfunding.php:328
 msgid "At least one reward is required."
 msgstr ""
 
@@ -48,7 +48,7 @@ msgstr ""
 msgid "Collect funds pledged at the end of the campaign no matter what."
 msgstr ""
 
-#: includes/class-campaign.php:494 includes/class-campaigns.php:649
+#: includes/class-campaign.php:494 includes/class-campaigns.php:647
 #: includes/shortcode-submit.php:520
 msgid "Donation"
 msgstr ""
@@ -57,152 +57,152 @@ msgstr ""
 msgid "Funds will be collected automatically as pledged."
 msgstr ""
 
-#: includes/class-campaigns.php:78 includes/class-campaigns.php:90
+#: includes/class-campaigns.php:76 includes/class-campaigns.php:88
 msgid "Campaigns"
 msgstr ""
 
-#: includes/class-campaigns.php:79
+#: includes/class-campaigns.php:77
 msgid "Campaign"
 msgstr ""
 
-#: includes/class-campaigns.php:80
+#: includes/class-campaigns.php:78
 msgid "Add New"
 msgstr ""
 
-#: includes/class-campaigns.php:81
+#: includes/class-campaigns.php:79
 msgid "Add New Campaign"
 msgstr ""
 
-#: includes/class-campaigns.php:82
+#: includes/class-campaigns.php:80
 msgid "Edit Campaign"
 msgstr ""
 
-#: includes/class-campaigns.php:83
+#: includes/class-campaigns.php:81
 msgid "New Campaign"
 msgstr ""
 
-#: includes/class-campaigns.php:84
+#: includes/class-campaigns.php:82
 msgid "All Campaigns"
 msgstr ""
 
-#: includes/class-campaigns.php:85
+#: includes/class-campaigns.php:83
 msgid "View Campaign"
 msgstr ""
 
-#: includes/class-campaigns.php:86
+#: includes/class-campaigns.php:84
 msgid "Search Campaigns"
 msgstr ""
 
-#: includes/class-campaigns.php:87
+#: includes/class-campaigns.php:85
 msgid "No Campaigns found"
 msgstr ""
 
-#: includes/class-campaigns.php:88
+#: includes/class-campaigns.php:86
 msgid "No Campaigns found in Trash"
 msgstr ""
 
-#: includes/class-campaigns.php:150 includes/shortcode-profile.php:80
+#: includes/class-campaigns.php:148 includes/shortcode-profile.php:80
 msgid "Name"
 msgstr ""
 
-#: includes/class-campaigns.php:151
+#: includes/class-campaigns.php:149
 msgid "Type"
 msgstr ""
 
-#: includes/class-campaigns.php:152 includes/class-campaigns.php:356
+#: includes/class-campaigns.php:150 includes/class-campaigns.php:354
 msgid "Backers"
 msgstr ""
 
-#: includes/class-campaigns.php:153
+#: includes/class-campaigns.php:151
 msgid "Amount Funded"
 msgstr ""
 
-#: includes/class-campaigns.php:154
+#: includes/class-campaigns.php:152
 msgid "Days Remaining"
 msgstr ""
 
-#: includes/class-campaigns.php:173
+#: includes/class-campaigns.php:171
 msgctxt "funded of goal"
 msgid "%s of %s"
 msgstr ""
 
-#: includes/class-campaigns.php:228
+#: includes/class-campaigns.php:226
 msgid "Campaign Stats"
 msgstr ""
 
-#: includes/class-campaigns.php:229
+#: includes/class-campaigns.php:227
 msgid "Campaign Updates"
 msgstr ""
 
-#: includes/class-campaigns.php:232
+#: includes/class-campaigns.php:230
 msgid "Campaign Video"
 msgstr ""
 
-#: includes/class-campaigns.php:336
+#: includes/class-campaigns.php:334
 msgid "Whoops, the provided date is invalid."
 msgstr ""
 
-#: includes/class-campaigns.php:355 includes/shortcode-submit.php:1173
+#: includes/class-campaigns.php:353 includes/shortcode-submit.php:1173
 msgid "Limit"
 msgstr ""
 
-#: includes/class-campaigns.php:410
+#: includes/class-campaigns.php:408
 msgid "Current Amount:"
 msgstr ""
 
-#: includes/class-campaigns.php:415
+#: includes/class-campaigns.php:413
 msgid "Backers:"
 msgstr ""
 
-#: includes/class-campaigns.php:422
+#: includes/class-campaigns.php:420
 msgid "Days Remaining:"
 msgstr ""
 
-#: includes/class-campaigns.php:447
+#: includes/class-campaigns.php:445
 msgid "oEmbed supported video links."
 msgstr ""
 
-#: includes/class-campaigns.php:467
+#: includes/class-campaigns.php:465
 msgid "Notes and updates about the campaign."
 msgstr ""
 
-#: includes/class-campaigns.php:516
+#: includes/class-campaigns.php:514
 msgid "Featured campaign"
 msgstr ""
 
-#: includes/class-campaigns.php:523
+#: includes/class-campaigns.php:521
 msgid "Collect shipping information on checkout"
 msgstr ""
 
-#: includes/class-campaigns.php:528
+#: includes/class-campaigns.php:526
 msgid "Funding Type:"
 msgstr ""
 
-#: includes/class-campaigns.php:538
+#: includes/class-campaigns.php:536
 msgid "Goal:"
 msgstr ""
 
-#: includes/class-campaigns.php:547
+#: includes/class-campaigns.php:545
 msgid "Location:"
 msgstr ""
 
-#: includes/class-campaigns.php:552
+#: includes/class-campaigns.php:550
 msgid "Author:"
 msgstr ""
 
-#: includes/class-campaigns.php:557
+#: includes/class-campaigns.php:555
 msgid "Contact Email:"
 msgstr ""
 
-#: includes/class-campaigns.php:564
+#: includes/class-campaigns.php:562
 msgid "End Date:"
 msgstr ""
 
-#: includes/class-campaigns.php:584
+#: includes/class-campaigns.php:582
 msgid "This %s never ends"
 msgstr ""
 
-#: includes/class-campaigns.php:598
+#: includes/class-campaigns.php:596
 msgid "This %s is donations only (no rewards)"
 msgstr ""
 
