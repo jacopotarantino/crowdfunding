@@ -193,12 +193,12 @@ class ATCF_Campaign {
 		global $edd_logs;
 
 		$backers_args = apply_filters( 'atcf_campaign_backers_args', array(
-	       'post_parent'    => $this->ID, 
+	       'post_parent'    => $this->ID,
 	       'log_type'       => atcf_has_preapproval_gateway() ? 'preapproval' : 'sale',
 	       'post_status'    => array( 'publish' ),
 	       'posts_per_page' => -1
 	    ) );
-		 
+
 		$backers = $edd_logs->get_connected_logs( $backers_args );
 
 		if ( ! $backers )
@@ -363,14 +363,14 @@ class ATCF_Campaign {
 				$logged[$payment_id] = $payment_id;
 
 				$payment = get_post( $payment_id );
-				
+
 				if ( empty( $payment ) )
 					continue;
 
 				$total = $total + edd_get_payment_amount( $payment_id );
 			}
 		}
-		
+
 		if ( $formatted )
 			return edd_currency_filter( edd_format_amount( $total ) );
 

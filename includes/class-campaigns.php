@@ -200,7 +200,7 @@ class ATCF_Campaigns {
 		$boxes = array(
 			'edd_file_download_log' => 'normal',
 			'edd_purchase_log'      => 'normal',
-			'edd_download_stats'    => 'side'
+			'edd_product_stats'     => 'side'
 		);
 
 		foreach ( $boxes as $box => $context ) {

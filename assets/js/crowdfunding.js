@@ -52,12 +52,12 @@ Crowdfunding.Campaign = ( function($) {
 				'digitGroupSymbol' : atcfSettings.campaign.currency.thousands,
 				'symbol'           : ''
 			}
-			
+
 			currentPrice      = 0;
 			customPriceField  = $( '#contribute-modal-wrap #atcf_custom_price' );
 			priceOptions      = $( '#contribute-modal-wrap .atcf-price-option' );
 			submitButton      = $( '#contribute-modal-wrap a.edd-add-to-cart' );
-			
+
 			Crowdfunding.Campaign.setBasePrice();
 			priceOptionsHandler();
 		},
@@ -102,7 +102,7 @@ Crowdfunding.Campaign = ( function($) {
 			priceOptions.each( function( index ) {
 				if ( ! $( this ).hasClass( 'inactive' ) ) {
 					var price = Crowdfunding.Campaign.parsePrice( $(this) );
-					
+
 					if ( parseFloat( price ) < parseFloat( basePrice.price ) ) {
 						basePrice = {
 							price : price,
@@ -116,7 +116,7 @@ Crowdfunding.Campaign = ( function($) {
 
 			if ( null != basePrice.el )
 				basePrice.el.find( 'input[type="radio"]' ).attr( 'checked', true );
-			
+
 			if ( atcfSettings.campaign.isDonations != 1 ) {
 				customPriceField
 					.val( startPledgeLevel )
@@ -151,7 +151,7 @@ Crowdfunding.SubmitCampaign = ( function($) {
 			newReward.find( 'input, select, textarea' ).each(function() {
 				var label = $( this ).prev().attr( 'for' );
 				var name  = $( this ).attr( 'name' );
-				
+
 				name  = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
 				label = label.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
 
@@ -212,7 +212,7 @@ Crowdfunding.SubmitCampaign = ( function($) {
 }(jQuery));
 
 jQuery(document).ready(function($) {
-	if ( atcfSettings.pages.is_submission ) 
+	if ( atcfSettings.pages.is_submission )
 		Crowdfunding.SubmitCampaign.init();
 
 	if ( atcfSettings.pages.is_campaign )

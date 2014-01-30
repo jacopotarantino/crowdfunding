@@ -357,7 +357,7 @@ class ATCF_Submit_Campaign {
 	 */
 	private function saved_data( $key, $campaign ) {
 		switch ( $key ) {
-			case 'title' : 
+			case 'title' :
 				$data = $campaign->data->post_title;
 			break;
 
@@ -400,7 +400,7 @@ class ATCF_Submit_Campaign {
 			case 'organization' :
 				$data = $campaign->__get( 'campaign_author' );
 			break;
-			
+
 			default :
 				$data = apply_filters( 'atcf_shortcode_submit_saved_data_' . $key, null, $key, $campaign );
 			break;
@@ -427,7 +427,7 @@ class ATCF_Submit_Campaign {
 		$_tags = array();
 
 		if ( isset ( $_POST[ 'tax_input' ][ 'download_tag' ] ) ) {
-			foreach ( $_POST[ 'tax_input' ][ 'download_tag' ] as $key => $term ) { 
+			foreach ( $_POST[ 'tax_input' ][ 'download_tag' ] as $key => $term ) {
 				$obj = get_term_by( 'id', $term, 'download_tag' );
 				$_tags[] = $obj->name;
 			}
@@ -566,7 +566,7 @@ class ATCF_Submit_Campaign {
 			$upload = wp_handle_upload( $_FILES[ $key ], $upload_overrides );
 
 			$attachment = array(
-				'guid'           => $upload[ 'url' ], 
+				'guid'           => $upload[ 'url' ],
 				'post_mime_type' => $upload[ 'type' ],
 				'post_title'     => $upload[ 'file' ],
 				'post_content'   => '',
@@ -574,11 +574,11 @@ class ATCF_Submit_Campaign {
 				'post_parent'    => $campaign
 			);
 
-			$attach_id = wp_insert_attachment( $attachment, $upload[ 'file' ], $campaign );		
-			
-			wp_update_attachment_metadata( 
-				$attach_id, 
-				wp_generate_attachment_metadata( $attach_id, $upload[ 'file' ] ) 
+			$attach_id = wp_insert_attachment( $attachment, $upload[ 'file' ], $campaign );
+
+			wp_update_attachment_metadata(
+				$attach_id,
+				wp_generate_attachment_metadata( $attach_id, $upload[ 'file' ] )
 			);
 
 			update_post_meta( $campaign, '_thumbnail_id', absint( $attach_id ) );
@@ -687,31 +687,31 @@ function atcf_shortcode_submit( $atts = array() ) {
 	global $edd_options;
 
 	$atts = shortcode_atts( array(
-		'campaign_id' => false, 
+		'campaign_id' => false,
 	), $atts );
 
 	$crowdfunding = crowdfunding();
 	$campaign     = $atts['campaign_id'] === false ? null : atcf_get_campaign( $atts[ 'campaign_id' ] );
-	
+
 	$is_draft     = false;
 	$is_editing   = false;
 
 	if ( is_null( $campaign ) ) {
 		global $post;
-			
-		// If the current $post is a download, we know this is 
+
+		// If the current $post is a download, we know this is
 		// either a draft, pending or published campaign
 		if ( 'download' == $post->post_type) {
 			$is_draft   = 'draft' == $post->post_status;
 			$is_editing = ! $is_draft;
 
 			$campaign   = atcf_get_campaign( $post );
-		}		
-	}	
+		}
+	}
 
 	$args = array(
 		'campaign'   => $campaign,
-		'previewing' => $is_draft, 
+		'previewing' => $is_draft,
 		'editing'    => $is_editing
 	);
 
@@ -729,7 +729,7 @@ function atcf_shortcode_submit( $atts = array() ) {
 	<?php do_action( 'atcf_shortcode_submit_before', $args, $args['campaign'] ); ?>
 
 	<form action="" method="post" class="atcf-submit-campaign" enctype="multipart/form-data">
-		
+
 		<?php
 			foreach ( atcf_shortcode_submit_fields() as $key => $field ) :
 				/** If we _aren't_ editing, and the field should only be shown on edit, skip... */
@@ -752,7 +752,7 @@ function atcf_shortcode_submit( $atts = array() ) {
 		<p class="atcf-submit-campaign-submit">
 			<button type="submit" name="submit" value="submit" class="button">
 				<?php echo $is_editing
-				? sprintf( _x( 'Update %s', 'edit "campaign"', 'atcf' ), edd_get_label_singular() ) 
+				? sprintf( _x( 'Update %s', 'edit "campaign"', 'atcf' ), edd_get_label_singular() )
 				: sprintf( _x( 'Submit %s', 'submit "campaign"', 'atcf' ), edd_get_label_singular() ); ?>
 			</button>
 
@@ -904,7 +904,7 @@ function atcf_shortcode_submit_heading( $key, $field, $args ) {
 function atcf_shortcode_submit_field_hidden( $key, $field, $args ) {
 ?>
 	<input type="hidden" name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $field[ 'value' ] ); ?>">
-	
+
 	<?php if ( $field[ 'label' ] ) : ?>
 	<p class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
 		<?php echo wp_kses_data( $field[ 'label' ] ); ?>
@@ -1064,9 +1064,9 @@ function atcf_shortcode_submit_field_term_checklist( $key, $field, $args ) {
 	<div class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
 		<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $field[ 'label' ] ); ?></label>
 
-		<ul class="atcf-multi-select">			
-		<?php 
-			wp_terms_checklist( is_null( $args['campaign'] ) ? 0 : $args['campaign']->ID, array( 
+		<ul class="atcf-multi-select">
+		<?php
+			wp_terms_checklist( is_null( $args['campaign'] ) ? 0 : $args['campaign']->ID, array(
 				'taxonomy'   => 'download_' . $key,
 				'walker'     => new ATCF_Walker_Terms_Checklist
 			) );
@@ -1090,11 +1090,11 @@ function atcf_shortcode_submit_field_wp_editor( $key, $field, $args ) {
 ?>
 	<div class="atcf-submit-campaign-<?php echo esc_attr( $key ); ?>">
 		<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $field[ 'label' ] ); ?></label>
-		<?php 
-			wp_editor( $field[ 'value' ], esc_attr( $key ), apply_filters( 'atcf_submit_field_' . $key . '_editor_args', array( 
+		<?php
+			wp_editor( $field[ 'value' ], esc_attr( $key ), apply_filters( 'atcf_submit_field_' . $key . '_editor_args', array(
 				'media_buttons' => true,
-				'teeny'         => true,
-				'quicktags'     => false,
+				'teeny'         => false,
+				'quicktags'     => true,
 				'editor_css'    => '<style>body { background: white; }</style>',
 				'tinymce'       => array(
 					'theme_advanced_path'     => false,
@@ -1102,7 +1102,7 @@ function atcf_shortcode_submit_field_wp_editor( $key, $field, $args ) {
 					'plugins'                 => 'paste',
 					'paste_remove_styles'     => true
 				),
-			) ) ); 
+			) ) );
 		?>
 	</div>
 <?php
@@ -1152,9 +1152,9 @@ function atcf_shortcode_submit_field_rewards( $key, $field, $args ) {
 	<?php do_action( 'atcf_shortcode_submit_field_rewards_list_before' ); ?>
 
 	<div class="atcf-submit-campaign-rewards">
-		<?php 
-			foreach ( $rewards as $k => $reward ) : 
-				$disabled = isset ( $reward[ 'bought' ] ) && $reward[ 'bought' ] > 0 ? true : false; 
+		<?php
+			foreach ( $rewards as $k => $reward ) :
+				$disabled = isset ( $reward[ 'bought' ] ) && $reward[ 'bought' ] > 0 ? true : false;
 		?>
 		<div class="atcf-submit-campaign-reward">
 			<?php do_action( 'atcf_shortcode_submit_field_rewards_before' ); ?>
@@ -1206,10 +1206,10 @@ function atcf_shortcode_submit_field_rewards( $key, $field, $args ) {
  */
 function atcf_shortcode_submit_process() {
 	global $edd_options, $post;
-	
+
 	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
 		return;
-	
+
 	if ( empty( $_POST[ 'action' ] ) || ( 'atcf-campaign-submit' !== $_POST[ 'action' ] ) )
 		return;
 
@@ -1235,7 +1235,7 @@ function atcf_shortcode_submit_process() {
 	}
 
 	do_action( 'atcf_campaign_submit_validate', $fields, $_POST );
-	
+
 	if ( edd_get_errors() )
 		return;
 
@@ -1244,7 +1244,7 @@ function atcf_shortcode_submit_process() {
 
 	if ( ! $user ) {
 		$user_id = atcf_register_user( array(
-			'user_login'           => $fields[ 'contact_email' ][ 'value' ], 
+			'user_login'           => $fields[ 'contact_email' ][ 'value' ],
 			'user_email'           => $fields[ 'contact_email' ][ 'value' ],
 			'display_name'         => isset ( $fields[ 'name' ][ 'value' ] ) ? $fields[ 'name' ][ 'value' ] : $fields[ 'contact_email' ][ 'value' ],
 		) );
@@ -1252,8 +1252,8 @@ function atcf_shortcode_submit_process() {
 		$user_id = $user->ID;
 	}
 
-	/** 
-	 * Create or update a campaign 
+	/**
+	 * Create or update a campaign
 	 */
 	$args = apply_filters( 'atcf_campaign_submit_data', array(
 		'post_type'    => 'download',
@@ -1285,7 +1285,7 @@ function atcf_shortcode_submit_process() {
 		$url = isset ( $edd_options[ 'submit_success_page' ] ) ? get_permalink( $edd_options[ 'submit_success_page' ] ) : home_url();
 
 		$redirect = apply_filters( 'atcf_submit_campaign_success_redirect', $url );
-		
+
 		wp_safe_redirect( add_query_arg( array( 'success' => true, 'campaign' => $campaign ), $redirect ) );
 		exit();
 	} else {
@@ -1299,7 +1299,7 @@ add_action( 'template_redirect', 'atcf_shortcode_submit_process' );
  * Save extra campaign data. This includes default registered fields.
  *
  * Themes and plugins should also hook into this action and save their
- * data as well. Some special fields have a special callback in the main 
+ * data as well. Some special fields have a special callback in the main
  * class, while default text fields and the like are just saved as standard meta.
  *
  * @since Astoundify Crowdfunding 1.7
@@ -1314,13 +1314,13 @@ function atcf_submit_process_after( $campaign, $postdata, $status, $fields ) {
 	global $edd_options, $wp_query;
 
 	$submit_campaign = atcf_submit_campaign();
-	
+
 	/**
 	 * Save the fields
 	 */
 	foreach ( $fields as $key => $field ) {
 		switch ( $key ) {
-			case 'tag' : 
+			case 'tag' :
 			case 'category' :
 			case 'length' :
 			case 'rewards' :
