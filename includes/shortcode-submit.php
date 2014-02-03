@@ -1093,8 +1093,8 @@ function atcf_shortcode_submit_field_wp_editor( $key, $field, $args ) {
 		<?php
 			wp_editor( $field[ 'value' ], esc_attr( $key ), apply_filters( 'atcf_submit_field_' . $key . '_editor_args', array(
 				'media_buttons' => true,
-				'teeny'         => false,
-				'quicktags'     => true,
+				'teeny'         => true,
+				'quicktags'     => false,
 				'editor_css'    => '<style>body { background: white; }</style>',
 				'tinymce'       => array(
 					'theme_advanced_path'     => false,
