@@ -147,13 +147,16 @@ Crowdfunding.SubmitCampaign = ( function($) {
 			var count     = rewardContainer.find( '.atcf-submit-campaign-reward' ).length;
 
 			newReward.removeClass( 'static' );
-			newReward.find( 'input, select, textarea' ).val( '' );
+			newReward.find( 'input:not([type=hidden]), select, textarea' ).val( '' );
 			newReward.find( 'input, select, textarea' ).each(function() {
 				var label = $( this ).prev().attr( 'for' );
 				var name  = $( this ).attr( 'name' );
 
 				name  = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
-				label = label.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
+
+				if ( label ) {
+					label = label.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
+				}
 
 				$( this )
 					.attr( 'name', name )
