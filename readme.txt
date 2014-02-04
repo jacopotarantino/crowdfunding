@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 1.8
+Stable Tag: 1.8.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -61,7 +61,12 @@ Yes. However, it won't look much different than a standard EDD install. Template
 
 == Changelog ==
 
-= 1.8: January 2, 2013 =
+= 1.8.1: February 4, 2014 =
+
+* Fix: Properly set "bought" count to 0 on all pledge levels on new submissions.
+* Fix: Remove default EDD stats box to avoid confusion.
+
+= 1.8: January 2, 2014 =
 
 * New: Single payment processing for PayPal Adaptive Payments, Stripe, and WePay.
 * New: Automatic payment processing (in batches) when a campaign is complete.

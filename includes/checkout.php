@@ -38,7 +38,7 @@ add_action( 'edd_update_payment_status', 'atcf_log_pledge_limit', 100, 3 );
 function atcf_update_backer_count( $payment_id, $direction ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
 	$downloads    = maybe_unserialize( $payment_data[ 'downloads' ] );
-	
+
 	if ( ! is_array( $downloads ) )
 		return;
 
@@ -79,7 +79,7 @@ function atcf_edd_purchase_form_user_info() {
 	</p>
 <?php
 }
-add_action( 'edd_purchase_form_user_info', 'atcf_edd_purchase_form_user_info' );
+add_action( 'edd_purchase_form_after_user_info', 'atcf_edd_purchase_form_user_info' );
 
 /**
  * Save if the user wants to remain anonymous.
@@ -122,12 +122,12 @@ function atcf_edd_add_to_cart_item( $cart_item ) {
 	}
 
 	$custom_price = edd_sanitize_amount( $custom_price );
-	
+
 	$price        = edd_get_cart_item_price( $cart_item[ 'id' ], $cart_item[ 'options' ] );
 
 	if ( $custom_price > $price ) {
 		$cart_item[ 'options' ][ 'atcf_extra_price' ] = $custom_price - $price;
-	
+
 		return $cart_item;
 	}
 
