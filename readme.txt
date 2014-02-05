@@ -65,6 +65,7 @@ Yes. However, it won't look much different than a standard EDD install. Template
 
 * Fix: Properly set "bought" count to 0 on all pledge levels on new submissions.
 * Fix: Remove default EDD stats box to avoid confusion.
+* Fix: Make sure Campaign data can properly be deleted when edited.
 
 = 1.8: January 2, 2014 =
 

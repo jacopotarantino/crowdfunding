@@ -665,8 +665,11 @@ class ATCF_Submit_Campaign {
 	 * @return void
 	 */
 	public function save_field( $key, $field, $campaign, $fields ) {
-		if ( isset ( $_POST[ $key ] ) && '' == $_POST[ $key ] )
+		if ( isset ( $_POST[ $key ] ) && '' == $_POST[ $key ] ) {
+			delete_post_meta( $campaign, 'campaign_' . $key );
+
 			return;
+		}
 
 		do_action( 'atcf_shortcode_submit_save_field_' . $key, $key, $field, $campaign, $fields );
 
