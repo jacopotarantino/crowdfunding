@@ -37,15 +37,19 @@ function atcf_pending_purchase( $payment_id, $new_status, $old_status ) {
 		return;
 
 	foreach ( $downloads as $download ) {
+		if ( ! isset( $download[ 'quantity' ] ) ) {
+			$download[ 'quantity' ] = 1;
+		}
+
 		for( $i = 0; $i < $download['quantity']; $i++ ) {
-			$edd_logs->insert_log( 
-				array( 
-					'post_parent' => $download[ 'id' ], 
-					'log_type'    => 'preapproval' 
-				), 
+			$edd_logs->insert_log(
 				array(
-					'payment_id' => $payment_id 
-				) 
+					'post_parent' => $download[ 'id' ],
+					'log_type'    => 'preapproval'
+				),
+				array(
+					'payment_id' => $payment_id
+				)
 			);
 		}
 	}
