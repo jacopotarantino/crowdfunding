@@ -245,7 +245,14 @@ class ATCF_Campaign {
 	 * @return int Campaign Backers Count
 	 */
 	public function backers_count() {
-		return absint( count( $this->unique_backers() ) );
+		$prices = edd_get_variable_prices( $this->ID );
+		$count  = 0;
+
+		foreach ( $prices as $price ) {
+			$count += isset( $price[ 'bought' ] ) ? $price[ 'bought' ] : 0;
+		}
+
+		return $count;
 	}
 
 	/**
