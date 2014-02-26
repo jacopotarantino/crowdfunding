@@ -207,7 +207,7 @@ class ATCF_Processing {
 
 				echo '<ul>';
 					foreach ( $payments[ 'payments' ] as $payment ) {
-						echo '<li><a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=edit-payment&purchase_id=' . $payment ) ) . '>">#' . $payment . '</a></li>';
+						echo '<li><a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $payment ) ) . '>">#' . $payment . '</a></li>';
 					}
 				echo '</ul>';
 			echo '</li>';
