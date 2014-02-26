@@ -45,7 +45,7 @@ class ATCF_Processing {
 	/**
 	 * Payments Queueueuueue.
 	 *
-	 * This is attached to the cron, and simply loops through any campaigns 
+	 * This is attached to the cron, and simply loops through any campaigns
 	 * that are still processing and instaitates the processing class.
 	 *
 	 * @since Astoundify Crowdfunding 1.8
@@ -116,7 +116,7 @@ class ATCF_Processing {
 				update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
 
 				if ( (
-					! in_array( $campaign->ID, $processing ) && 
+					! in_array( $campaign->ID, $processing ) &&
 					! $campaign->_campaign_batch_complete
 				) && (
 					( 'fixed' == $campaign->type() && $campaign->is_funded() ) ||
@@ -143,17 +143,17 @@ class ATCF_Processing {
 		if ( count( $campaign->unique_backers() ) == 0 )
 			return;
 
-		if ( 
-			isset( $edd_options[ 'atcf_automatic_process' ] ) && 
+		if (
+			isset( $edd_options[ 'atcf_automatic_process' ] ) &&
 			in_array( $campaign->ID, get_option( 'atcf_processing', array() ) ) &&
 			! $campaign->__get( '_campaign_batch_complete' )
 		)
 			add_meta_box( 'atcf_campaign_collect_funds', __( 'Campaign Funds', 'atcf' ), array( $this, 'meta_box_processing' ), 'download', 'side', 'high' );
 
-		if ( 
+		if (
 			! isset( $edd_options[ 'atcf_automatic_process' ] ) &&
 			! $campaign->__get( '_campaign_batch_complete' ) &&
-			( ( $campaign->type() == 'fixed' && $campaign->is_funded() ) || 
+			( ( $campaign->type() == 'fixed' && $campaign->is_funded() ) ||
 			$campaign->type() == 'flexible' )
 		)
 			add_meta_box( 'atcf_campaign_collect_funds', __( 'Campaign Funds', 'atcf' ), array( $this, 'meta_box_collect' ), 'download', 'side', 'high' );
@@ -179,7 +179,7 @@ class ATCF_Processing {
 		if ( 'flexible' == $campaign->type() )
 			echo '<p>' . __( 'Once processed, this campaign will automatically be closed.' ) . '</p>';
 
-		echo '<p><a href="' . wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ) . '" class="button">' . 
+		echo '<p><a href="' . wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID ), admin_url() ), 'atcf-collect-funds' ) . '" class="button">' .
 					sprintf( __( 'Collect Payments', 'atcf' ), $pledges <= $to_process ? $pledges : $to_process )
 			. '</a></p>';
 	}
@@ -191,17 +191,17 @@ class ATCF_Processing {
 
 		$failed_payments = $campaign->failed_payments();
 		$count           = 0;
-		
+
 		foreach ( $failed_payments as $gateways ) {
 			foreach ( $gateways as $gateway ) {
 				$count = $count + count( $gateway );
 			}
 		}
-		
+
 		echo '<p><strong>' . sprintf( _n( '%d payment failed to process.', '%d payments failed to process.', $count, 'atcf' ), $count ) . '</strong> <a href="' . esc_url( add_query_arg( array( 'page' => 'edd-reports', 'tab' => 'logs', 'view' => 'gateway_errors', 'post_type' => 'download' ), admin_url( 'edit.php' ) ) ) . '">' . __( 'View gateway errors', 'atcf' ) . '</a>.</p>';
 
 		echo  '<ul>';
-			
+
 		foreach ( $failed_payments as $gateway => $payments ) {
 			echo '<li><strong>' . edd_get_gateway_admin_label( $gateway ) . '</strong>';
 
@@ -212,10 +212,10 @@ class ATCF_Processing {
 				echo '</ul>';
 			echo '</li>';
 		}
-			
+
 		echo '</ul>';
 
-		echo '<p><a href="' . wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-failed-funds', 'campaign' => $campaign->ID, 'status' => 'failed' ), admin_url() ), 'atcf-collect-failed-funds' ) . '" class="button">' . __( 'Retry Failed Funds', 'atcf' ) . '</a></p>';
+		echo '<p><a href="' . wp_nonce_url( add_query_arg( array( 'action' => 'atcf-collect-funds', 'campaign' => $campaign->ID, 'status' => 'failed' ), admin_url() ), 'atcf-collect-funds' ) . '" class="button">' . __( 'Retry Failed Funds', 'atcf' ) . '</a></p>';
 	}
 
 	/**
@@ -368,7 +368,7 @@ class ATCF_Process_Campaign {
 	 * This will be modified as payments are processed and used as
 	 * our "destructable" list of payments we still need to process.
 	 *
-	 * If something goes wrong, we always have the actual payments we can 
+	 * If something goes wrong, we always have the actual payments we can
 	 * rebuild the list from.
 	 *
 	 * @since Astoundify Crowdfunding 1.8
@@ -487,7 +487,7 @@ class ATCF_Process_Campaign {
 			return;
 
 		foreach ( $this->failed_payments as $gateway => $payments ) {
-			
+
 			foreach ( $payments[ 'payments' ] as $payment_id ) {
 				edd_insert_payment_note( $payment_id, apply_filters( 'atcf_failed_payment_note', sprintf( __( 'Error processing preapproved payment via %s when automatically collecting funds.', 'atcf' ), $gateway ) ) );
 
@@ -496,7 +496,7 @@ class ATCF_Process_Campaign {
 			}
 
 		}
-		
+
 	}
 
 	/**
