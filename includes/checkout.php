@@ -123,7 +123,7 @@ function atcf_edd_add_to_cart_item( $cart_item ) {
 
 	$custom_price = edd_sanitize_amount( $custom_price );
 
-	$price        = edd_get_cart_item_price( $cart_item[ 'id' ], $cart_item[ 'options' ] );
+	$price        = edd_get_cart_item_price( $cart_item[ 'id' ], $cart_item[ 'options' ], edd_prices_include_tax() );
 
 	if ( $custom_price > $price ) {
 		$cart_item[ 'options' ][ 'atcf_extra_price' ] = $custom_price - $price;
