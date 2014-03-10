@@ -84,8 +84,6 @@ class ATCF_Processing {
 	 * @return void
 	 */
 	function find_completed_campaigns() {
-		$now = current_time( 'timestamp', true );
-
 		$active_campaigns = get_posts( array(
 			'post_type'             => array( 'download' ),
 			'post_status'           => array( 'publish' ),
@@ -107,10 +105,11 @@ class ATCF_Processing {
 		foreach ( $active_campaigns as $campaign ) {
 
 			$campaign        = atcf_get_campaign( $campaign );
-			$expiration_date = mysql2date( 'G', $campaign->end_date() );
+			$expires         = strtotime( $campaign->end_date() );
+			$now             = current_time( 'timestamp' );
 
 			// Make sure it is actually expired
-			if ( $now > $expiration_date ) {
+			if ( $now > $expires ) {
 
 				// Flag that it has expired to avoid calculations in the future.
 				update_post_meta( $campaign->ID, '_campaign_expired', current_time( 'mysql' ) );
