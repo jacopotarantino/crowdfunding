@@ -342,7 +342,8 @@ final class ATCF_CrowdFunding {
 				'currency'    => array(
 					'thousands' => $edd_options[ 'thousands_separator' ],
 					'decimal'   => $edd_options[ 'decimal_separator' ],
-					'symbol'    => edd_currency_filter( '' )
+					'symbol'    => edd_currency_filter( '' ),
+					'round'     => apply_filters( 'edd_format_amount_decimals', 2 )
 				)
 			);
 		}

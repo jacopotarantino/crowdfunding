@@ -48,9 +48,10 @@ Crowdfunding.Campaign = ( function($) {
 	return {
 		init : function() {
 			formatCurrencySettings = {
-				'decimalSymbol'    : atcfSettings.campaign.currency.decimal,
-				'digitGroupSymbol' : atcfSettings.campaign.currency.thousands,
-				'symbol'           : ''
+				'decimalSymbol'       : atcfSettings.campaign.currency.decimal,
+				'digitGroupSymbol'    : atcfSettings.campaign.currency.thousands,
+				'symbol'              : '',
+				'roundToDecimalPlace' : atcfSettings.campaign.currency.round
 			}
 
 			currentPrice      = 0;
