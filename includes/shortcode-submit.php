@@ -1151,6 +1151,10 @@ function atcf_shortcode_submit_field_rewards( $key, $field, $args ) {
 		return;
 
 	$rewards = isset ( $field[ 'value' ] ) ? $field[ 'value' ] : array( 0 => array( 'amount' => null, 'name' => null, 'limit' => null ) );
+
+	if ( empty( $rewards ) ) {
+		$rewards = array(0);
+	}
 ?>
 	<?php do_action( 'atcf_shortcode_submit_field_rewards_list_before' ); ?>
 
