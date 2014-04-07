@@ -1,10 +1,10 @@
-# Copyright (C) 2014
+# Copyright (C) 2014 
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
 "Project-Id-Version:  \n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/appthemer-crowdfunding\n"
-"POT-Creation-Date: 2014-01-15 18:44:07+00:00\n"
+"POT-Creation-Date: 2014-04-07 17:37:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,40 +20,40 @@ msgstr ""
 msgid "At least one reward is required."
 msgstr ""
 
-#: includes/checkout.php:77
+#: includes/checkout.php:76
 msgid "Hide name on backers list?"
 msgstr ""
 
-#: includes/class-campaign.php:459
+#: includes/class-campaign.php:466
 msgid "Reward Options:"
 msgstr ""
 
-#: includes/class-campaign.php:471
+#: includes/class-campaign.php:478
 msgid "Enable multiple reward options"
 msgstr ""
 
-#: includes/class-campaign.php:482
+#: includes/class-campaign.php:489
 msgid "All-or-nothing"
 msgstr ""
 
-#: includes/class-campaign.php:483
+#: includes/class-campaign.php:490
 msgid "Only collect pledged funds when the campaign ends if the set goal is met."
 msgstr ""
 
-#: includes/class-campaign.php:486
+#: includes/class-campaign.php:493
 msgid "Flexible"
 msgstr ""
 
-#: includes/class-campaign.php:487
+#: includes/class-campaign.php:494
 msgid "Collect funds pledged at the end of the campaign no matter what."
 msgstr ""
 
-#: includes/class-campaign.php:494 includes/class-campaigns.php:647
+#: includes/class-campaign.php:501 includes/class-campaigns.php:647
 #: includes/shortcode-submit.php:520
 msgid "Donation"
 msgstr ""
 
-#: includes/class-campaign.php:495
+#: includes/class-campaign.php:502
 msgid "Funds will be collected automatically as pledged."
 msgstr ""
 
@@ -142,7 +142,7 @@ msgstr ""
 msgid "Whoops, the provided date is invalid."
 msgstr ""
 
-#: includes/class-campaigns.php:353 includes/shortcode-submit.php:1173
+#: includes/class-campaigns.php:353 includes/shortcode-submit.php:1180
 msgid "Limit"
 msgstr ""
 
@@ -267,53 +267,53 @@ msgstr ""
 msgid "guest"
 msgstr ""
 
-#: includes/class-processing.php:151 includes/class-processing.php:159
+#: includes/class-processing.php:150 includes/class-processing.php:158
 msgid "Campaign Funds"
 msgstr ""
 
-#: includes/class-processing.php:162
+#: includes/class-processing.php:161
 msgid "Failed Payments"
 msgstr ""
 
-#: includes/class-processing.php:166
+#: includes/class-processing.php:165
 msgid "This campaign is currently being processed."
 msgstr ""
 
-#: includes/class-processing.php:177
+#: includes/class-processing.php:176
 msgid "<strong>There are currently unprocessed for this campaign.</strong> If there are more than %d, you will have to process multiple batches."
 msgstr ""
 
-#: includes/class-processing.php:180
+#: includes/class-processing.php:179
 msgid "Once processed, this campaign will automatically be closed."
 msgstr ""
 
-#: includes/class-processing.php:183
+#: includes/class-processing.php:182
 msgid "Collect Payments"
 msgstr ""
 
-#: includes/class-processing.php:201
+#: includes/class-processing.php:200
 msgid "%d payment failed to process."
 msgid_plural "%d payments failed to process."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-processing.php:201
+#: includes/class-processing.php:200
 msgid "View gateway errors"
 msgstr ""
 
-#: includes/class-processing.php:218
+#: includes/class-processing.php:217
 msgid "Retry Failed Funds"
 msgstr ""
 
-#: includes/class-processing.php:266
+#: includes/class-processing.php:265
 msgid "Payments have attempted to be processed. Any errors will appear on this page."
 msgstr ""
 
-#: includes/class-processing.php:267
+#: includes/class-processing.php:266
 msgid "You do not have permission to collect funds for %s."
 msgstr ""
 
-#: includes/class-processing.php:492
+#: includes/class-processing.php:491
 msgid "Error processing preapproved payment via %s when automatically collecting funds."
 msgstr ""
 
@@ -779,53 +779,53 @@ msgstr ""
 msgid "Location"
 msgstr ""
 
-#: includes/shortcode-submit.php:755
+#: includes/shortcode-submit.php:758
 msgctxt "edit \"campaign\""
 msgid "Update %s"
 msgstr ""
 
-#: includes/shortcode-submit.php:756
+#: includes/shortcode-submit.php:759
 msgctxt "submit \"campaign\""
 msgid "Submit %s"
 msgstr ""
 
-#: includes/shortcode-submit.php:761
+#: includes/shortcode-submit.php:764
 msgid "Save and Preview"
 msgstr ""
 
-#: includes/shortcode-submit.php:797
+#: includes/shortcode-submit.php:800
 msgid "Agree to Terms?"
 msgstr ""
 
-#: includes/shortcode-submit.php:832
+#: includes/shortcode-submit.php:835
 msgid "Show Terms"
 msgstr ""
 
-#: includes/shortcode-submit.php:833
+#: includes/shortcode-submit.php:836
 msgid "Hide Terms"
 msgstr ""
 
-#: includes/shortcode-submit.php:874
+#: includes/shortcode-submit.php:877
 msgid "No End Date"
 msgstr ""
 
-#: includes/shortcode-submit.php:1163
+#: includes/shortcode-submit.php:1170
 msgid "Amount (%s)"
 msgstr ""
 
-#: includes/shortcode-submit.php:1168
+#: includes/shortcode-submit.php:1175
 msgid "Reward"
 msgstr ""
 
-#: includes/shortcode-submit.php:1190
+#: includes/shortcode-submit.php:1197
 msgid "+ <em>Add Reward</em>"
 msgstr ""
 
-#: includes/shortcode-submit.php:1234
+#: includes/shortcode-submit.php:1241
 msgid "The <strong>%s</strong> field is required."
 msgstr ""
 
-#: includes/shortcode-submit.php:1392
+#: includes/shortcode-submit.php:1399
 msgid "<strong>Note</strong>: You are currently logged in as %1$s. This %2$s will be associated with that account. Please <a href=\"%3$s\">log out</a> if you would like to make a %2$s under a new account."
 msgstr ""
 

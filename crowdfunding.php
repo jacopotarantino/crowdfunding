@@ -5,7 +5,7 @@
  * Description: A crowd funding platform in the likes of Kickstarter and Indigogo
  * Author:      Astoundify
  * Author URI:  http://astoundify.com
- * Version:     1.8.1
+ * Version:     1.8.2
  * Text Domain: atcf
  */
 
@@ -74,7 +74,7 @@ final class ATCF_CrowdFunding {
 	private function setup_globals() {
 		/** Versions **********************************************************/
 
-		$this->version    = '1.8';
+		$this->version    = '1.8.2';
 		$this->version_db = get_option( 'atcf_version' );
 		$this->db_version = '1';
 

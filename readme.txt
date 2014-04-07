@@ -7,7 +7,7 @@ Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource
 Requires at least: 3.5
 Tested up to: 3.5
-Stable Tag: 1.8.1
+Stable Tag: 1.8.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,6 +60,13 @@ Developers can contribute to the source code of the project on [GitHub](https://
 Yes. However, it won't look much different than a standard EDD install. Templates must be modified/created to output relevant crowdfunding information (display amount funded, etc).
 
 == Changelog ==
+
+= 1.8.2: April 7, 2014 =
+
+* Fix: Make sure failed funds are properly re-processed when trying again.
+* Fix: If no rewards are added before saving/previewing allow them to be added when viewing again.
+* Fix: Make sure quantity is always set when creating preapproval logs.
+* Fix: Account for longer decimals if filtered via EDD
 
 = 1.8.1: February 4, 2014 =
 
