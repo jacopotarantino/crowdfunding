@@ -25,7 +25,7 @@ function atcf_log_pledge_limit( $payment_id, $new_status, $old_status ) {
 		return;
 
 	// Make sure the payment completion is only processed when new status is complete
-	if ( in_array( $new_status, array( 'refunded', 'failed', 'revoked' ) ) )
+	if ( in_array( $new_status, array( 'refunded', 'failed', 'revoked', 'cancelled',  'abandoned' ) ) )
 		return;
 
 	if ( edd_is_test_mode() && ! apply_filters( 'edd_log_test_payment_stats', false ) )

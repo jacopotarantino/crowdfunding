@@ -248,6 +248,10 @@ class ATCF_Campaign {
 		$prices = edd_get_variable_prices( $this->ID );
 		$count  = 0;
 
+		if ( empty( $prices ) ) {
+			return $count;
+		}
+
 		foreach ( $prices as $price ) {
 			$count += isset( $price[ 'bought' ] ) ? $price[ 'bought' ] : 0;
 		}
