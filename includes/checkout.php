@@ -78,7 +78,7 @@ function atcf_edd_purchase_form_user_info() {
 	</p>
 <?php
 }
-add_action( 'edd_purchase_form_after_user_info', 'atcf_edd_purchase_form_user_info' );
+add_action( 'edd_purchase_form_after_cc_form', 'atcf_edd_purchase_form_user_info' );
 
 /**
  * Save if the user wants to remain anonymous.
