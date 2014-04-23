@@ -512,8 +512,9 @@ class ATCF_Submit_Campaign {
 	public function save_rewards( $key, $field, $campaign, $fields ) {
 		$prices = array();
 
-		if ( ! isset( $_POST[ 'norewards' ] ) && ! isset( $_POST[ 'rewards' ] ) )
-			return;
+		if ( ! isset( $_POST[ 'norewards' ] ) && ! isset( $_POST[ 'rewards' ] ) ) {
+			return update_post_meta( $campaign, 'campaign_norewards', 1 );
+		}
 
 		if ( $fields[ 'norewards' ][ 'value' ] ) {
 			$prices[0] = array(
