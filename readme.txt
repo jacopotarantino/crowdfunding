@@ -5,8 +5,8 @@ Plugin URI: http://astoundify.com
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=contact@astoundify.com&item_name=Donation+for+Crowdfunding
 Contributors: SpencerFinnell, adampickering
 Tags: crowdfunding, donations, charity, fundraising, digital downloads, crowd funding, crowdsource
-Requires at least: 3.5
-Tested up to: 3.5
+Requires at least: 3.9
+Tested up to: 3.9
 Stable Tag: 1.8.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
