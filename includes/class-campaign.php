@@ -121,7 +121,7 @@ class ATCF_Campaign {
 	 * @return sting Campaign Contact Email
 	 */
 	public function contact_email() {
-		return $this->__get( 'campaign_contact_email' );
+		return antispambot( $this->__get( 'campaign_contact_email' ) );
 	}
 
 	/**
@@ -286,7 +286,7 @@ class ATCF_Campaign {
 			break;
 		}
 
-		$remaining = ceil( $off );
+		$remaining = floor( $off );
 
 		return apply_filters( 'atcf_campaign_time_remainig', $remaining, $this );
 	}
