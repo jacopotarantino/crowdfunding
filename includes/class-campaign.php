@@ -187,6 +187,7 @@ class ATCF_Campaign {
 	 *
 	 * @since Astoundify Crowdfunding 0.1-alpha
 	 *
+	 * @param bool $unique
 	 * @return array Campaign Backers
 	 */
 	public function backers( $unique = false ) {
@@ -273,7 +274,7 @@ class ATCF_Campaign {
 	 */
 	public function time_remaining( $format ) {
 		$now     = current_time( 'timestamp' );
-		$expires = strtotime( $this->end_date(), $now );
+		$expires = strtotime( $this->campaign_end_datete(), $now );
 
 		if ( $now > $expires )
 			return 0;
@@ -360,36 +361,24 @@ class ATCF_Campaign {
 	 * @return sting $total The amount funded (currency formatted or not)
 	 */
 	public function current_amount( $formatted = true ) {
-		$total   = 0;
-		$backers = $this->backers();
-		$logged  = array();
+		global $wpdb;
 
-		if ( 0 == $backers )
-			return $formatted ? edd_currency_filter( edd_format_amount( 0 ) ) : 0;
-
-		$status = atcf_has_preapproval_gateway() ? 'preapproved' : 'publish';
-
-		foreach ( $backers as $backer ) {
-			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
-
-			if ( in_array( $payment_id, $logged ) )
-				continue;
-			else {
-				$logged[$payment_id] = $payment_id;
-
-				$payment = get_post( $payment_id );
-
-				if ( empty( $payment ) )
-					continue;
-
-				$total = $total + edd_get_payment_amount( $payment_id );
-			}
-		}
+		$total = $wpdb->get_var( $wpdb->prepare( 
+			"SELECT SUM(m.meta_value) 
+			FROM ( 
+				SELECT DISTINCT m1.post_id, m1.meta_value 
+				FROM $wpdb->postmeta m1 
+				LEFT JOIN $wpdb->postmeta m2 
+				ON m2.meta_value = m1.post_id 
+				LEFT JOIN $wpdb->posts p ON p.ID = m2.post_id
+				WHERE p.post_parent = %d 
+				AND m1.meta_key = '_edd_payment_total' 
+			) m", $this->ID ) );
 
 		if ( $formatted )
 			return edd_currency_filter( edd_format_amount( $total ) );
 
-		return $total;
+		return $total;		
 	}
 
 	function failed_payments() {
