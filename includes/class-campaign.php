@@ -187,7 +187,7 @@ class ATCF_Campaign {
 	 *
 	 * @since Astoundify Crowdfunding 0.1-alpha
 	 *
-	 * @return sting Campaign Backers
+	 * @return array Campaign Backers
 	 */
 	public function backers( $unique = false ) {
 		global $edd_logs;
@@ -205,7 +205,7 @@ class ATCF_Campaign {
 			return array();
 
 		if ( $unique )
-			return $this->unique_backers();
+			return $this->unique_backers($backers);
 
 		return $backers;
 	}
@@ -218,10 +218,14 @@ class ATCF_Campaign {
 	 *
 	 * @since Astoundify Crowdfunding 1.7.2
 	 *
+	 * @param array $backers
 	 * @return sting Campaign Backers
 	 */
-	public function unique_backers() {
-		$backers  = $this->backers();
+	public function unique_backers( $backers = null ) {
+		if ( is_null( $backers ) ) {
+			$backers  = $this->backers();
+		}		
+		
 		$_backers = array();
 
 		foreach ( $backers as $backer ) {
