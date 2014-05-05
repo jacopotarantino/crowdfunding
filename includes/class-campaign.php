@@ -206,7 +206,7 @@ class ATCF_Campaign {
 			return array();
 
 		if ( $unique )
-			return $this->unique_backers($backers);
+			return $this->unique_backers( $backers );
 
 		return $backers;
 	}
@@ -274,7 +274,7 @@ class ATCF_Campaign {
 	 */
 	public function time_remaining( $format ) {
 		$now     = current_time( 'timestamp' );
-		$expires = strtotime( $this->campaign_end_datete(), $now );
+		$expires = strtotime( $this->end_date(), $now );
 
 		if ( $now > $expires )
 			return 0;
@@ -357,28 +357,47 @@ class ATCF_Campaign {
 	 *
 	 * @since Astoundify Crowdfunding 0.1-alpha
 	 *
+	 * @global $wpdb
 	 * @param boolean $formatted Return formatted currency or not
 	 * @return sting $total The amount funded (currency formatted or not)
 	 */
 	public function current_amount( $formatted = true ) {
-		global $wpdb;
 
-		$total = $wpdb->get_var( $wpdb->prepare( 
-			"SELECT SUM(m.meta_value) 
-			FROM ( 
-				SELECT DISTINCT m1.post_id, m1.meta_value 
-				FROM $wpdb->postmeta m1 
-				LEFT JOIN $wpdb->postmeta m2 
-				ON m2.meta_value = m1.post_id 
-				LEFT JOIN $wpdb->posts p ON p.ID = m2.post_id
-				WHERE p.post_parent = %d 
-				AND m1.meta_key = '_edd_payment_total' 
-			) m", $this->ID ) );
+		// Don't do this more than once
+		if ( !isset( $this->current_amount ) ) {
 
+			global $wpdb;
+
+			// Allow plugins/themes to filter which IDs are matched in post_parent.
+			$campaign_ids = apply_filters( 'atcf_campaign_pledged_amount_id', array( $this->ID ), $this );
+			$campaign_ids = array_filter( $campaign_ids, 'is_int' );
+			$campaign_ids = implode( ',', $campaign_ids );
+
+			// Fetches the SUM of all payments made to this campaign.
+			$query = apply_filters( 'atcf_campaign_pledged_query', 
+				"SELECT SUM(m.meta_value) 
+				FROM ( 
+					SELECT DISTINCT m1.post_id, m1.meta_value 
+					FROM $wpdb->postmeta m1 
+					INNER JOIN $wpdb->posts p1
+					ON p1.ID = m1.post_id
+					INNER JOIN $wpdb->postmeta m2 
+					ON m2.meta_value = m1.post_id 
+					INNER JOIN $wpdb->posts p2 
+					ON p2.ID = m2.post_id
+					WHERE p1.post_status IN ('publish', 'preapproval')
+					AND p2.post_parent IN ( $campaign_ids )
+					AND m1.meta_key = '_edd_payment_total' 
+				) m", 
+			$campaign_ids, $this );
+
+			$this->current_amount = $wpdb->get_var( $query );
+		}
+	
 		if ( $formatted )
-			return edd_currency_filter( edd_format_amount( $total ) );
+			return edd_currency_filter( edd_format_amount( $this->current_amount ) );
 
-		return $total;		
+		return $this->current_amount;
 	}
 
 	function failed_payments() {
