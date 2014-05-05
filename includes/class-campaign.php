@@ -187,7 +187,8 @@ class ATCF_Campaign {
 	 *
 	 * @since Astoundify Crowdfunding 0.1-alpha
 	 *
-	 * @return sting Campaign Backers
+	 * @param bool $unique
+	 * @return array Campaign Backers
 	 */
 	public function backers( $unique = false ) {
 		global $edd_logs;
@@ -205,7 +206,7 @@ class ATCF_Campaign {
 			return array();
 
 		if ( $unique )
-			return $this->unique_backers();
+			return $this->unique_backers( $backers );
 
 		return $backers;
 	}
@@ -218,10 +219,14 @@ class ATCF_Campaign {
 	 *
 	 * @since Astoundify Crowdfunding 1.7.2
 	 *
+	 * @param array $backers
 	 * @return sting Campaign Backers
 	 */
-	public function unique_backers() {
-		$backers  = $this->backers();
+	public function unique_backers( $backers = null ) {
+		if ( is_null( $backers ) ) {
+			$backers  = $this->backers();
+		}		
+		
 		$_backers = array();
 
 		foreach ( $backers as $backer ) {
@@ -352,40 +357,47 @@ class ATCF_Campaign {
 	 *
 	 * @since Astoundify Crowdfunding 0.1-alpha
 	 *
+	 * @global $wpdb
 	 * @param boolean $formatted Return formatted currency or not
 	 * @return sting $total The amount funded (currency formatted or not)
 	 */
 	public function current_amount( $formatted = true ) {
-		$total   = 0;
-		$backers = $this->backers();
-		$logged  = array();
 
-		if ( 0 == $backers )
-			return $formatted ? edd_currency_filter( edd_format_amount( 0 ) ) : 0;
+		// Don't do this more than once
+		if ( !isset( $this->current_amount ) ) {
 
-		$status = atcf_has_preapproval_gateway() ? 'preapproved' : 'publish';
+			global $wpdb;
 
-		foreach ( $backers as $backer ) {
-			$payment_id = get_post_meta( $backer->ID, '_edd_log_payment_id', true );
+			// Allow plugins/themes to filter which IDs are matched in post_parent.
+			$campaign_ids = apply_filters( 'atcf_campaign_pledged_amount_id', array( $this->ID ), $this );
+			$campaign_ids = array_filter( $campaign_ids, 'is_int' );
+			$campaign_ids = implode( ',', $campaign_ids );
 
-			if ( in_array( $payment_id, $logged ) )
-				continue;
-			else {
-				$logged[$payment_id] = $payment_id;
+			// Fetches the SUM of all payments made to this campaign.
+			$query = apply_filters( 'atcf_campaign_pledged_query', 
+				"SELECT SUM(m.meta_value) 
+				FROM ( 
+					SELECT DISTINCT m1.post_id, m1.meta_value 
+					FROM $wpdb->postmeta m1 
+					INNER JOIN $wpdb->posts p1
+					ON p1.ID = m1.post_id
+					INNER JOIN $wpdb->postmeta m2 
+					ON m2.meta_value = m1.post_id 
+					INNER JOIN $wpdb->posts p2 
+					ON p2.ID = m2.post_id
+					WHERE p1.post_status IN ('publish', 'preapproval')
+					AND p2.post_parent IN ( $campaign_ids )
+					AND m1.meta_key = '_edd_payment_total' 
+				) m", 
+			$campaign_ids, $this );
 
-				$payment = get_post( $payment_id );
-
-				if ( empty( $payment ) )
-					continue;
-
-				$total = $total + edd_get_payment_amount( $payment_id );
-			}
+			$this->current_amount = $wpdb->get_var( $query );
 		}
-
+	
 		if ( $formatted )
-			return edd_currency_filter( edd_format_amount( $total ) );
+			return edd_currency_filter( edd_format_amount( $this->current_amount ) );
 
-		return $total;
+		return $this->current_amount;
 	}
 
 	function failed_payments() {
