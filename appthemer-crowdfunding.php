@@ -7,7 +7,7 @@
  * Author URI:			http://astoundify.com
  * Version:     		1.8.3
  * Text Domain: 		atcf
- * GitHub Theme URI: 	https://github.com/Studio164a/crowdfunding/
+ * GitHub Plugin URI: 	https://github.com/Studio164a/crowdfunding
  * GitHub Branch:    	master
  */
 
