@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: Crowdfunding by Astoundify
- * Plugin URI:  https://github.com/astoundify/crowdfunding/
- * Description: A crowd funding platform in the likes of Kickstarter and Indigogo
- * Author:      Astoundify
- * Author URI:  http://astoundify.com
- * Version:     1.8.3
- * Text Domain: atcf
- * GitHub Theme URI: https://github.com/afragen/test-child
- * GitHub Branch:    master
+ * Plugin Name:			Crowdfunding by Astoundify
+ * Plugin URI:			https://github.com/Studio164a/crowdfunding/
+ * Description:			A crowdfunding platform in the likes of Kickstarter and Indigogo
+ * Author:				Astoundify
+ * Author URI:			http://astoundify.com
+ * Version:     		1.8.3
+ * Text Domain: 		atcf
+ * GitHub Theme URI: 	https://github.com/Studio164a/crowdfunding/
+ * GitHub Branch:    	master
  */
 
 // Exit if accessed directly
