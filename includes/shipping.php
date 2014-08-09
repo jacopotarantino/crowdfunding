@@ -129,6 +129,28 @@ function atcf_shipping_address_fields() {
 add_action( 'edd_purchase_form_before_submit', 'atcf_shipping_address_fields', 1 );
 
 /**
+ * Provides the state for shipping. 
+ *
+ * @param string $country
+ * @return string
+ */
+function atcf_shipping_get_state( $country ) {
+	switch ( $country ) :
+		case 'US' :
+			$state = isset( $_POST[ 'shipping_state_us' ] )	  ? sanitize_text_field( $_POST[ 'shipping_state_us' ] )     : '';
+			break;
+		case 'CA' :
+			$state = isset( $_POST[ 'shipping_state_ca' ] )	  ? sanitize_text_field( $_POST[ 'shipping_state_ca' ] )     : '';
+			break;
+		default :
+			$state = isset( $_POST[ 'shipping_state_other' ] ) ? sanitize_text_field( $_POST[ 'shipping_state_other' ] ) : '';
+			break;
+	endswitch;
+
+	return $state;
+}
+
+/**
  * Validate shipping information
  *
  * @since Astoundify Crowdfunding 0.1-alpha
@@ -147,18 +169,7 @@ function atcf_shipping_validate_meta( $valid_data, $data ) {
 	$shipping_info[ 'shipping_city' ]      = isset( $data[ 'shipping_city' ] )      ? sanitize_text_field( $data[ 'shipping_city' ] )      : '';
 	$shipping_info[ 'shipping_country' ]   = isset( $data[ 'shipping_country' ] )   ? sanitize_text_field( $data[ 'shipping_country' ] )   : '';
 	$shipping_info[ 'shipping_zip' ]       = isset( $data[ 'shipping_zip' ] )	    ? sanitize_text_field( $data[ 'shipping_zip' ] )       : '';
-
-	switch ( $shipping_info[ 'shipping_country'] ) :
-		case 'US' :
-			$shipping_info[ 'shipping_state' ] = isset( $_POST[ 'shipping_state_us' ] )	  ? sanitize_text_field( $_POST[ 'shipping_state_us' ] )     : '';
-			break;
-		case 'CA' :
-			$shipping_info[ 'shipping_state' ] = isset( $_POST[ 'shipping_state_ca' ] )	  ? sanitize_text_field( $_POST[ 'shipping_state_ca' ] )     : '';
-			break;
-		default :
-			$shipping_info[ 'shipping_state' ] = isset( $_POST[ 'shipping_state_other' ] ) ? sanitize_text_field( $_POST[ 'shipping_state_other' ] ) : '';
-			break;
-	endswitch;
+	$shipping_info[ 'shipping_state' ]     = atcf_shipping_get_state( $shipping_info[ 'shipping_country' ] );
 
 	if ( '' == $shipping_info[ 'shipping_address' ] || '' == $shipping_info[ 'shipping_city' ] || '' == $shipping_info[ 'shipping_city' ] || '' == $shipping_info[ 'shipping_country' ] || '' == $shipping_info[ 'shipping_zip' ] ) {
 		edd_set_error( 'invalid_shipping_info', __( 'Please fill out all required shipping fields.', 'atcf' ) );
@@ -189,7 +200,7 @@ function atcf_shipping_save_meta( $payment_meta ) {
 	$payment_meta[ 'shipping' ][ 'shipping_address_2' ] = isset( $_POST[ 'shipping_address_2' ] ) ? sanitize_text_field( $_POST[ 'shipping_address_2' ] ) : '';
 	$payment_meta[ 'shipping' ][ 'shipping_city' ]      = isset( $_POST[ 'shipping_city' ] )      ? sanitize_text_field( $_POST[ 'shipping_city' ] )      : '';
 	$payment_meta[ 'shipping' ][ 'shipping_country' ]   = isset( $_POST[ 'shipping_country' ] )   ? sanitize_text_field( $_POST[ 'shipping_country' ] )   : '';
-	$payment_meta[ 'shipping' ][ 'shipping_state' ]     = sanitize_text_field( $state );
+	$payment_meta[ 'shipping' ][ 'shipping_state' ]     = sanitize_text_field( atcf_shipping_get_state( $payment_meta[ 'shipping' ][ 'shipping_country' ] ) );
 
 	$payment_meta[ 'shipping' ][ 'shipping_zip' ]       = isset( $_POST[ 'shipping_zip' ] )	      ? sanitize_text_field( $_POST[ 'shipping_zip' ] )       : '';
 
