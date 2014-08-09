@@ -5,8 +5,10 @@
  * Description: A crowd funding platform in the likes of Kickstarter and Indigogo
  * Author:      Astoundify
  * Author URI:  http://astoundify.com
- * Version:     1.8.2
+ * Version:     1.8.3
  * Text Domain: atcf
+ * GitHub Theme URI: https://github.com/afragen/test-child
+ * GitHub Branch:    master
  */
 
 // Exit if accessed directly
