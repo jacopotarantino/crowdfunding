@@ -4,7 +4,7 @@
  *
  * Handle a bit of extra email info.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  */
 
 // Exit if accessed directly
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Causes the purchase receipt to be emailed when initially pledged.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @param int $payment_id The ID of the payment
  * @param string $new_status The status we are changing to
@@ -38,14 +38,14 @@ function atcf_trigger_pending_purchase_receipt( $payment_id, $new_status, $old_s
 	// Send email with secure download link
 	atcf_email_pending_purchase_receipt( $payment_id );
 }
-add_action( 'edd_update_payment_status', 'edd_trigger_purchase_receipt', 10, 3 );
+add_action( 'edd_update_payment_status', 'atcf_trigger_pending_purchase_receipt', 10, 3 );
 
 /**
  * Build the purchase email.
  *
  * Figure out who to send to, who it's from, etc.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @param int $payment_id The ID of the payment
  * @param boolean $admin_notice Alert admins, or not
@@ -95,7 +95,7 @@ function atcf_email_pending_purchase_receipt( $payment_id, $admin_notice = true 
  * Get the actual pending email body content. Default text, can be filtered, and will
  * use all template tags that EDD supports.
  *
- * @since Appthemer CrowdFunding 0.1-alpha
+ * @since Astoundify Crowdfunding 0.1-alpha
  *
  * @param int $payment_id The ID of the payment
  * @param array $payment_data The relevant payment data
@@ -126,3 +126,40 @@ function atcf_get_email_body_content( $payment_id = 0, $payment_data = array() )
 
 	return apply_filters( 'atcf_pending_purchase_receipt', $email_body, $payment_id, $payment_data );
 }
+
+/**
+ * Build the campaign expired email.
+ *
+ * Figure out who to send to, who it's from, etc.
+ *
+ * @since Astoundify Crowdfunding 1.6
+ *
+ * @param object $campaign
+ * @return void
+ */
+function atcf_email_campaign_expiration( $campaign ) {
+	global $edd_options;
+
+	$message  = edd_get_email_body_header();
+	
+	$default_email_body = __( 'Dear Author', 'atcf' ) . "\n\n";
+	$default_email_body .= sprintf( __( 'We would just like to let you know that your campaign has reached its end date. You can view your campaign by clicking <a href="%s">here</a>.', 'atcf' ), get_permalink( $campaign->ID ) );
+
+	$message .= apply_filters( 'atcf_campaign_expiration_message', $default_email_body, $campaign );
+
+	$message .= edd_get_email_body_footer();
+
+	$from_name  = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
+	$from_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
+
+	$subject = apply_filters( 'atcf_campaign_expiration_subject', __( 'Your campaign is complete!', 'atcf' ), $campaign );
+	$subject = edd_email_template_tags( $subject, $payment_data, $payment_id );
+
+	$headers  = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
+	$headers .= "Reply-To: ". $from_email . "\r\n";
+	$headers .= "MIME-Version: 1.0\r\n";
+	$headers .= "Content-Type: text/html; charset=utf-8\r\n";
+
+	wp_mail( $campaign->contact_email(), $subject, $message, $headers );
+}
+add_action( 'atcf_campaign_expired', 'atcf_email_campaign_expiration' );
